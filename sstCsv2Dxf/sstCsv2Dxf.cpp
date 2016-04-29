@@ -45,6 +45,7 @@
 #include <sstMisc01Lib.h>
 #include <sstRec04Lib.h>
 #include <sstDxf02Lib.h>
+#include <rs.h>
 
 #include "sstCsv2Dxf.h"
 
@@ -55,6 +56,43 @@ int main(int argc, char** argv)
   std::string oJobNam;
   std::string oDxfFilNam;
   int iStat = 0;
+
+  // converts enum to string <BR>
+  std::string oTypeString;
+  RS2::EntityType eTypeEnum = RS2::EntityUnknown;
+  sstDxf02EntityTypeCls oEntityType;
+
+  oTypeString = oEntityType.Enum2String(eTypeEnum);
+  oTypeString = "XXX";
+  eTypeEnum = oEntityType.String2Enum(oTypeString);
+
+  sstDxf02FncMainCls oMainFnc;  // functions for dxf main record
+  std::string oMainCsvString;
+
+  {
+    sstDxf02TypMainCls oMainRec;  // dxf main record
+    oMainRec.setMainID(22);
+    oMainRec.setEntityType(RS2::EntityArc);
+    oMainRec.setLayBlockID(44);
+    oMainRec.setSectString("B");
+    oMainRec.setTypeID(55);
+    oMainFnc.Csv_Write(0,&oMainRec,&oMainCsvString);
+    iStat = oMainCsvString.compare("22;\"B\";44;\"Arc\";55");
+    assert(iStat == 0);
+  }
+
+  {
+    sstDxf02TypMainCls oMainRec;  // dxf main record
+    std::string oErrStr;
+    iStat = oMainFnc.Csv_Read(0,&oErrStr,&oMainCsvString,&oMainRec);
+    assert (iStat == 0);
+    assert ( oMainRec.getMainID() == 22);
+    assert ( oMainRec.getEntityType() == RS2::EntityArc);
+    assert ( oMainRec.getLayBlockID() == 44);
+    assert ( oMainRec.getSectString() == "B");
+    assert ( oMainRec.getTypeID() == 55);
+  }
+
 
   // Open Protocol
   iStat = oCsv2Dxf.SST_PrtAuf ( 1, (char*) "Csv2Dxf");
@@ -74,10 +112,26 @@ int main(int argc, char** argv)
   oDxfFilNam = argv[1];
 
   // create sst dxf database and set protocol channel
-  sstDxf01DatabaseCls oSstDxfDB(&oCsv2Dxf);
+  // sstDxf01DatabaseCls oSstDxfDB(&oCsv2Dxf);
 
-  // read all csv file and import into sst dxf database
-  iStat = oSstDxfDB.ReadAllCsvFiles(0,oDxfFilNam);
+//  // read all csv file and import into sst dxf database
+//  iStat = oSstDxfDB.ReadAllCsvFiles(0,oDxfFilNam);
+  //  if (iStat < 0)
+  //  {
+  //    // Write Message to Protocolfile and console
+  //    iStat = oCsv2Dxf.SST_PrtWrtChar ( 1, (char*) "Error occured! Exit!", (char*) "Import: ");
+
+  //    // Close Protocol
+  //    iStat = oCsv2Dxf.SST_PrtZu ( 1);
+  //    return 0;
+  //  }
+
+  // sstMisc01FilNamCls oFilNamConv;
+    // {
+  sstDxf02WriteCls oDxfWrite(&oCsv2Dxf);  // Open dxflib, set dxf export version and open dxf file
+
+  oDxfWrite.SetDxfFilNam( oDxfFilNam);
+  iStat = oDxfWrite.ReadAllCsvFiles(0);  // import all csv data into sstdxf database
   if (iStat < 0)
   {
     // Write Message to Protocolfile and console
@@ -87,109 +141,17 @@ int main(int argc, char** argv)
     iStat = oCsv2Dxf.SST_PrtZu ( 1);
     return 0;
   }
-
-  // sstMisc01FilNamCls oFilNamConv;
-    {
-      sstDxf01WriteCls oDxfWrite(&oSstDxfDB);  // Open dxflib, set dxf export version and open dxf file
-      oDxfWrite.WrtSecHeader(0);
-      oDxfWrite.WrtSecTypes(0);
-      oDxfWrite.WrtSecLayers(0);
-      oDxfWrite.WrtSecStyles(0);
-      oDxfWrite.WrtSecBlocks(0);
-      oDxfWrite.WrtSecEntities(0);
-      oDxfWrite.WrtSecObjects(0);
-    }
-
-    // Open DXF file
-    DL_Dxf* dxf;
-    DL_WriterA* dw;
-    // RS_Vector dPnt2[4];
-    // RS_Vector dPnt2WC[4];
-
-    // Open Dxf-File for writing, using dxflib functions
-    iStat = sstdxf_FileOpen ( 0, &dxf, &dw);
-
-    // Write section HEADER to dxf file
-    iStat = sstdxf_WrtSecHeader ( 0, &dxf, &dw);
-
-    // Write Section Layers, Table Types (LINETYPES etc.)  to DXF file
-    iStat = sstdxf_WrtSecTypes ( 0, &dxf, &dw);
-
-    // Write Section Layers, Table LAYER to Dxf file
-    iStat = sstdxf_WrtSecLayers ( 0, &dxf, &dw);
-
-    // Write Section TABLES to Dxf file
-    iStat = sstdxf_WrtSecStyles( 0, &dxf, &dw);
-
-    // Section blocks
-    dw->sectionBlocks();
-
-    dxf->writeBlock(*dw,
-                   DL_BlockData("*Model_Space", 0, 0.0, 0.0, 0.0));
-    dxf->writeEndBlock(*dw, "*Model_Space");
-
-    dxf->writeBlock(*dw,
-                   DL_BlockData("*Paper_Space", 0, 0.0, 0.0, 0.0));
-    dxf->writeEndBlock(*dw, "*Paper_Space");
-
-    dxf->writeBlock(*dw,
-                   DL_BlockData("*Paper_Space0", 0, 0.0, 0.0, 0.0));
-    dxf->writeEndBlock(*dw, "*Paper_Space0");
-
-    // Write one Symobl definition ================================================
-
-    dxf->writeBlock(*dw,
-                   DL_BlockData("myblock1", 0, 0.0, 0.0, 0.0));
-    // ...
-    // write block entities e.g. with dxf->writeLine(), ..
-
-    dxf->writeLine(
-        *dw,
-        DL_LineData(0.0,   // start point
-                    0.0,
-                    0.0,
-                    1.0,   // end point
-                    1.0,
-                    0.0),
-        DL_Attributes("myblock1", 256, -1, "BYBLOCK"));
-
-    dxf->writeLine(
-        *dw,
-        DL_LineData(0.0,   // start point
-                    1.0,
-                    0.0,
-                    1.0,   // end point
-                    0.0,
-                    0.0),
-        DL_Attributes("myblock1", 256, -1, "BYBLOCK"));
-
-    // ...
-    dxf->writeEndBlock(*dw, "myblock1");
-    // End Symobl definition ================================================
-
-    dxf->writeBlock(*dw,
-                   DL_BlockData("myblock2", 0, 0.0, 0.0, 0.0));
-    // ...
-    // write block entities e.g. with dxf->writeLine(), ..
-    // ...
-    dxf->writeEndBlock(*dw, "myblock2");
-
-    dw->sectionEnd();
-
-    dw->sectionEntities();
-
-    //===========================================================================
-
-    dw->sectionEnd();
-    dxf->writeObjects(*dw);
-    dxf->writeObjectsEnd(*dw);
-    dw->dxfEOF();
-    dw->close();
-    delete dw;
-    delete dxf;
+  if (iStat >= 0) iStat = oDxfWrite.OpenNewDxfFile(0,oDxfFilNam);  // Open dxf file for writing data
+  if (iStat >= 0) iStat = oDxfWrite.WrtSecHeader(0);    // write header section to dxf file
+  if (iStat >= 0) iStat = oDxfWrite.WrtSecTypes(0);     // write types section to dxf file
+  if (iStat >= 0) iStat = oDxfWrite.WrtSecLayers(0);    // write layer section to dxf file
+  if (iStat >= 0) iStat = oDxfWrite.WrtSecStyles(0);    // write styles section to dxf file
+  if (iStat >= 0) iStat = oDxfWrite.WrtSecBlocks(0);    // write blocks section to dxf file
+  if (iStat >= 0) iStat = oDxfWrite.WrtSecEntities(0);  // write entities section to dxf file
+  if (iStat >= 0) iStat = oDxfWrite.WrtSecObjects(0);   // write objects section to dxf file
 
     // Close Protocol
-    iStat = oCsv2Dxf.SST_PrtZu ( 1);
+  iStat = oCsv2Dxf.SST_PrtZu ( 1);
   return 0;
 }
 //=============================================================================

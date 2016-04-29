@@ -35,16 +35,18 @@ release{
   LIBS        += ../../libs/libsst_rec04_lib_r.a
   LIBS        += ../../libs/libsst_misc01_lib_r.a
   LIBS        += ../../libs/libsst_str01_lib_r.a
-  LIBS        += ../../libs/libsstLibreCAD2Lib_d.a
+  LIBS        += ../../libs/libsstLibreCAD2Lib_r.a
   LIBS        += ../../libs/libdxflib_r.a
 }
 
 HEADERS += \
     sstCsv2Dxf.h
 
-SOURCES    += sstCsv2Dxf.cpp \
-    sstDxf02Database.cpp \
-    sstDxf02Write.cpp
+SOURCES    += sstCsv2Dxf.cpp
+#    sstDxf02Database.cpp \
+#    sstDxf02Write.cpp \
+#    sstDxf02TypMain.cpp \
+#    sstDxf02EntityType.cpp
 
 TARGET	  	= sstCsv2Dxf
 

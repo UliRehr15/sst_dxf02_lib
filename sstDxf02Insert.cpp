@@ -38,6 +38,8 @@
 #include <dl_dxf.h>
 #include <dl_creationadapter.h>
 
+#include <rs_vector.h>
+
 #include <sstStr01Lib.h>
 #include <sstMisc01Lib.h>
 #include <sstRec04Lib.h>
@@ -45,7 +47,7 @@
 
  
 // Constructor
-sstDxf01TypInsertCls::sstDxf01TypInsertCls()
+sstDxf02TypInsertCls::sstDxf02TypInsertCls()
 {
   this->ulInsertID = 0;
   this->ulLayerID = 0;
@@ -65,14 +67,14 @@ sstDxf01TypInsertCls::sstDxf01TypInsertCls()
 }
  
 // Set Test Data
-int sstDxf01TypInsertCls::SetTestData(int iKey)
+int sstDxf02TypInsertCls::SetTestData(int iKey)
 {
   if ( iKey != 0) return -1;
 
   return 0;
 }
 
-void sstDxf01TypInsertCls::ReadFromDL(const DL_InsertData oDLInsert)
+void sstDxf02TypInsertCls::ReadFromDL(const DL_InsertData oDLInsert)
 {
   this->ipx = oDLInsert.ipx;
   this->ipy  = oDLInsert.ipy;
@@ -87,7 +89,7 @@ void sstDxf01TypInsertCls::ReadFromDL(const DL_InsertData oDLInsert)
   this->rowSp = oDLInsert.rowSp;
 }
 //=============================================================================
-void sstDxf01TypInsertCls::WritToDL(DL_InsertData *poDLInsert)
+void sstDxf02TypInsertCls::WritToDL(DL_InsertData *poDLInsert)
 {
   poDLInsert->ipx = this->ipx;
   poDLInsert->ipy = this->ipy;
@@ -102,74 +104,74 @@ void sstDxf01TypInsertCls::WritToDL(DL_InsertData *poDLInsert)
   poDLInsert->rowSp = this->rowSp;
 }
 //=============================================================================
-unsigned long sstDxf01TypInsertCls::getLayerID() const
+unsigned long sstDxf02TypInsertCls::getLayerID() const
 {
 return ulLayerID;
 }
 //=============================================================================
-void sstDxf01TypInsertCls::setLayerID(unsigned long value)
+void sstDxf02TypInsertCls::setLayerID(unsigned long value)
 {
 ulLayerID = value;
 }
 //=============================================================================
-unsigned long sstDxf01TypInsertCls::getBlockID() const
+unsigned long sstDxf02TypInsertCls::getBlockID() const
 {
 return ulBlockID;
 }
 //=============================================================================
-void sstDxf01TypInsertCls::setBlockID(unsigned long value)
+void sstDxf02TypInsertCls::setBlockID(unsigned long value)
 {
 ulBlockID = value;
 }
 //=============================================================================
-unsigned long sstDxf01TypInsertCls::getInsertID() const
+unsigned long sstDxf02TypInsertCls::getInsertID() const
 {
 return ulInsertID;
 }
 //=============================================================================
-void sstDxf01TypInsertCls::setInsertID(unsigned long value)
+void sstDxf02TypInsertCls::setInsertID(unsigned long value)
 {
 ulInsertID = value;
 }
 //=============================================================================
-double sstDxf01TypInsertCls::getIpx() const
+double sstDxf02TypInsertCls::getIpx() const
 {
 return ipx;
 }
 //=============================================================================
-void sstDxf01TypInsertCls::setIpx(double value)
+void sstDxf02TypInsertCls::setIpx(double value)
 {
 ipx = value;
 }
 //=============================================================================
-double sstDxf01TypInsertCls::getIpy() const
+double sstDxf02TypInsertCls::getIpy() const
 {
 return ipy;
 }
 //=============================================================================
-void sstDxf01TypInsertCls::setIpy(double value)
+void sstDxf02TypInsertCls::setIpy(double value)
 {
 ipy = value;
 }
 //=============================================================================
-double sstDxf01TypInsertCls::getIpz() const
+double sstDxf02TypInsertCls::getIpz() const
 {
 return ipz;
 }
 //=============================================================================
-void sstDxf01TypInsertCls::setIpz(double value)
+void sstDxf02TypInsertCls::setIpz(double value)
 {
 ipz = value;
 }
 //=============================================================================
 // Constructor
-sstDxf01FncInsertCls::sstDxf01FncInsertCls():sstDxf01FncBaseCls(sizeof(sstDxf01TypInsertCls))
+sstDxf02FncInsertCls::sstDxf02FncInsertCls():sstDxf02FncBaseCls(sizeof(sstDxf02TypInsertCls))
 {
 
 }
 //=============================================================================
 // Csv Read Function
-int sstDxf01FncInsertCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxfLib_Str, sstDxf01TypInsertCls *osstDxf01TypInsertCls)
+int sstDxf02FncInsertCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxfLib_Str, sstDxf02TypInsertCls *osstDxf02TypInsertCls)
 {
   DL_InsertData sDLInsert("",
                           0,0,0,
@@ -182,11 +184,13 @@ int sstDxf01FncInsertCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *
   unsigned long ulTmpLayerID = 0;
   unsigned long ulTmpBlockID = 0;
   int iTmpColor = 0;
-  sstStr01Cls oCsvRow;
+  // sstStr01Cls oCsvRow;
   int iStat = 0;
   int iRet  = 0;
 //-----------------------------------------------------------------------------
   if ( iKey != 0) return -1;
+
+  oCsvRow.SetReadPositon(0,0);
 
   if (iStat >= 0)
     iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpInsertID);
@@ -211,12 +215,12 @@ int sstDxf01FncInsertCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *
 
   *sErrTxt = oCsvRow.GetErrorString();
 
-  osstDxf01TypInsertCls->ReadFromDL(sDLInsert);
+  osstDxf02TypInsertCls->ReadFromDL(sDLInsert);
 
-  osstDxf01TypInsertCls->setInsertID(ulTmpInsertID);
-  osstDxf01TypInsertCls->setLayerID(ulTmpLayerID);
-  osstDxf01TypInsertCls->setBlockID(ulTmpBlockID);
-  osstDxf01TypInsertCls->setColor(iTmpColor);
+  osstDxf02TypInsertCls->setInsertID(ulTmpInsertID);
+  osstDxf02TypInsertCls->setLayerID(ulTmpLayerID);
+  osstDxf02TypInsertCls->setBlockID(ulTmpBlockID);
+  osstDxf02TypInsertCls->setColor(iTmpColor);
 
   // Fatal Errors goes to an assert
   if (iRet < 0)
@@ -233,7 +237,7 @@ int sstDxf01FncInsertCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *
 }
 //=============================================================================
 // Csv Write Function
-int sstDxf01FncInsertCls::Csv_Write(int iKey, sstDxf01TypInsertCls *poSstInsert, std::string *ssstDxfLib_Str)
+int sstDxf02FncInsertCls::Csv_Write(int iKey, sstDxf02TypInsertCls *poSstInsert, std::string *ssstDxfLib_Str)
 {
   int iStat = 0;
 
@@ -277,7 +281,7 @@ int sstDxf01FncInsertCls::Csv_Write(int iKey, sstDxf01TypInsertCls *poSstInsert,
   return iStat;
 }
 //=============================================================================
-int sstDxf01FncInsertCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
+int sstDxf02FncInsertCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
 {
   std::string oTitelStr;
   int iStat = 0;
@@ -330,7 +334,7 @@ int sstDxf01FncInsertCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
   return iStat;
 }
 //=============================================================================
-int sstDxf01FncInsertCls::ReadCsvFile(int iKey, std::string oFilNam)
+int sstDxf02FncInsertCls::ReadCsvFile(int iKey, std::string oFilNam)
 {
   sstMisc01AscFilCls oCsvFilLayer;
   int iStat = 0;
@@ -352,7 +356,7 @@ int sstDxf01FncInsertCls::ReadCsvFile(int iKey, std::string oFilNam)
   iStat1 = oCsvFilLayer.Rd_StrDS1 ( 2, &oLayStr);
   while (iStat1 >= 0)
   {
-    sstDxf01TypInsertCls oSstInsert;
+    sstDxf02TypInsertCls oSstInsert;
     // Read layer object from string row
     iStat = this->Csv_Read( 0, &oErrStr, &oLayStr, &oSstInsert);
     if (iStat < 0)

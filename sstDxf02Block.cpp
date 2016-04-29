@@ -35,65 +35,67 @@
 #include <dl_dxf.h>
 #include <dl_creationadapter.h>
 
+#include <rs_vector.h>
+
 #include <sstStr01Lib.h>
 #include <sstMisc01Lib.h>
 #include <sstRec04Lib.h>
 #include <sstDxf02Lib.h>
 
 //=============================================================================
-sstDxf01TypBlkCls::sstDxf01TypBlkCls()
+sstDxf02TypBlkCls::sstDxf02TypBlkCls()
 {
   this->ulBlockID = 0;
   memset(this->Nam,0,dSSTDXFBLOCKNAMELEN);
   this->flags = 0;
 }
 //=============================================================================
-int sstDxf01TypBlkCls::getFlags() const
+int sstDxf02TypBlkCls::getFlags() const
 {
 return flags;
 }
 //=============================================================================
-void sstDxf01TypBlkCls::setFlags(int value)
+void sstDxf02TypBlkCls::setFlags(int value)
 {
 flags = value;
 }
 //=============================================================================
-char* sstDxf01TypBlkCls::getName()
+char* sstDxf02TypBlkCls::getName()
 {
   return this->Nam;
 }
 //=============================================================================
-void sstDxf01TypBlkCls::setName(const char* cTmpName)
+void sstDxf02TypBlkCls::setName(const char* cTmpName)
 {
   strncpy(this->Nam,cTmpName,dSSTDXFLAYERNAMELEN);
 }
 
-unsigned long sstDxf01TypBlkCls::getBlockID() const
+unsigned long sstDxf02TypBlkCls::getBlockID() const
 {
 return ulBlockID;
 }
 
-void sstDxf01TypBlkCls::setBlockID(unsigned long value)
+void sstDxf02TypBlkCls::setBlockID(unsigned long value)
 {
 ulBlockID = value;
 }
 //=============================================================================
-void sstDxf01TypBlkCls::ReadFromDL(const DL_BlockData oDlBlk)
+void sstDxf02TypBlkCls::ReadFromDL(const DL_BlockData oDlBlk)
 {
   strncpy(this->Nam, oDlBlk.name.c_str(), dSSTDXFBLOCKNAMELEN);
   this->flags = oDlBlk.flags;
 }
 //=============================================================================
-void sstDxf01TypBlkCls::WritToDL(DL_BlockData *poDlBlk)
+void sstDxf02TypBlkCls::WritToDL(DL_BlockData *poDlBlk)
 {
     poDlBlk->name = this->getName();
     poDlBlk->flags = this->getFlags();
 }
 //=============================================================================
 // Constructor
-sstDxf01FncBlkCls::sstDxf01FncBlkCls():sstDxf01FncBaseCls(sizeof(sstDxf01TypBlkCls))
+sstDxf02FncBlkCls::sstDxf02FncBlkCls():sstDxf02FncBaseCls(sizeof(sstDxf02TypBlkCls))
 {
-  sstDxf01TypBlkCls oBlkRec;
+  sstDxf02TypBlkCls oBlkRec;
   // Init new name Tree sorting object for Block RecMem object
   int iStat = this->TreIni( 0, &oBlkRec, &oBlkRec.Nam, sizeof(oBlkRec.Nam), sstRecTyp_CC, &this->oBlockTree);
   assert(iStat == 0);
@@ -101,15 +103,17 @@ sstDxf01FncBlkCls::sstDxf01FncBlkCls():sstDxf01FncBaseCls(sizeof(sstDxf01TypBlkC
 }
 
 // Csv Read Function
-int sstDxf01FncBlkCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxfLib_Str, sstDxf01TypBlkCls *oSstBlk)
+int sstDxf02FncBlkCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxfLib_Str, sstDxf02TypBlkCls *oSstBlk)
 {
   DL_BlockData sDlBlk("",0,0.0,0.0,0.0);
-  sstStr01Cls oCsvRow;
+  // sstStr01Cls oCsvRow;
   unsigned long ulTmpBlockID = 0;
   int iStat = 0;
   int iRet  = 0;
 //-----------------------------------------------------------------------------
   if ( iKey != 0) return -1;
+
+  oCsvRow.SetReadPositon(0,0);
 
   if (iStat >= 0)
     iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpBlockID);
@@ -139,7 +143,7 @@ int sstDxf01FncBlkCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *sss
 }
 
 // Csv Write Function
-int sstDxf01FncBlkCls::Csv_Write(int iKey, sstDxf01TypBlkCls *poSstBlk, std::string *ssstDxfLib_Str)
+int sstDxf02FncBlkCls::Csv_Write(int iKey, sstDxf02TypBlkCls *poSstBlk, std::string *ssstDxfLib_Str)
 {
   // sstStr01Cls oCsvRow;  // Csv String Convert object
   int iStat = 0;
@@ -171,7 +175,7 @@ int sstDxf01FncBlkCls::Csv_Write(int iKey, sstDxf01TypBlkCls *poSstBlk, std::str
   return iStat;
 }
 //=============================================================================
-int sstDxf01FncBlkCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
+int sstDxf02FncBlkCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
 {
   std::string oTitelStr;
   int iStat = 0;
@@ -200,12 +204,12 @@ int sstDxf01FncBlkCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
   return iStat;
 }
 //=============================================================================
-sstRec04TreeKeyCls* sstDxf01FncBlkCls::getNameSortKey()
+sstRec04TreeKeyCls* sstDxf02FncBlkCls::getNameSortKey()
 {
   return &this->oBlockTree;
 }
 //=============================================================================
-int sstDxf01FncBlkCls::ReadCsvFile(int iKey, std::string oFilNam)
+int sstDxf02FncBlkCls::ReadCsvFile(int iKey, std::string oFilNam)
 {
   sstMisc01AscFilCls oCsvFilLayer;
   int iStat = 0;
@@ -216,7 +220,7 @@ int sstDxf01FncBlkCls::ReadCsvFile(int iKey, std::string oFilNam)
   if (iStat < 0) return -2;
   // assert(iStat==0);
 
-  // sstDxf01FncLayCls oSstFncLay;  // layer recmem object
+  // sstDxf02FncLayCls oSstFncLay;  // layer recmem object
   std::string oLayStr;
   std::string oErrStr;
   dREC04RECNUMTYP dRecNo = 0;
@@ -229,7 +233,7 @@ int sstDxf01FncBlkCls::ReadCsvFile(int iKey, std::string oFilNam)
   iStat1 = oCsvFilLayer.Rd_StrDS1 ( 2, &oLayStr);
   while (iStat1 >= 0)
   {
-    sstDxf01TypBlkCls oSstBlk;
+    sstDxf02TypBlkCls oSstBlk;
     // Read layer object from string row
     iStat = this->Csv_Read( 0, &oErrStr, &oLayStr, &oSstBlk);
     if (iStat < 0)

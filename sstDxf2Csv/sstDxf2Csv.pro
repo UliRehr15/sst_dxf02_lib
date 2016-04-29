@@ -2,11 +2,14 @@ TEMPLATE	  = app
 CONFIG	 	 += warn_on
 CONFIG       -= qt
 CONFIG       -= windows
+CONFIG += c++11
+
 
 # CONFIG       -= debug  # RELEASE ist aktiv
 CONFIG       -= release  # DEBUG ist aktiv
 
 INCLUDEPATH +=  ../../dxflib/Header
+INCLUDEPATH +=  ../../sstLibreCAD2Lib/Header
 INCLUDEPATH +=  ../../sst_str01_lib/Header
 INCLUDEPATH +=  ../../sst_misc01_lib/Header
 INCLUDEPATH +=  ../../sst_rec04_lib/Header

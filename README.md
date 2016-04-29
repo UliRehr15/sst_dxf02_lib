@@ -19,4 +19,5 @@ Structure of coding projects should be:
 28.02.16: Version 1.0: sst dxf lib: Tool Dxf2Csv: Realized: Layer Csv Table, Block Csv table, ARC Element Csv  <BR>
 05.03.16: Version 1.1: Dxf2Csv: Arc Csv links to Layer Csv.  <BR>
 05.03.16: Version 1.2: Dxf2Csv: Supports now INSERT element.  <BR>
-10.03.16: Version 1.3: Csv2Dxf: Tool frame.  <BR>
+10.03.16: Version 1.3: Csv2Dxf: Tool frame and new table MAIN.  <BR>
+29.04.16: Version 1.4: Tools Dxf2Csv and Csv2Dxf: Full support of ARC and INSERT.  <BR>

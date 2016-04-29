@@ -35,71 +35,73 @@
 #include <dl_dxf.h>
 #include <dl_creationadapter.h>
 
+#include <rs_vector.h>
+
 #include <sstStr01Lib.h>
 #include <sstMisc01Lib.h>
 #include <sstRec04Lib.h>
 #include <sstDxf02Lib.h>
 
 //=============================================================================
-sstDxf01TypLayCls::sstDxf01TypLayCls()
+sstDxf02TypLayCls::sstDxf02TypLayCls()
 {
   this->ulLayerID = 0;
   memset(this->Nam,0,dSSTDXFLAYERNAMELEN);
   this->flags = 0;
 }
 //=============================================================================
-int sstDxf01TypLayCls::getFlags() const
+int sstDxf02TypLayCls::getFlags() const
 {
   return flags;
 }
 //=============================================================================
-void sstDxf01TypLayCls::setFlags(int value)
+void sstDxf02TypLayCls::setFlags(int value)
 {
   flags = value;
 }
 //=============================================================================
-char* sstDxf01TypLayCls::getName()
+char* sstDxf02TypLayCls::getName()
 {
   return this->Nam;
 }
 //=============================================================================
-void sstDxf01TypLayCls::setName(const char* cTmpName)
+void sstDxf02TypLayCls::setName(const char* cTmpName)
 {
   strncpy(this->Nam,cTmpName,dSSTDXFLAYERNAMELEN);
 }
 
-unsigned long sstDxf01TypLayCls::getLayerID() const
+unsigned long sstDxf02TypLayCls::getLayerID() const
 {
 return ulLayerID;
 }
 
-void sstDxf01TypLayCls::setLayerID(unsigned long value)
+void sstDxf02TypLayCls::setLayerID(unsigned long value)
 {
 ulLayerID = value;
 }
 //=============================================================================
-void sstDxf01TypLayCls::ReadFromDL(const DL_LayerData oDlLay)
+void sstDxf02TypLayCls::ReadFromDL(const DL_LayerData oDlLay)
 {
   strncpy(this->Nam, oDlLay.name.c_str(),dSSTDXFLAYERNAMELEN);
   this->flags  = oDlLay.flags;
 }
 //=============================================================================
-void sstDxf01TypLayCls::WritToDL(DL_LayerData *poDlLay)
+void sstDxf02TypLayCls::WritToDL(DL_LayerData *poDlLay)
 {
     poDlLay->name = this->getName();
     poDlLay->flags = this->getFlags();
 }
 //=============================================================================
 // Constructor
-sstDxf01FncLayCls::sstDxf01FncLayCls():sstDxf01FncBaseCls(sizeof(sstDxf01TypLayCls))
+sstDxf02FncLayCls::sstDxf02FncLayCls():sstDxf02FncBaseCls(sizeof(sstDxf02TypLayCls))
 {
-  sstDxf01TypLayCls oLayRec;
+  sstDxf02TypLayCls oLayRec;
   // Init new name Tree sorting object for Layer RecMem object
   int iStat = this->TreIni( 0, &oLayRec, &oLayRec.Nam, sizeof(oLayRec.Nam), sstRecTyp_CC, &this->oLayerTree);
   assert(iStat == 0);
 }
 //=============================================================================
-int sstDxf01FncLayCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *oCsvStr, sstDxf01TypLayCls *oTypLay)
+int sstDxf02FncLayCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *oCsvStr, sstDxf02TypLayCls *oTypLay)
 {
   unsigned long ulTmpLayerID = 0;
   std::string oTmpStr;
@@ -108,6 +110,8 @@ int sstDxf01FncLayCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *oCs
   int iStat = 0;
 //-----------------------------------------------------------------------------
   if ( iKey != 0) return -1;
+
+  oCsvRow.SetReadPositon(0,0);
 
   if (iStat >= 0)
     iStat = oCsvRow.CsvString2_UInt4( 0, oCsvStr, &ulTmpLayerID);
@@ -131,7 +135,7 @@ int sstDxf01FncLayCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *oCs
 }
 
 // Csv Write Function
-int sstDxf01FncLayCls::Csv_Write(int iKey, sstDxf01TypLayCls *poSstLAY, std::string *ssstDxfLib_Str)
+int sstDxf02FncLayCls::Csv_Write(int iKey, sstDxf02TypLayCls *poSstLAY, std::string *ssstDxfLib_Str)
 {
   // sstStr01Cls oCsvRow;  // Csv String Convert object
   int iStat = 0;
@@ -163,7 +167,7 @@ int sstDxf01FncLayCls::Csv_Write(int iKey, sstDxf01TypLayCls *poSstLAY, std::str
   return iStat;
 }
 //=============================================================================
-int sstDxf01FncLayCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
+int sstDxf02FncLayCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
 {
   std::string oTitelStr;
   int iStat = 0;
@@ -192,12 +196,12 @@ int sstDxf01FncLayCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
   return iStat;
 }
 //=============================================================================
-sstRec04TreeKeyCls* sstDxf01FncLayCls::getNameSortKey()
+sstRec04TreeKeyCls* sstDxf02FncLayCls::getNameSortKey()
 {
   return &this->oLayerTree;
 }
 //=============================================================================
-int sstDxf01FncLayCls::ReadCsvFile(int iKey, std::string oFilNam)
+int sstDxf02FncLayCls::ReadCsvFile(int iKey, std::string oFilNam)
 {
   sstMisc01AscFilCls oCsvFilLayer;
   int iStat = 0;
@@ -208,7 +212,7 @@ int sstDxf01FncLayCls::ReadCsvFile(int iKey, std::string oFilNam)
   // assert(iStat==0);
   if (iStat < 0) return -2;
 
-  // sstDxf01FncLayCls oSstFncLay;  // layer recmem object
+  // sstDxf02FncLayCls oSstFncLay;  // layer recmem object
   std::string oLayStr;
   std::string oErrStr;
   dREC04RECNUMTYP dRecNo = 0;
@@ -222,7 +226,7 @@ int sstDxf01FncLayCls::ReadCsvFile(int iKey, std::string oFilNam)
 
   while (iStat1 >= 0)
   {
-    sstDxf01TypLayCls oSstLay;
+    sstDxf02TypLayCls oSstLay;
     // Read layer object from string row
     iStat = this->Csv_Read( 0, &oErrStr, &oLayStr, &oSstLay);
     if (iStat < 0)

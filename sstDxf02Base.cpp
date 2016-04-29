@@ -38,6 +38,8 @@
 #include <dl_dxf.h>
 #include <dl_creationadapter.h>
 
+#include <rs_vector.h>
+
 #include <sstStr01Lib.h>
 #include <sstMisc01Lib.h>
 #include <sstRec04Lib.h>
@@ -45,37 +47,39 @@
 
 //=============================================================================
 // Constructor
-sstDxf01TypBaseCls::sstDxf01TypBaseCls()
+sstDxf02TypBaseCls::sstDxf02TypBaseCls()
 {
+  this->dElementID = 0;
+  this->dLayerID = 0;
+  this->dLinetypeID = 0;
   this->color = 0; // int color;
   this->color24 = 0;  // int color24;
   this->width = 0;  // int width;
-  // std::string lineType;
   this->handle = 0;  // int handle;
 }
 //=============================================================================
-int sstDxf01TypBaseCls::getColor() const
+int sstDxf02TypBaseCls::getColor() const
 {
   return color;
 }
 //=============================================================================
-void sstDxf01TypBaseCls::setColor(int value)
+void sstDxf02TypBaseCls::setColor(int value)
 {
   color = value;
 }
 //=============================================================================
-void sstDxf01TypBaseCls::BaseReadFromDL(const DL_Attributes oDLAttrib)
+void sstDxf02TypBaseCls::BaseReadFromDL(const DL_Attributes oDLAttrib)
 {
   this->color = oDLAttrib.getColor();
 }
 //=============================================================================
-void sstDxf01TypBaseCls::BaseWritToDL(DL_Attributes *poDLAttrib)
+void sstDxf02TypBaseCls::BaseWritToDL(DL_Attributes *poDLAttrib)
 {
   poDLAttrib->setColor( this->color);
 }
 //=============================================================================
 // Constructor
-sstDxf01FncBaseCls::sstDxf01FncBaseCls(dREC04RECSIZTYP iSize):sstRec04Cls(iSize)
+sstDxf02FncBaseCls::sstDxf02FncBaseCls(dREC04RECSIZTYP iSize):sstRec04Cls(iSize)
 {
   // this->oCsvRow.setDecType(1);  // set decimal point
   this->oCsvRow.SetBracket(0,(char*)"\x22");  // quotation marks

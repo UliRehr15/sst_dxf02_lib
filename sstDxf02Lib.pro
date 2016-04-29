@@ -22,14 +22,18 @@ INCLUDEPATH += ./Header
 HEADERS		+= ./Header/sstDxf02Lib.h
 
 SOURCES		+=  \
-    sst_dxf02_lib1.cpp \
-    sst_dxf02_lib2.cpp \
+#    sst_dxf02_lib1.cpp \
+#    sst_dxf02_lib2.cpp \
     sstDxf02Arc.cpp \
     sstDxf02Base.cpp \
     sstDxf02Insert.cpp \
     sstDxf02Read.cpp \
     sstDxf02Block.cpp \
-    sstDxf02Layer.cpp
+    sstDxf02Layer.cpp \
+    sstDxf02Database.cpp \
+    sstDxf02EntityType.cpp \
+    sstDxf02Write.cpp \
+    sstDxf02Main.cpp
 
 OTHER_FILES += README.md
 

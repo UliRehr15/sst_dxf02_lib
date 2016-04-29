@@ -26,7 +26,7 @@
 //
 // Tool splits dxf drawing file into object csv files.
 // Csv file for layers, blocks, arc elements and so on ...
-// Tool uses dxflib as base library.
+// Tool uses dxflib and librecad as base libraries.
 
 #include <iostream>
 #include <stdlib.h>
@@ -35,15 +35,17 @@
 
 #include <list>
 
-#include "dl_dxf.h"
-#include "dl_creationadapter.h"
+#include <dl_dxf.h>
+#include <dl_creationadapter.h>
+
+#include <rs_vector.h>
 
 #include <sstStr01Lib.h>
 #include <sstMisc01Lib.h>
 #include <sstRec04Lib.h>
 #include <sstDxf02Lib.h>
 
-#include "sstdxf2csv.h"
+#include "sstDxf2Csv.h"
 
 //=============================================================================
 int main(int argc, char** argv)
@@ -78,16 +80,16 @@ void sstDxf2CsvCls::usage() {
 }
 //=============================================================================
 void sstDxf2CsvCls::testReading(char* file) {
-    // Load DXF file into memory:
+    // Load DXF file into sst dxf database recmem memory:
     std::cout << "Reading file " << file << "...\n";
-    sstDxf01ReadCls* creationClass = new sstDxf01ReadCls();
+    sstDxf02ReadCls* creationClass = new sstDxf02ReadCls(this);
 
     creationClass->SetDxfFilNam(file);
 
     DL_Dxf* dxf = new DL_Dxf();
     if (!dxf->in(file, creationClass)) { // if file open failed
         std::cerr << file << " could not be opened.\n";
-        return;
+        // return;
     }
     delete dxf;
     delete creationClass;

@@ -39,15 +39,15 @@
 #include <sstRec04Lib.h>
 #include <sstDxf02Lib.h>
 
-#include "sstCsv2Dxf.h"
+// #include "sstCsv2Dxf.h"
 
 //=============================================================================
-sstDxf01DatabaseCls::sstDxf01DatabaseCls(sstMisc01PrtFilCls *oTmpPrt)
+sstDxf02DatabaseCls::sstDxf02DatabaseCls(sstMisc01PrtFilCls *oTmpPrt)
 {
   this->oPrt = oTmpPrt;
 }
 //=============================================================================
-int sstDxf01DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
+int sstDxf02DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
 {
   int iStat = 0;
   sstMisc01FilNamCls oFilNamConv;
@@ -63,15 +63,31 @@ int sstDxf01DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
   std::string oFilNamBlock;
   std::string oFilNamArc;
   std::string oFilNamInsert;
+  std::string oFilNamMain;
 
   oFilNamLayer = oJobNam + "_Layer.csv";
   oFilNamBlock = oJobNam + "_Block.csv";
   oFilNamArc = oJobNam + "_Arc.csv";
   oFilNamInsert = oJobNam + "_Insert.csv";
+  oFilNamMain = oJobNam + "_Main.csv";
 
+
+  // Read whole main csv file into sst_rec_mem
+  iStat = this->oSstFncMain.ReadCsvFile ( 0, oFilNamMain);
+  // Check given arguments:
+  if (iStat != 0)
+  {
+    // Write Message to Protocolfile and console
+    // iStat = oCsv2Dxf.SST_PrtWrtChar ( 1, (char*) oFilNamLayer.c_str(), (char*) "File not found: ");
+    iStat = this->oPrt->SST_PrtWrtChar ( 1, (char*) oFilNamMain.c_str(), (char*) "File not found: ");
+
+    // Close Protocol
+    // iStat = oCsv2Dxf.SST_PrtZu ( 1);
+    return -2;
+  }
 
   // Read whole layer csv file into sst_rec_mem
-  iStat = oSstFncLay.ReadCsvFile ( 0, oFilNamLayer);
+  iStat = this->oSstFncLay.ReadCsvFile ( 0, oFilNamLayer);
   // Check given arguments:
   if (iStat != 0)
   {
@@ -102,43 +118,48 @@ int sstDxf01DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
   return 0;
 }
 //=============================================================================
-sstDxf01FncLayCls* sstDxf01DatabaseCls::getSstFncLay()
+sstDxf02FncLayCls* sstDxf02DatabaseCls::getSstFncLay()
 {
   return &this->oSstFncLay;
 }
 //=============================================================================
-void sstDxf01DatabaseCls::setSstFncLay(const sstDxf01FncLayCls &value)
-{
-  oSstFncLay = value;
-}
+//void sstDxf02DatabaseCls::setSstFncLay(const sstDxf02FncLayCls &value)
+//{
+//  oSstFncLay = value;
+//}
 //=============================================================================
-sstDxf01FncBlkCls* sstDxf01DatabaseCls::getSstFncBlk()
+sstDxf02FncBlkCls* sstDxf02DatabaseCls::getSstFncBlk()
 {
   return &this->oSstFncBlk;
 }
 //=============================================================================
-void sstDxf01DatabaseCls::setSstFncBlk(const sstDxf01FncBlkCls &value)
-{
-  oSstFncBlk = value;
-}
+//void sstDxf02DatabaseCls::setSstFncBlk(const sstDxf02FncBlkCls &value)
+//{
+//  oSstFncBlk = value;
+//}
 //=============================================================================
-sstDxf01FncArcCls* sstDxf01DatabaseCls::getSstFncArc()
+sstDxf02FncArcCls* sstDxf02DatabaseCls::getSstFncArc()
 {
   return &this->oSstFncArc;
 }
 //=============================================================================
-void sstDxf01DatabaseCls::setSstFncArc(const sstDxf01FncArcCls &value)
-{
-  oSstFncArc = value;
-}
+//void sstDxf02DatabaseCls::setSstFncArc(const sstDxf02FncArcCls &value)
+//{
+//  oSstFncArc = value;
+//}
 //=============================================================================
-sstDxf01FncInsertCls* sstDxf01DatabaseCls::getSstFncInsert()
+sstDxf02FncInsertCls* sstDxf02DatabaseCls::getSstFncInsert()
 {
   return &this->oSstFncInsert;
 }
 //=============================================================================
-void sstDxf01DatabaseCls::setSstFncInsert(const sstDxf01FncInsertCls &value)
+//void sstDxf02DatabaseCls::setSstFncInsert(const sstDxf02FncInsertCls &value)
+//{
+//  oSstFncInsert = value;
+//}
+//=============================================================================
+sstDxf02FncMainCls* sstDxf02DatabaseCls::getSstFncMain()
 {
-  oSstFncInsert = value;
+  return &this->oSstFncMain;
 }
 //=============================================================================

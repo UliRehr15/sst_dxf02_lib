@@ -33,94 +33,73 @@
 #include <dl_dxf.h>
 #include <dl_creationadapter.h>
 
+#include <rs_vector.h>
+
 #include <sstStr01Lib.h>
 #include <sstMisc01Lib.h>
 #include <sstRec04Lib.h>
 #include <sstDxf02Lib.h>
 
 //=============================================================================
-sstDxf01ReadCls::sstDxf01ReadCls()
+sstDxf02ReadCls::sstDxf02ReadCls(sstMisc01PrtFilCls *oTmpPrt):oDxfDb(oTmpPrt)
 {
-  // sstDxf01TypLayCls oLayRec;
-  // sstDxf01TypBlkCls oBlkRec;
-  // int iStat=0;
-
-  this->poRecMemArc = new sstDxf01FncArcCls;
-  this->poRecMemInsert = new sstDxf01FncInsertCls;
-  this->poRecMemLay = new sstDxf01FncLayCls;
-  this->poRecMemBlk = new sstDxf01FncBlkCls;
-
-  // this->poDxfArcMem = new sstRec04Cls(sizeof(sstDxf01TypArcCls));
-  // this->poDxfInsertMem = new sstRec04Cls(sizeof(sstDxf01TypInsertCls));
-
-  // this->poDxfLayMem = new sstRec04Cls(sizeof(sstDxf01TypLayCls));
-  // this->poDxfBlkMem = new sstRec04Cls(sizeof(sstDxf01TypBlkCls));
-
-  // Init new name Tree sorting object for Layer RecMem object
-  // iStat = this->poDxfLayMem->TreIni( 0, &oLayRec, &oLayRec.Nam, sizeof(oLayRec.Nam), sstRecTyp_CC, &this->oLayerTree);
-  // assert(iStat == 0);
-
-  // Init new name Tree sorting object for Block RecMem object
-  // iStat = this->poDxfBlkMem->TreIni( 0, &oBlkRec, &oBlkRec.Nam, sizeof(oBlkRec.Nam), sstRecTyp_CC, &this->oBlockTree);
-  // assert(iStat == 0);
-
+  this->poPrt = oTmpPrt;
 }
 //=============================================================================
-sstDxf01ReadCls::~sstDxf01ReadCls()
+sstDxf02ReadCls::~sstDxf02ReadCls()
 {
     sstMisc01AscFilCls oCsvFil;
     std::string oCsvFilNam;
-    // sstAscRow_Cls oCsvRow;
+    sstDxf02FncArcCls *poArcFnc;
+    poArcFnc = this->oDxfDb.getSstFncArc();
+    sstDxf02FncInsertCls *poInsertFnc;
+    poInsertFnc = this->oDxfDb.getSstFncInsert();
+    sstDxf02FncLayCls *poLayFnc;
+    poLayFnc = this->oDxfDb.getSstFncLay();
+    sstDxf02FncBlkCls *poBlkFnc;
+    poBlkFnc = this->oDxfDb.getSstFncBlk();
+    sstDxf02FncMainCls *poMainFnc;
+    poMainFnc = this->oDxfDb.getSstFncMain();
 
     // Write all Arcs to Csv file
-
     oCsvFilNam = this->oDxfFilNam + "_Arc.csv";
     int iStat = oCsvFil.fopenWr(0,(char*) oCsvFilNam.c_str());
     assert(iStat >= 0);
 
-    // sstDxf01FncArcCls oDxfArcCsv;
     std::string oCsvStr;
 
-    this->poRecMemArc->Csv_WriteHeader(0,&oCsvStr);
+    poArcFnc->Csv_WriteHeader(0,&oCsvStr);
     oCsvFil.Wr_StrDS1(0, &oCsvStr);
 
-    // for(dREC04RECNUMTYP kk = 1; kk <= this->poDxfArcMem->count(); kk++)
-    for(dREC04RECNUMTYP kk = 1; kk <= this->poRecMemArc->count(); kk++)
+    for(dREC04RECNUMTYP kk = 1; kk <= poArcFnc->count(); kk++)
     {
-      // int iVal=0;
 
-      sstDxf01TypArcCls oDxfArc;
-      // this->poDxfArcMem->Read(0,kk,&oDxfArc);
-      iStat = this->poRecMemArc->Read(0,kk,&oDxfArc);
+      sstDxf02TypArcCls oDxfArc;
+      iStat = poArcFnc->Read(0,kk,&oDxfArc);
 
       oDxfArc.setArcID(kk);
 
-      this->poRecMemArc->Csv_Write( 0, &oDxfArc, &oCsvStr);
+      poArcFnc->Csv_Write( 0, &oDxfArc, &oCsvStr);
       oCsvFil.Wr_StrDS1(0, &oCsvStr);
     }
 
     iStat = oCsvFil.fcloseFil(0);
 
     // Write all Inserts to Csv file
-
     oCsvFilNam = this->oDxfFilNam + "_Insert.csv";
     iStat = oCsvFil.fopenWr(0,(char*) oCsvFilNam.c_str());
     assert(iStat >= 0);
 
-    sstDxf01FncInsertCls oDxfInsertCsv;
+    sstDxf02FncInsertCls oDxfInsertCsv;
     oCsvStr.clear();
 
     oDxfInsertCsv.Csv_WriteHeader(0,&oCsvStr);
     oCsvFil.Wr_StrDS1(0, &oCsvStr);
 
-    // for(dREC04RECNUMTYP kk = 1; kk <= this->poDxfInsertMem->count(); kk++)
-    for(dREC04RECNUMTYP kk = 1; kk <= this->poRecMemInsert->count(); kk++)
+    for(dREC04RECNUMTYP kk = 1; kk <= poInsertFnc->count(); kk++)
     {
-      // int iVal=0;
-
-      sstDxf01TypInsertCls oDxfInsert;
-      // this->poDxfInsertMem->Read(0,kk,&oDxfInsert);
-      this->poRecMemInsert->Read(0,kk,&oDxfInsert);
+      sstDxf02TypInsertCls oDxfInsert;
+      poInsertFnc->Read(0,kk,&oDxfInsert);
 
       oDxfInsert.setInsertID(kk);
 
@@ -136,17 +115,15 @@ sstDxf01ReadCls::~sstDxf01ReadCls()
     iStat = oCsvFil.fopenWr(0,(char*) oCsvFilNam.c_str());
     assert(iStat >= 0);
 
-    sstDxf01TypLayCls oDxfLay;
-    sstDxf01FncLayCls oDxfLayCsv;
+    sstDxf02TypLayCls oDxfLay;
+    sstDxf02FncLayCls oDxfLayCsv;
 
     oDxfLayCsv.Csv_WriteHeader(0,&oCsvStr);
     oCsvFil.Wr_StrDS1(0, &oCsvStr);
 
-    // for(dREC04RECNUMTYP kk = 1; kk <= this->poDxfLayMem->count(); kk++)
-    for(dREC04RECNUMTYP kk = 1; kk <= this->poRecMemLay->count(); kk++)
+    for(dREC04RECNUMTYP kk = 1; kk <= poLayFnc->count(); kk++)
     {
-      // this->poDxfLayMem->Read(0,kk,&oDxfLay);
-      this->poRecMemLay->Read(0,kk,&oDxfLay);
+      poLayFnc->Read(0,kk,&oDxfLay);
 
       oDxfLay.setLayerID(kk);
 
@@ -158,22 +135,19 @@ sstDxf01ReadCls::~sstDxf01ReadCls()
     iStat = oCsvFil.fcloseFil(0);
 
     // === Write all Block to Csv file
-
     oCsvFilNam = this->oDxfFilNam + "_Block.csv";
     iStat = oCsvFil.fopenWr(0,(char*) oCsvFilNam.c_str());
     assert(iStat >= 0);
 
-    sstDxf01FncBlkCls oDxfBlkCsv;
+    sstDxf02FncBlkCls oDxfBlkCsv;
 
     oDxfBlkCsv.Csv_WriteHeader(0,&oCsvStr);
     oCsvFil.Wr_StrDS1(0, &oCsvStr);
 
-    // for(dREC04RECNUMTYP kk = 1; kk <= this->poDxfBlkMem->count(); kk++)
-    for(dREC04RECNUMTYP kk = 1; kk <= this->poRecMemBlk->count(); kk++)
+    for(dREC04RECNUMTYP kk = 1; kk <= poBlkFnc->count(); kk++)
     {
-      sstDxf01TypBlkCls oDxfBlk;
-      // this->poDxfBlkMem->Read(0,kk,&oDxfBlk);
-      this->poRecMemBlk->Read(0,kk,&oDxfBlk);
+      sstDxf02TypBlkCls oDxfBlk;
+      poBlkFnc->Read(0,kk,&oDxfBlk);
 
       oDxfBlk.setBlockID(kk);
 
@@ -184,20 +158,37 @@ sstDxf01ReadCls::~sstDxf01ReadCls()
 
     iStat = oCsvFil.fcloseFil(0);
 
-    // delete(this->poDxfBlkMem);
-    // delete(this->poDxfLayMem);
-    // delete(this->poDxfInsertMem);
-    // delete(this->poDxfArcMem);
-    delete (this->poRecMemArc);
-    delete (this->poRecMemInsert);
-    delete (this->poRecMemLay);
-    delete (this->poRecMemBlk);
+    // === Write all main records to Csv file
+    oCsvFilNam = this->oDxfFilNam + "_Main.csv";
+    iStat = oCsvFil.fopenWr(0,(char*) oCsvFilNam.c_str());
+    assert(iStat >= 0);
+
+    sstDxf02FncMainCls oDxfMainCsv;
+
+    oDxfMainCsv.Csv_WriteHeader(0,&oCsvStr);
+    oCsvFil.Wr_StrDS1(0, &oCsvStr);
+
+    for(dREC04RECNUMTYP kk = 1; kk <= poMainFnc->count(); kk++)
+    {
+      sstDxf02TypMainCls oDxfMain;
+      poMainFnc->Read(0,kk,&oDxfMain);
+
+      // oDxfMain.setBlockID(kk);
+
+      oDxfMainCsv.Csv_Write ( 0, &oDxfMain, &oCsvStr);
+
+      oCsvFil.Wr_StrDS1(0, &oCsvStr);
+    }
+
+    iStat = oCsvFil.fcloseFil(0);
 }
 //=============================================================================
-void sstDxf01ReadCls::addLayer(const DL_LayerData& data)
+void sstDxf02ReadCls::addLayer(const DL_LayerData& data)
 {
-    sstDxf01TypLayCls LayDs;
+    sstDxf02TypLayCls LayDs;
     dREC04RECNUMTYP dRecNo = 0;
+    sstDxf02FncLayCls *poLayFnc;
+    poLayFnc = this->oDxfDb.getSstFncLay();
     int LayNamLen = 0;
     int iStat = 0;
   //-----------------------------------------------------------------------------
@@ -214,7 +205,7 @@ void sstDxf01ReadCls::addLayer(const DL_LayerData& data)
 
       // Write new record into record memory and update all trees
       // iStat = this->poDxfLayMem->TreWriteNew ( 0, &LayDs, &dRecNo);
-      iStat = this->poRecMemLay->TreWriteNew( 0, &LayDs, &dRecNo);
+      iStat = poLayFnc->TreWriteNew( 0, &LayDs, &dRecNo);
       assert(iStat == 0);
     }
     else
@@ -223,152 +214,209 @@ void sstDxf01ReadCls::addLayer(const DL_LayerData& data)
     }
 }
 //=============================================================================
-void sstDxf01ReadCls::addBlock(const DL_BlockData& data)
+void sstDxf02ReadCls::addBlock(const DL_BlockData& data)
 {
   int iStat = 0;
-  sstDxf01TypBlkCls oBlk;
+  sstDxf02TypBlkCls oBlk;
   dREC04RECNUMTYP dRecNo = 0;
+  sstDxf02FncBlkCls *poBlkFnc;
+  poBlkFnc = this->oDxfDb.getSstFncBlk();
 
   oBlk.setName( data.name.c_str());
   oActBlockNam = data.name;
 
   // Write new record into record memory and update all trees
   // iStat = this->poDxfBlkMem->TreWriteNew ( 0, &oBlk, &dRecNo);
-  iStat = this->poRecMemBlk->TreWriteNew( 0, &oBlk, &dRecNo);
+  iStat = poBlkFnc->TreWriteNew( 0, &oBlk, &dRecNo);
   assert(iStat == 0);
 }
 //=============================================================================
-void sstDxf01ReadCls::endBlock()
+void sstDxf02ReadCls::endBlock()
 {
   oActBlockNam.clear();
 }
 //=============================================================================
-void sstDxf01ReadCls::addPoint(const DL_PointData& data) {
+void sstDxf02ReadCls::addPoint(const DL_PointData& data) {
     printf("POINT    (%6.3f, %6.3f, %6.3f)\n",
            data.x, data.y, data.z);
     printAttributes();
 }
 //=============================================================================
-void sstDxf01ReadCls::addInsert(const DL_InsertData& data)
+void sstDxf02ReadCls::addInsert(const DL_InsertData& data)
 {
   int iStat = 0;
   std::string oLayerStr;
   std::string oBlockStr;
 
-  sstDxf01TypInsertCls oDxfInsert;
+  sstDxf02FncInsertCls *poInsertFnc;
+  poInsertFnc = this->oDxfDb.getSstFncInsert();
+  sstDxf02FncLayCls *poLayFnc;
+  poLayFnc = this->oDxfDb.getSstFncLay();
+  sstDxf02FncBlkCls *poBlkFnc;
+  poBlkFnc = this->oDxfDb.getSstFncBlk();
+  sstDxf02FncMainCls *poMainFnc;
+  poMainFnc = this->oDxfDb.getSstFncMain();
+
+  sstDxf02TypInsertCls oDxfInsert;
   oDxfInsert.ReadFromDL(data);
   oDxfInsert.BaseReadFromDL(attributes);
   dREC04RECNUMTYP dRecNo=0;
   dREC04RECNUMTYP dLayRecNo=0;
   dREC04RECNUMTYP dBlkRecNo=0;
 
+  dREC04RECNUMTYP dNumBlocks = 0;
+
   // is it element in section entities or block??
   if (this->oActBlockNam.length() > 0)
   {  // Block
     // dREC04RECNUMTYP dNumBlocks = this->poDxfBlkMem->count();
-    dREC04RECNUMTYP dNumBlocks = this->poRecMemBlk->count();
+    dNumBlocks = poBlkFnc->count();
     oDxfInsert.setBlockID(dNumBlocks);
   }
   else
   {  // entities
     oLayerStr = attributes.getLayer();
     // Find record with exact search value
-    // iStat = this->poDxfLayMem->TreSeaEQ( 0, &this->oLayerTree, (char*) oLayerStr.c_str(), &dLayRecNo);
-    // iStat = this->poRecMemLay->TreSeaEQ( 0, &this->poRecMemLay->oLayerTree, (char*) oLayerStr.c_str(), &dLayRecNo);
-    iStat = this->poRecMemLay->TreSeaEQ( 0, this->poRecMemLay->getNameSortKey(), (char*) oLayerStr.c_str(), &dLayRecNo);
+    iStat = poLayFnc->TreSeaEQ( 0, poLayFnc->getNameSortKey(), (char*) oLayerStr.c_str(), &dLayRecNo);
     assert(iStat >= 0);
     if (iStat == 0)
     {
       // layer not found in layer table
       // write new layer data record with new name, take attributes from layer 0
       oLayerStr = "0";
-      sstDxf01TypLayCls oLayRec;
-      // iStat = this->poDxfLayMem->TreSeaEQ( 0, &this->oLayerTree, (char*) oLayerStr.c_str(), &dLayRecNo);
-      // iStat = this->poRecMemLay->TreSeaEQ( 0, &this->poRecMemLay->oLayerTree, (char*) oLayerStr.c_str(), &dLayRecNo);
-      iStat = this->poRecMemLay->TreSeaEQ( 0, this->poRecMemLay->getNameSortKey(), (char*) oLayerStr.c_str(), &dLayRecNo);
-      // this->poDxfLayMem->Read(0,dLayRecNo,&oLayRec);
-      this->poRecMemLay->Read(0,dLayRecNo,&oLayRec);
+      sstDxf02TypLayCls oLayRec;
+      iStat = poLayFnc->TreSeaEQ( 0, poLayFnc->getNameSortKey(), (char*) oLayerStr.c_str(), &dLayRecNo);
+      poLayFnc->Read(0,dLayRecNo,&oLayRec);
       oLayerStr = attributes.getLayer();
       oLayRec.setName(oLayerStr.c_str());
       // Write new record into record memory and update all trees
-      // iStat = this->poDxfLayMem->TreWriteNew ( 0, &oLayRec, &dLayRecNo);
-      iStat = this->poRecMemLay->TreWriteNew( 0, &oLayRec, &dLayRecNo);
+      iStat = poLayFnc->TreWriteNew( 0, &oLayRec, &dLayRecNo);
 
     }
     oDxfInsert.setLayerID(dLayRecNo);
 
     // Find block record with block name
     oBlockStr = data.name;
-    // iStat = this->poDxfBlkMem->TreSeaEQ( 0, &this->oBlockTree, (void*) oBlockStr.c_str(), &dBlkRecNo);
-    iStat = this->poRecMemBlk->TreSeaEQ( 0, this->poRecMemBlk->getNameSortKey(), (void*) oBlockStr.c_str(), &dBlkRecNo);
+    iStat = poBlkFnc->TreSeaEQ( 0, poBlkFnc->getNameSortKey(), (void*) oBlockStr.c_str(), &dBlkRecNo);
     // assert(iStat >= 0);
     assert(iStat == 1);  // exit, if block not found in block table
     oDxfInsert.setBlockID(dBlkRecNo);
   }
   // write new insert record in insert table
-  // iStat = this->poDxfInsertMem->WritNew(0,&oDxfInsert,&dRecNo);
-  iStat = this->poRecMemInsert->WritNew(0,&oDxfInsert,&dRecNo);
+  iStat = poInsertFnc->WritNew(0,&oDxfInsert,&dRecNo);
   assert(iStat == 0);
+
+  sstDxf02TypMainCls oMainRec;
+
+  dREC04RECNUMTYP dMainRecNo = poMainFnc->count();
+
+  oMainRec.setMainID(dMainRecNo+1);
+  oMainRec.setEntityType(RS2::EntityInsert);
+  oMainRec.setTypeID(dRecNo);
+
+  // is it layer or block??
+  if (this->oActBlockNam.length() > 0)
+  {  // Block
+    oMainRec.setLayBlockID(dNumBlocks);
+    oMainRec.setSectString("B");
+  }
+  else
+  {  // Layer
+    oMainRec.setLayBlockID(dLayRecNo);
+    oMainRec.setSectString("L");
+  }
+  iStat = poMainFnc->WritNew(0,&oMainRec,&dRecNo);
+
 }
 //=============================================================================
-void sstDxf01ReadCls::addLine(const DL_LineData& data) {
+void sstDxf02ReadCls::addLine(const DL_LineData& data) {
     printf("LINE     (%6.3f, %6.3f, %6.3f) (%6.3f, %6.3f, %6.3f)\n",
            data.x1, data.y1, data.z1, data.x2, data.y2, data.z2);
     printAttributes();
 }
 //=============================================================================
-void sstDxf01ReadCls::addArc(const DL_ArcData& data) {
+void sstDxf02ReadCls::addArc(const DL_ArcData& data) {
   int iStat = 0;
   std::string oLayerStr;
 
-  sstDxf01TypArcCls oDxfArc;
+  sstDxf02TypArcCls oDxfArc;
   oDxfArc.ReadFromDL(data);
   oDxfArc.BaseReadFromDL(attributes);
   dREC04RECNUMTYP dRecNo=0;
   dREC04RECNUMTYP dLayRecNo=0;
 
+  sstDxf02FncArcCls *poArcFnc;
+  poArcFnc = this->oDxfDb.getSstFncArc();
+//  sstDxf02FncInsertCls *poInsertFnc;
+//  poInsertFnc = this->oDxfDb.getSstFncInsert();
+  sstDxf02FncLayCls *poLayFnc;
+  poLayFnc = this->oDxfDb.getSstFncLay();
+  sstDxf02FncBlkCls *poBlkFnc;
+  poBlkFnc = this->oDxfDb.getSstFncBlk();
+  sstDxf02FncMainCls *poMainFnc;
+  poMainFnc = this->oDxfDb.getSstFncMain();
+
+  dREC04RECNUMTYP dNumBlocks = 0;
+
   // is it layer or block??
   if (this->oActBlockNam.length() > 0)
   {  // Block
-    // dREC04RECNUMTYP dNumBlocks = this->poDxfBlkMem->count();
-    dREC04RECNUMTYP dNumBlocks = this->poRecMemBlk->count();
+    dNumBlocks = poBlkFnc->count();
     oDxfArc.setBlockID(dNumBlocks);
   }
   else
   {  // Layer
     oLayerStr = attributes.getLayer();
     // Find record with exact search value
-    // iStat = this->poDxfLayMem->TreSeaEQ( 0, &this->oLayerTree, (void*) oLayerStr.c_str(), &dLayRecNo);
-    // iStat = this->poRecMemLay->TreSeaEQ( 0, &this->poRecMemLay->oLayerTree, (void*) oLayerStr.c_str(), &dLayRecNo);
-    iStat = this->poRecMemLay->TreSeaEQ( 0, this->poRecMemLay->getNameSortKey(), (void*) oLayerStr.c_str(), &dLayRecNo);
+    iStat = poLayFnc->TreSeaEQ( 0, poLayFnc->getNameSortKey(), (void*) oLayerStr.c_str(), &dLayRecNo);
     assert(iStat == 1);
     oDxfArc.setLayerID(dLayRecNo);
   }
-  iStat = this->poRecMemArc->WritNew(0,&oDxfArc,&dRecNo);
-  // iStat = oDxfFilCsv.WritNew(0,&oDxfArc,&dRecNo);
+  iStat = poArcFnc->WritNew(0,&oDxfArc,&dRecNo);
+
+  sstDxf02TypMainCls oMainRec;
+
+  dREC04RECNUMTYP dMainRecNo = poMainFnc->count();
+
+  oMainRec.setMainID(dMainRecNo+1);
+  oMainRec.setEntityType(RS2::EntityArc);
+  oMainRec.setTypeID(dRecNo);
+
+  // is it layer or block??
+  if (this->oActBlockNam.length() > 0)
+  {  // Block
+    oMainRec.setLayBlockID(dNumBlocks);
+    oMainRec.setSectString("B");
+  }
+  else
+  {  // Layer
+    oMainRec.setLayBlockID(dLayRecNo);
+    oMainRec.setSectString("L");
+  }
+  iStat = poMainFnc->WritNew(0,&oMainRec,&dRecNo);
 }
 //=============================================================================
-void sstDxf01ReadCls::addCircle(const DL_CircleData& data) {
+void sstDxf02ReadCls::addCircle(const DL_CircleData& data) {
     printf("CIRCLE   (%6.3f, %6.3f, %6.3f) %6.3f\n",
            data.cx, data.cy, data.cz,
            data.radius);
     printAttributes();
 }
 //=============================================================================
-void sstDxf01ReadCls::addPolyline(const DL_PolylineData& data) {
+void sstDxf02ReadCls::addPolyline(const DL_PolylineData& data) {
     printf("POLYLINE \n");
     printf("flags: %d\n", (int)data.flags);
     printAttributes();
 }
 //=============================================================================
-void sstDxf01ReadCls::addVertex(const DL_VertexData& data) {
+void sstDxf02ReadCls::addVertex(const DL_VertexData& data) {
     printf("VERTEX   (%6.3f, %6.3f, %6.3f) %6.3f\n",
            data.x, data.y, data.z,
            data.bulge);
     printAttributes();
 }
 //=============================================================================
-void sstDxf01ReadCls::add3dFace(const DL_3dFaceData& data) {
+void sstDxf02ReadCls::add3dFace(const DL_3dFaceData& data) {
     printf("3DFACE\n");
     for (int i=0; i<4; i++) {
         printf("   corner %d: %6.3f %6.3f %6.3f\n",
@@ -377,7 +425,7 @@ void sstDxf01ReadCls::add3dFace(const DL_3dFaceData& data) {
     printAttributes();
 }
 //=============================================================================
-void sstDxf01ReadCls::printAttributes() {
+void sstDxf02ReadCls::printAttributes() {
     printf("  Attributes: Layer: %s, ", attributes.getLayer().c_str());
     printf(" Color: ");
     if (attributes.getColor()==256)	{
@@ -400,7 +448,7 @@ void sstDxf01ReadCls::printAttributes() {
     printf(" Type: %s\n", attributes.getLineType().c_str());
 }
 //=============================================================================
-void sstDxf01ReadCls::SetDxfFilNam(char* cTmpDxfFilNam)
+void sstDxf02ReadCls::SetDxfFilNam(char* cTmpDxfFilNam)
 {
   std::string oTmpStr;
   sstMisc01FilNamCls oFilNam;
@@ -409,6 +457,5 @@ void sstDxf01ReadCls::SetDxfFilNam(char* cTmpDxfFilNam)
   oFilNam.RemoveExtension(0,"dxf",oTmpStr,&this->oDxfFilNam);
 }
 //=============================================================================
-
 
 // EOF

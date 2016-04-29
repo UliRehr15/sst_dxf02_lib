@@ -38,6 +38,8 @@
 #include <dl_dxf.h>
 #include <dl_creationadapter.h>
 
+#include <rs_vector.h>
+
 #include <sstStr01Lib.h>
 #include <sstMisc01Lib.h>
 #include <sstRec04Lib.h>
@@ -45,7 +47,7 @@
 
  
 // Constructor
-sstDxf01TypArcCls::sstDxf01TypArcCls()
+sstDxf02TypArcCls::sstDxf02TypArcCls()
 {
   this->ulArcID = 0;
   this->ulLayerID = 0;
@@ -59,7 +61,7 @@ sstDxf01TypArcCls::sstDxf01TypArcCls()
 }
  
 // Set Test Data
-int sstDxf01TypArcCls::SetTestData(int iKey)
+int sstDxf02TypArcCls::SetTestData(int iKey)
 {
   if ( iKey != 0) return -1;
  
@@ -73,7 +75,7 @@ int sstDxf01TypArcCls::SetTestData(int iKey)
   return 0;
 }
 
-void sstDxf01TypArcCls::ReadFromDL(const DL_ArcData oDLArc)
+void sstDxf02TypArcCls::ReadFromDL(const DL_ArcData oDLArc)
 {
   this->cx = oDLArc.cx;
   this->cy = oDLArc.cy;
@@ -82,7 +84,7 @@ void sstDxf01TypArcCls::ReadFromDL(const DL_ArcData oDLArc)
   this->angle1 = oDLArc.angle1;
   this->angle2 = oDLArc.angle2;
 }
-void sstDxf01TypArcCls::WritToDL(DL_ArcData *poDLArc)
+void sstDxf02TypArcCls::WritToDL(DL_ArcData *poDLArc)
 {
   poDLArc->cx = this->cx;
   poDLArc->cy = this->cy;
@@ -91,102 +93,104 @@ void sstDxf01TypArcCls::WritToDL(DL_ArcData *poDLArc)
   poDLArc->angle1 = this->angle1;
   poDLArc->angle2 = this->angle2;
 }
-double sstDxf01TypArcCls::getCx() const
+double sstDxf02TypArcCls::getCx() const
 {
   return this->cx;
 }
-void sstDxf01TypArcCls::setCx(double value)
+void sstDxf02TypArcCls::setCx(double value)
 {
   this->cx = value;
 }
-double sstDxf01TypArcCls::getCy() const
+double sstDxf02TypArcCls::getCy() const
 {
   return this->cy;
 }
-void sstDxf01TypArcCls::setCy(double value)
+void sstDxf02TypArcCls::setCy(double value)
 {
   this->cy = value;
 }
-double sstDxf01TypArcCls::getCz() const
+double sstDxf02TypArcCls::getCz() const
 {
   return this->cz;
 }
-void sstDxf01TypArcCls::setCz(double value)
+void sstDxf02TypArcCls::setCz(double value)
 {
   this->cz = value;
 }
-double sstDxf01TypArcCls::getRadius() const
+double sstDxf02TypArcCls::getRadius() const
 {
   return this->radius;
 }
-void sstDxf01TypArcCls::setRadius(double value)
+void sstDxf02TypArcCls::setRadius(double value)
 {
   this->radius = value;
 }
-double sstDxf01TypArcCls::getAngle1() const
+double sstDxf02TypArcCls::getAngle1() const
 {
   return this->angle1;
 }
-void sstDxf01TypArcCls::setAngle1(double value)
+void sstDxf02TypArcCls::setAngle1(double value)
 {
   this->angle1 = value;
 }
-double sstDxf01TypArcCls::getAngle2() const
+double sstDxf02TypArcCls::getAngle2() const
 {
   return this->angle2;
 }
-void sstDxf01TypArcCls::setAngle2(double value)
+void sstDxf02TypArcCls::setAngle2(double value)
 {
   this->angle2 = value;
 }
 
-unsigned long sstDxf01TypArcCls::getLayerID() const
+unsigned long sstDxf02TypArcCls::getLayerID() const
 {
 return ulLayerID;
 }
 
-void sstDxf01TypArcCls::setLayerID(unsigned long value)
+void sstDxf02TypArcCls::setLayerID(unsigned long value)
 {
 ulLayerID = value;
 }
 
-unsigned long sstDxf01TypArcCls::getBlockID() const
+unsigned long sstDxf02TypArcCls::getBlockID() const
 {
 return ulBlockID;
 }
 
-void sstDxf01TypArcCls::setBlockID(unsigned long value)
+void sstDxf02TypArcCls::setBlockID(unsigned long value)
 {
 ulBlockID = value;
 }
-unsigned long sstDxf01TypArcCls::getArcID() const
+unsigned long sstDxf02TypArcCls::getArcID() const
 {
 return ulArcID;
 }
 
-void sstDxf01TypArcCls::setArcID(unsigned long value)
+void sstDxf02TypArcCls::setArcID(unsigned long value)
 {
 ulArcID = value;
 }
 //=============================================================================
 // Constructor
-sstDxf01FncArcCls::sstDxf01FncArcCls():sstDxf01FncBaseCls(sizeof(sstDxf01TypArcCls))
+sstDxf02FncArcCls::sstDxf02FncArcCls():sstDxf02FncBaseCls(sizeof(sstDxf02TypArcCls))
 {
-  // this->poDxfArcMem = new sstRec04Cls(sizeof(sstDxf01TypArcCls));
+  // this->poDxfArcMem = new sstRec04Cls(sizeof(sstDxf02TypArcCls));
 }
 //=============================================================================
 // Csv Read Function
-int sstDxf01FncArcCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxfLib_Str, sstDxf01TypArcCls *osstDxf01TypArcCls)
+int sstDxf02FncArcCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxfLib_Str, sstDxf02TypArcCls *osstDxf02TypArcCls)
 {
   DL_ArcData sDLArc(0.0,0.0,0.0,0.0,0.0,0.0);
   unsigned long ulTmpArcID = 0;
   unsigned long ulTmpLayerID = 0;
   unsigned long ulTmpBlockID = 0;
-  sstStr01Cls oCsvRow;
+  // sstStr01Cls oCsvRow;
   int iStat = 0;
   int iRet  = 0;
 //-----------------------------------------------------------------------------
   if ( iKey != 0) return -1;
+
+  oCsvRow.SetReadPositon(0,0);
 
   if (iStat >= 0)
     iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpArcID);
@@ -209,11 +213,11 @@ int sstDxf01FncArcCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *sss
 
   *sErrTxt = oCsvRow.GetErrorString();
 
-  osstDxf01TypArcCls->ReadFromDL(sDLArc);
+  osstDxf02TypArcCls->ReadFromDL(sDLArc);
 
-  osstDxf01TypArcCls->setArcID(ulTmpArcID);
-  osstDxf01TypArcCls->setLayerID(ulTmpLayerID);
-  osstDxf01TypArcCls->setBlockID(ulTmpBlockID);
+  osstDxf02TypArcCls->setArcID(ulTmpArcID);
+  osstDxf02TypArcCls->setLayerID(ulTmpLayerID);
+  osstDxf02TypArcCls->setBlockID(ulTmpBlockID);
 
   // Fatal Errors goes to an assert
   if (iRet < 0)
@@ -230,7 +234,7 @@ int sstDxf01FncArcCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *sss
 }
 //=============================================================================
 // Csv Write Function
-int sstDxf01FncArcCls::Csv_Write(int iKey, sstDxf01TypArcCls *poSstARC, std::string *ssstDxfLib_Str)
+int sstDxf02FncArcCls::Csv_Write(int iKey, sstDxf02TypArcCls *poSstARC, std::string *ssstDxfLib_Str)
 {
   int iStat = 0;
 
@@ -262,7 +266,7 @@ int sstDxf01FncArcCls::Csv_Write(int iKey, sstDxf01TypArcCls *poSstARC, std::str
   return iStat;
 }
 //=============================================================================
-int sstDxf01FncArcCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
+int sstDxf02FncArcCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
 {
   std::string oTitelStr;
   int iStat = 0;
@@ -312,7 +316,7 @@ int sstDxf01FncArcCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
   return iStat;
 }
 //=============================================================================
-int sstDxf01FncArcCls::ReadCsvFile(int iKey, std::string oFilNam)
+int sstDxf02FncArcCls::ReadCsvFile(int iKey, std::string oFilNam)
 {
   sstMisc01AscFilCls oCsvFilLayer;
   int iStat = 0;
@@ -334,7 +338,7 @@ int sstDxf01FncArcCls::ReadCsvFile(int iKey, std::string oFilNam)
   iStat1 = oCsvFilLayer.Rd_StrDS1 ( 2, &oLayStr);
   while (iStat1 >= 0)
   {
-    sstDxf01TypArcCls oSstArc;
+    sstDxf02TypArcCls oSstArc;
     // Read layer object from string row
     iStat = this->Csv_Read( 0, &oErrStr, &oLayStr, &oSstArc);
     if (iStat < 0)
