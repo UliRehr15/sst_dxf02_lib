@@ -23,6 +23,7 @@
  *
 **********************************************************************/
 // sstDxf02EntityType.cpp    13.04.16  Re.    13.04.16  Re.
+//
 // Class handles librecad enum RS2::EntityType
 
 #include <iostream>
@@ -79,6 +80,8 @@ std::string sstDxf02EntityTypeCls::Enum2String(RS2::EntityType eType)
     case RS2::EntityDimAngular: oLocString = "DimAngular"; break;
     case RS2::EntityDimLeader: oLocString = "DimLeader"; break;
     case RS2::EntityHatch: oLocString = "Hatch"; break;
+    case RS2::EntityHatchEdge: oLocString = "HatchEdge"; break;
+    case RS2::EntityHatchLoop: oLocString = "HatchLoop"; break;
     case RS2::EntityImage: oLocString = "Image"; break;
     case RS2::EntitySpline: oLocString = "Spline"; break;
     case RS2::EntitySplinePoints: oLocString = "SplinePoints"; break;
@@ -153,6 +156,8 @@ RS2::EntityType sstDxf02EntityTypeCls::String2Enum(std::string oTypeString)
   else if (oTypeString.compare("DimAngular") == 0) eLocType = RS2::EntityDimAngular;
   else if (oTypeString.compare("DimLeader") == 0) eLocType = RS2::EntityDimLeader;
   else if (oTypeString.compare("Hatch") == 0) eLocType = RS2::EntityHatch;
+  else if (oTypeString.compare("HatchEdge") == 0) eLocType = RS2::EntityHatchEdge;
+  else if (oTypeString.compare("HatchLoop") == 0) eLocType = RS2::EntityHatchLoop;
   else if (oTypeString.compare("Image") == 0) eLocType = RS2::EntityImage;
   else if (oTypeString.compare("Spline") == 0) eLocType = RS2::EntitySpline;
   else if (oTypeString.compare("SplinePoints") == 0) eLocType = RS2::EntitySplinePoints;

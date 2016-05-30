@@ -21,3 +21,4 @@ Structure of coding projects should be:
 05.03.16: Version 1.2: Dxf2Csv: Supports now INSERT element.  <BR>
 10.03.16: Version 1.3: Csv2Dxf: Tool frame and new table MAIN.  <BR>
 29.04.16: Version 1.4: Tools Dxf2Csv and Csv2Dxf: Full support of ARC and INSERT.  <BR>
+30.05.16: Version 1.5: Tool Dxf2Csv: Support of HATCH and POLYLINE.  <BR>

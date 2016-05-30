@@ -54,7 +54,12 @@ SOURCES       = sstDxf02Arc.cpp \
 		sstDxf02Database.cpp \
 		sstDxf02EntityType.cpp \
 		sstDxf02Write.cpp \
-		sstDxf02Main.cpp 
+		sstDxf02Main.cpp \
+		sstDxf02Vertex.cpp \
+		sstDxf02Polyline.cpp \
+		sstDxf02Hatch.cpp \
+		sstDxf02HatchLoop.cpp \
+		sstDxf02HatchEdge.cpp 
 OBJECTS       = sstDxf02Arc.o \
 		sstDxf02Base.o \
 		sstDxf02Insert.o \
@@ -64,7 +69,12 @@ OBJECTS       = sstDxf02Arc.o \
 		sstDxf02Database.o \
 		sstDxf02EntityType.o \
 		sstDxf02Write.o \
-		sstDxf02Main.o
+		sstDxf02Main.o \
+		sstDxf02Vertex.o \
+		sstDxf02Polyline.o \
+		sstDxf02Hatch.o \
+		sstDxf02HatchLoop.o \
+		sstDxf02HatchEdge.o
 DIST          = ../../Qt/5.5/gcc/mkspecs/features/spec_pre.prf \
 		../../Qt/5.5/gcc/mkspecs/common/unix.conf \
 		../../Qt/5.5/gcc/mkspecs/common/linux.conf \
@@ -203,7 +213,12 @@ DIST          = ../../Qt/5.5/gcc/mkspecs/features/spec_pre.prf \
 		sstDxf02Database.cpp \
 		sstDxf02EntityType.cpp \
 		sstDxf02Write.cpp \
-		sstDxf02Main.cpp
+		sstDxf02Main.cpp \
+		sstDxf02Vertex.cpp \
+		sstDxf02Polyline.cpp \
+		sstDxf02Hatch.cpp \
+		sstDxf02HatchLoop.cpp \
+		sstDxf02HatchEdge.cpp
 QMAKE_TARGET  = sst_dxf02_lib_d
 DESTDIR       = ../libs/#avoid trailing-slash linebreak
 TARGET        = libsst_dxf02_lib_d.a
@@ -721,6 +736,96 @@ sstDxf02Main.o: sstDxf02Main.cpp ../dxflib/Header/dl_dxf.h \
 		../sst_rec04_lib/Header/sstRec04Lib.h \
 		Header/sstDxf02Lib.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sstDxf02Main.o sstDxf02Main.cpp
+
+sstDxf02Vertex.o: sstDxf02Vertex.cpp ../dxflib/Header/dl_dxf.h \
+		../dxflib/Header/dl_global.h \
+		../dxflib/Header/dl_attributes.h \
+		../dxflib/Header/dl_codes.h \
+		../dxflib/Header/dl_entities.h \
+		../dxflib/Header/dl_writer_ascii.h \
+		../dxflib/Header/dl_writer.h \
+		../dxflib/Header/dl_creationadapter.h \
+		../dxflib/Header/dl_creationinterface.h \
+		../dxflib/Header/dl_extrusion.h \
+		../sstLibreCAD2Lib/Header/rs_vector.h \
+		../sstLibreCAD2Lib/Header/rs.h \
+		../sst_str01_lib/Header/sstStr01Lib.h \
+		../sst_misc01_lib/Header/sstMisc01Lib.h \
+		../sst_rec04_lib/Header/sstRec04Lib.h \
+		Header/sstDxf02Lib.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sstDxf02Vertex.o sstDxf02Vertex.cpp
+
+sstDxf02Polyline.o: sstDxf02Polyline.cpp ../dxflib/Header/dl_dxf.h \
+		../dxflib/Header/dl_global.h \
+		../dxflib/Header/dl_attributes.h \
+		../dxflib/Header/dl_codes.h \
+		../dxflib/Header/dl_entities.h \
+		../dxflib/Header/dl_writer_ascii.h \
+		../dxflib/Header/dl_writer.h \
+		../dxflib/Header/dl_creationadapter.h \
+		../dxflib/Header/dl_creationinterface.h \
+		../dxflib/Header/dl_extrusion.h \
+		../sstLibreCAD2Lib/Header/rs_vector.h \
+		../sstLibreCAD2Lib/Header/rs.h \
+		../sst_str01_lib/Header/sstStr01Lib.h \
+		../sst_misc01_lib/Header/sstMisc01Lib.h \
+		../sst_rec04_lib/Header/sstRec04Lib.h \
+		Header/sstDxf02Lib.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sstDxf02Polyline.o sstDxf02Polyline.cpp
+
+sstDxf02Hatch.o: sstDxf02Hatch.cpp ../dxflib/Header/dl_dxf.h \
+		../dxflib/Header/dl_global.h \
+		../dxflib/Header/dl_attributes.h \
+		../dxflib/Header/dl_codes.h \
+		../dxflib/Header/dl_entities.h \
+		../dxflib/Header/dl_writer_ascii.h \
+		../dxflib/Header/dl_writer.h \
+		../dxflib/Header/dl_creationadapter.h \
+		../dxflib/Header/dl_creationinterface.h \
+		../dxflib/Header/dl_extrusion.h \
+		../sstLibreCAD2Lib/Header/rs_vector.h \
+		../sstLibreCAD2Lib/Header/rs.h \
+		../sst_str01_lib/Header/sstStr01Lib.h \
+		../sst_misc01_lib/Header/sstMisc01Lib.h \
+		../sst_rec04_lib/Header/sstRec04Lib.h \
+		Header/sstDxf02Lib.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sstDxf02Hatch.o sstDxf02Hatch.cpp
+
+sstDxf02HatchLoop.o: sstDxf02HatchLoop.cpp ../dxflib/Header/dl_dxf.h \
+		../dxflib/Header/dl_global.h \
+		../dxflib/Header/dl_attributes.h \
+		../dxflib/Header/dl_codes.h \
+		../dxflib/Header/dl_entities.h \
+		../dxflib/Header/dl_writer_ascii.h \
+		../dxflib/Header/dl_writer.h \
+		../dxflib/Header/dl_creationadapter.h \
+		../dxflib/Header/dl_creationinterface.h \
+		../dxflib/Header/dl_extrusion.h \
+		../sstLibreCAD2Lib/Header/rs_vector.h \
+		../sstLibreCAD2Lib/Header/rs.h \
+		../sst_str01_lib/Header/sstStr01Lib.h \
+		../sst_misc01_lib/Header/sstMisc01Lib.h \
+		../sst_rec04_lib/Header/sstRec04Lib.h \
+		Header/sstDxf02Lib.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sstDxf02HatchLoop.o sstDxf02HatchLoop.cpp
+
+sstDxf02HatchEdge.o: sstDxf02HatchEdge.cpp ../dxflib/Header/dl_dxf.h \
+		../dxflib/Header/dl_global.h \
+		../dxflib/Header/dl_attributes.h \
+		../dxflib/Header/dl_codes.h \
+		../dxflib/Header/dl_entities.h \
+		../dxflib/Header/dl_writer_ascii.h \
+		../dxflib/Header/dl_writer.h \
+		../dxflib/Header/dl_creationadapter.h \
+		../dxflib/Header/dl_creationinterface.h \
+		../dxflib/Header/dl_extrusion.h \
+		../sstLibreCAD2Lib/Header/rs_vector.h \
+		../sstLibreCAD2Lib/Header/rs.h \
+		../sst_str01_lib/Header/sstStr01Lib.h \
+		../sst_misc01_lib/Header/sstMisc01Lib.h \
+		../sst_rec04_lib/Header/sstRec04Lib.h \
+		Header/sstDxf02Lib.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sstDxf02HatchEdge.o sstDxf02HatchEdge.cpp
 
 ####### Install
 

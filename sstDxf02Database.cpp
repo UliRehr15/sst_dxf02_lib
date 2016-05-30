@@ -63,12 +63,22 @@ int sstDxf02DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
   std::string oFilNamBlock;
   std::string oFilNamArc;
   std::string oFilNamInsert;
+  std::string oFilNamPolyline;
+  std::string oFilNamVertex;
+  std::string oFilNamHatch;
+  std::string oFilNamHatchEdge;
+  std::string oFilNamHatchLoop;
   std::string oFilNamMain;
 
   oFilNamLayer = oJobNam + "_Layer.csv";
   oFilNamBlock = oJobNam + "_Block.csv";
   oFilNamArc = oJobNam + "_Arc.csv";
   oFilNamInsert = oJobNam + "_Insert.csv";
+  oFilNamPolyline = oJobNam + "_Polyline.csv";
+  oFilNamVertex = oJobNam + "_Vertex.csv";
+  oFilNamHatch = oJobNam + "_Hatch.csv";
+  oFilNamHatchEdge = oJobNam + "_HatchEdge.csv";
+  oFilNamHatchLoop = oJobNam + "_HatchLoop.csv";
   oFilNamMain = oJobNam + "_Main.csv";
 
 
@@ -115,6 +125,21 @@ int sstDxf02DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
   // Read whole arc csv file into sst_rec_mem
   iStat = oSstFncArc.ReadCsvFile ( 0, oFilNamArc);
 
+  // Read whole polyline csv file into sst_rec_mem
+  iStat = oSstFncPolyline.ReadCsvFile ( 0, oFilNamPolyline);
+
+  // Read whole vertex csv file into sst_rec_mem
+  iStat = oSstFncVertex.ReadCsvFile ( 0, oFilNamVertex);
+
+  // Read whole hatch csv file into sst_rec_mem
+  iStat = oSstFncHatch.ReadCsvFile ( 0, oFilNamHatch);
+
+  // Read whole hatch edge csv file into sst_rec_mem
+  iStat = oSstFncHatchEdge.ReadCsvFile ( 0, oFilNamHatchEdge);
+
+  // Read whole hatch loop csv file into sst_rec_mem
+  iStat = oSstFncHatchLoop.ReadCsvFile ( 0, oFilNamHatchLoop);
+
   return 0;
 }
 //=============================================================================
@@ -123,40 +148,45 @@ sstDxf02FncLayCls* sstDxf02DatabaseCls::getSstFncLay()
   return &this->oSstFncLay;
 }
 //=============================================================================
-//void sstDxf02DatabaseCls::setSstFncLay(const sstDxf02FncLayCls &value)
-//{
-//  oSstFncLay = value;
-//}
-//=============================================================================
 sstDxf02FncBlkCls* sstDxf02DatabaseCls::getSstFncBlk()
 {
   return &this->oSstFncBlk;
 }
-//=============================================================================
-//void sstDxf02DatabaseCls::setSstFncBlk(const sstDxf02FncBlkCls &value)
-//{
-//  oSstFncBlk = value;
-//}
 //=============================================================================
 sstDxf02FncArcCls* sstDxf02DatabaseCls::getSstFncArc()
 {
   return &this->oSstFncArc;
 }
 //=============================================================================
-//void sstDxf02DatabaseCls::setSstFncArc(const sstDxf02FncArcCls &value)
-//{
-//  oSstFncArc = value;
-//}
-//=============================================================================
 sstDxf02FncInsertCls* sstDxf02DatabaseCls::getSstFncInsert()
 {
   return &this->oSstFncInsert;
 }
 //=============================================================================
-//void sstDxf02DatabaseCls::setSstFncInsert(const sstDxf02FncInsertCls &value)
-//{
-//  oSstFncInsert = value;
-//}
+sstDxf02FncPolylineCls* sstDxf02DatabaseCls::getSstFncPolyline()
+{
+  return &this->oSstFncPolyline;
+}
+//=============================================================================
+sstDxf02FncVertexCls* sstDxf02DatabaseCls::getSstFncVertex()
+{
+  return &this->oSstFncVertex;
+}
+//=============================================================================
+sstDxf02FncHatchCls* sstDxf02DatabaseCls::getSstFncHatch()
+{
+  return &this->oSstFncHatch;
+}
+//=============================================================================
+sstDxf02FncHatchLoopCls* sstDxf02DatabaseCls::getSstFncHatchLoop()
+{
+  return &this->oSstFncHatchLoop;
+}
+//=============================================================================
+sstDxf02FncHatchEdgeCls* sstDxf02DatabaseCls::getSstFncHatchEdge()
+{
+  return &this->oSstFncHatchEdge;
+}
 //=============================================================================
 sstDxf02FncMainCls* sstDxf02DatabaseCls::getSstFncMain()
 {

@@ -247,3 +247,36 @@ int sstDxf02FncLayCls::ReadCsvFile(int iKey, std::string oFilNam)
   return iStat;
 }
 //=============================================================================
+int sstDxf02FncLayCls::WriteCsvFile(int iKey, std::string oDxfFilNam)
+{
+  sstMisc01AscFilCls oCsvFil;
+  std::string oCsvFilNam;
+  //-----------------------------------------------------------------------------
+  if ( iKey != 0) return -1;
+
+  // ===== Write all Layer data to Csv file
+  oCsvFilNam = oDxfFilNam + "_Layer.csv";
+  int iStat = oCsvFil.fopenWr(0,(char*) oCsvFilNam.c_str());
+  assert(iStat >= 0);
+
+  std::string oCsvStr;
+
+  this->Csv_WriteHeader(0,&oCsvStr);
+  oCsvFil.Wr_StrDS1(0, &oCsvStr);
+
+  for(dREC04RECNUMTYP kk = 1; kk <= this->count(); kk++)
+  {
+
+    sstDxf02TypLayCls oDxfLay;
+    iStat = this->Read(0,kk,&oDxfLay);
+
+    oDxfLay.setLayerID(kk);
+
+    this->Csv_Write( 0, &oDxfLay, &oCsvStr);
+    oCsvFil.Wr_StrDS1(0, &oCsvStr);
+  }
+
+  iStat = oCsvFil.fcloseFil(0);
+  return iStat;
+}
+//=============================================================================

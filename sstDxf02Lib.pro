@@ -33,7 +33,12 @@ SOURCES		+=  \
     sstDxf02Database.cpp \
     sstDxf02EntityType.cpp \
     sstDxf02Write.cpp \
-    sstDxf02Main.cpp
+    sstDxf02Main.cpp \
+    sstDxf02Vertex.cpp \
+    sstDxf02Polyline.cpp \
+    sstDxf02Hatch.cpp \
+    sstDxf02HatchLoop.cpp \
+    sstDxf02HatchEdge.cpp
 
 OTHER_FILES += README.md
 

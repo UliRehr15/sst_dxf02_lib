@@ -49,7 +49,7 @@
 // Constructor
 sstDxf02TypBaseCls::sstDxf02TypBaseCls()
 {
-  this->dElementID = 0;
+  this->dRecordID = 0;
   this->dLayerID = 0;
   this->dLinetypeID = 0;
   this->color = 0; // int color;
@@ -76,6 +76,36 @@ void sstDxf02TypBaseCls::BaseReadFromDL(const DL_Attributes oDLAttrib)
 void sstDxf02TypBaseCls::BaseWritToDL(DL_Attributes *poDLAttrib)
 {
   poDLAttrib->setColor( this->color);
+}
+//=============================================================================
+dREC04RECNUMTYP sstDxf02TypBaseCls::getBlockID() const
+{
+return dBlockID;
+}
+//=============================================================================
+void sstDxf02TypBaseCls::setBlockID(const dREC04RECNUMTYP &value)
+{
+dBlockID = value;
+}
+//=============================================================================
+dREC04RECNUMTYP sstDxf02TypBaseCls::getLayerID() const
+{
+return dLayerID;
+}
+//=============================================================================
+void sstDxf02TypBaseCls::setLayerID(const dREC04RECNUMTYP &value)
+{
+dLayerID = value;
+}
+//=============================================================================
+dREC04RECNUMTYP sstDxf02TypBaseCls::getRecordID() const
+{
+return dRecordID;
+}
+//=============================================================================
+void sstDxf02TypBaseCls::setRecordID(const dREC04RECNUMTYP &value)
+{
+dRecordID = value;
 }
 //=============================================================================
 // Constructor

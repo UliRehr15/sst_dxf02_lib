@@ -359,3 +359,36 @@ int sstDxf02FncArcCls::ReadCsvFile(int iKey, std::string oFilNam)
   return iStat;
 }
 //=============================================================================
+int sstDxf02FncArcCls::WriteCsvFile(int iKey, std::string oDxfFilNam)
+{
+  sstMisc01AscFilCls oCsvFil;
+  std::string oCsvFilNam;
+  //-----------------------------------------------------------------------------
+  if ( iKey != 0) return -1;
+
+  // ===== Write all Arcs to Csv file
+  oCsvFilNam = oDxfFilNam + "_Arc.csv";
+  int iStat = oCsvFil.fopenWr(0,(char*) oCsvFilNam.c_str());
+  assert(iStat >= 0);
+
+  std::string oCsvStr;
+
+  this->Csv_WriteHeader(0,&oCsvStr);
+  oCsvFil.Wr_StrDS1(0, &oCsvStr);
+
+  for(dREC04RECNUMTYP kk = 1; kk <= this->count(); kk++)
+  {
+
+    sstDxf02TypArcCls oDxfArc;
+    iStat = this->Read(0,kk,&oDxfArc);
+
+    oDxfArc.setArcID(kk);
+
+    this->Csv_Write( 0, &oDxfArc, &oCsvStr);
+    oCsvFil.Wr_StrDS1(0, &oCsvStr);
+  }
+
+  iStat = oCsvFil.fcloseFil(0);
+  return iStat;
+}
+//=============================================================================

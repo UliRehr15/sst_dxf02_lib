@@ -22,7 +22,10 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  *
 **********************************************************************/
-// sstDxf02Block.cpp   26.02.16  Re.   26.02.16  Re.
+//  sstDxf02HatchLoop.cpp   29.04.16  Re.   29.04.16  Re.
+//
+//  Functions for sst Dxf Hatch Loop Classes
+//
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,71 +46,65 @@
 #include <sstDxf02Lib.h>
 
 //=============================================================================
-sstDxf02TypBlkCls::sstDxf02TypBlkCls()
+// Constructor
+sstDxf02TypHatchLoopCls::sstDxf02TypHatchLoopCls()
 {
-  this->ulBlockID = 0;
-  memset(this->Nam,0,dSSTDXFBLOCKNAMELEN);
-  this->flags = 0;
+  this->dRecordID = 0;
+  this->numEdges = 0;
 }
 //=============================================================================
-int sstDxf02TypBlkCls::getFlags() const
+// Set Test Data
+int sstDxf02TypHatchLoopCls::SetTestData(int iKey)
 {
-return flags;
-}
-//=============================================================================
-void sstDxf02TypBlkCls::setFlags(int value)
-{
-flags = value;
-}
-//=============================================================================
-char* sstDxf02TypBlkCls::getName()
-{
-  return this->Nam;
-}
-//=============================================================================
-void sstDxf02TypBlkCls::setName(const char* cTmpName)
-{
-  strncpy(this->Nam,cTmpName,dSSTDXFLAYERNAMELEN);
-}
+  if ( iKey != 0) return -1;
 
-unsigned long sstDxf02TypBlkCls::getBlockID() const
-{
-return ulBlockID;
-}
-
-void sstDxf02TypBlkCls::setBlockID(unsigned long value)
-{
-ulBlockID = value;
+  this->dRecordID = 5;
+  this->numEdges = 1;
+  return 0;
 }
 //=============================================================================
-void sstDxf02TypBlkCls::ReadFromDL(const DL_BlockData oDlBlk)
+void sstDxf02TypHatchLoopCls::ReadFromDL(const DL_HatchLoopData oDLHatchLoop)
 {
-  strncpy(this->Nam, oDlBlk.name.c_str(), dSSTDXFBLOCKNAMELEN);
-  this->flags = oDlBlk.flags;
+  this->numEdges = oDLHatchLoop.numEdges;
 }
 //=============================================================================
-void sstDxf02TypBlkCls::WritToDL(DL_BlockData *poDlBlk)
+void sstDxf02TypHatchLoopCls::WritToDL(DL_HatchLoopData *poDLHatchLoop)
 {
-    poDlBlk->name = this->getName();
-    poDlBlk->flags = this->getFlags();
+  poDLHatchLoop->numEdges = this->numEdges;
+}
+//=============================================================================
+dREC04RECNUMTYP sstDxf02TypHatchLoopCls::getRecordID() const
+{
+return dRecordID;
+}
+//=============================================================================
+void sstDxf02TypHatchLoopCls::setRecordID(const dREC04RECNUMTYP &value)
+{
+dRecordID = value;
+}
+//=============================================================================
+int sstDxf02TypHatchLoopCls::getNumEdges() const
+{
+return numEdges;
+}
+//=============================================================================
+void sstDxf02TypHatchLoopCls::setNumEdges(int value)
+{
+numEdges = value;
 }
 //=============================================================================
 // Constructor
-sstDxf02FncBlkCls::sstDxf02FncBlkCls():sstDxf02FncBaseCls(sizeof(sstDxf02TypBlkCls))
+sstDxf02FncHatchLoopCls::sstDxf02FncHatchLoopCls():sstDxf02FncBaseCls(sizeof(sstDxf02TypHatchLoopCls))
 {
-  sstDxf02TypBlkCls oBlkRec;
-  // Init new name Tree sorting object for Block RecMem object
-  int iStat = this->TreIni( 0, &oBlkRec, &oBlkRec.Nam, sizeof(oBlkRec.Nam), sstRecTyp_CC, &this->oBlockTree);
-  assert(iStat == 0);
-
+  // this->poDxfArcMem = new sstRec04Cls(sizeof(sstDxf02TypHatchLoopCls));
 }
-
+//=============================================================================
 // Csv Read Function
-int sstDxf02FncBlkCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxfLib_Str, sstDxf02TypBlkCls *oSstBlk)
+int sstDxf02FncHatchLoopCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxfLib_Str, sstDxf02TypHatchLoopCls *osstDxf02TypHatchLoop)
 {
-  DL_BlockData sDlBlk("",0,0.0,0.0,0.0);
-  // sstStr01Cls oCsvRow;
-  unsigned long ulTmpBlockID = 0;
+  dREC04RECNUMTYP dLocRecordID = 0;
+  int iLocNumEdges;
+
   int iStat = 0;
   int iRet  = 0;
 //-----------------------------------------------------------------------------
@@ -115,18 +112,15 @@ int sstDxf02FncBlkCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *sss
 
   oCsvRow.SetReadPositon(0,0);
 
-  if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpBlockID);
-  if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_Str( 0, ssstDxfLib_Str, &sDlBlk.name);
-  if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_Int2( 0, ssstDxfLib_Str, &sDlBlk.flags);
-  if (iStat >= 0)
+  //  int numEdges;
+
+  if (iStat >= 0) iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &dLocRecordID);
+  if (iStat >= 0) osstDxf02TypHatchLoop->setRecordID(dLocRecordID);
+
+  if (iStat >= 0) iStat = oCsvRow.CsvString2_Int2( 0, ssstDxfLib_Str, &iLocNumEdges);
+  if (iStat >= 0) osstDxf02TypHatchLoop->setNumEdges(iLocNumEdges);
 
   *sErrTxt = oCsvRow.GetErrorString();
-
-  oSstBlk->ReadFromDL(sDlBlk);
-  oSstBlk->setBlockID(ulTmpBlockID);
 
   // Fatal Errors goes to an assert
   if (iRet < 0)
@@ -141,57 +135,39 @@ int sstDxf02FncBlkCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *sss
 //  Bloc Function1 End
   return iStat;
 }
-
+//=============================================================================
 // Csv Write Function
-int sstDxf02FncBlkCls::Csv_Write(int iKey, sstDxf02TypBlkCls *poSstBlk, std::string *ssstDxfLib_Str)
+int sstDxf02FncHatchLoopCls::Csv_Write(int iKey, sstDxf02TypHatchLoopCls *poSstHatchLoop, std::string *ssstDxfLib_Str)
 {
-  // sstStr01Cls oCsvRow;  // Csv String Convert object
   int iStat = 0;
 
-  //  Bloc Function Write Start
-  int iRet  = 0;
   if ( iKey != 0) return -1;
 
   ssstDxfLib_Str->clear();
 
-  if (iStat >= 0)
-    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstBlk->getBlockID(), ssstDxfLib_Str);
-  if (iStat >= 0)
-    iStat = oCsvRow.Csv_Char_2String( 0, poSstBlk->getName(), ssstDxfLib_Str);
-  if (iStat >= 0)
-    iStat = oCsvRow.Csv_Int2_2String ( 0, poSstBlk->getFlags(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, poSstHatchLoop->getRecordID(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Int2_2String( 0, poSstHatchLoop->getNumEdges(), ssstDxfLib_Str);
 
-  // Fatal Errors goes to an assert
-  if (iRet < 0)
-  {
-    // Expression (iRet >= 0) has to be fullfilled
-    assert(0);
-  }
 
-  // Small Errors will given back
-  iRet = iStat;
+  //  int numEdges;
 
-//  Bloc Function Write End
   return iStat;
 }
 //=============================================================================
-int sstDxf02FncBlkCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
+int sstDxf02FncHatchLoopCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
 {
   std::string oTitelStr;
   int iStat = 0;
 
-//  char Nam[dSSTDXFBLOCKNAMELEN];  /**< Block Name */
-//  int  flags;               /**< Block Flags */
-
   if ( iKey != 0) return -1;
 
   ssstDxfLib_Str->clear();
 
-  oTitelStr = "BlockID";
+  //  int numEdges;
+
+  oTitelStr = "RecordID";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
-  oTitelStr = "name";
-  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
-  oTitelStr = "flags";
+  oTitelStr = "NumEdges";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
@@ -204,12 +180,7 @@ int sstDxf02FncBlkCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
   return iStat;
 }
 //=============================================================================
-sstRec04TreeKeyCls* sstDxf02FncBlkCls::getNameSortKey()
-{
-  return &this->oBlockTree;
-}
-//=============================================================================
-int sstDxf02FncBlkCls::ReadCsvFile(int iKey, std::string oFilNam)
+int sstDxf02FncHatchLoopCls::ReadCsvFile(int iKey, std::string oFilNam)
 {
   sstMisc01AscFilCls oCsvFilLayer;
   int iStat = 0;
@@ -218,9 +189,7 @@ int sstDxf02FncBlkCls::ReadCsvFile(int iKey, std::string oFilNam)
 
   iStat = oCsvFilLayer.fopenRd(0,oFilNam.c_str());
   if (iStat < 0) return -2;
-  // assert(iStat==0);
 
-  // sstDxf02FncLayCls oSstFncLay;  // layer recmem object
   std::string oLayStr;
   std::string oErrStr;
   dREC04RECNUMTYP dRecNo = 0;
@@ -233,9 +202,9 @@ int sstDxf02FncBlkCls::ReadCsvFile(int iKey, std::string oFilNam)
   iStat1 = oCsvFilLayer.Rd_StrDS1 ( 2, &oLayStr);
   while (iStat1 >= 0)
   {
-    sstDxf02TypBlkCls oSstBlk;
+    sstDxf02TypHatchLoopCls oSstArc;
     // Read layer object from string row
-    iStat = this->Csv_Read( 0, &oErrStr, &oLayStr, &oSstBlk);
+    iStat = this->Csv_Read( 0, &oErrStr, &oLayStr, &oSstArc);
     if (iStat < 0)
     {
       iStat1 = -1;
@@ -243,8 +212,7 @@ int sstDxf02FncBlkCls::ReadCsvFile(int iKey, std::string oFilNam)
       break;
     }
     // write layer object to recmem
-    this->WritNew(0,&oSstBlk,&dRecNo);
-
+    this->WritNew(0,&oSstArc,&dRecNo);
     // Read next row from layer csv file
     oLayStr.clear();
     iStat1 = oCsvFilLayer.Rd_StrDS1 ( 2, &oLayStr);
@@ -255,15 +223,15 @@ int sstDxf02FncBlkCls::ReadCsvFile(int iKey, std::string oFilNam)
   return iStat;
 }
 //=============================================================================
-int sstDxf02FncBlkCls::WriteCsvFile(int iKey, std::string oDxfFilNam)
+int sstDxf02FncHatchLoopCls::WriteCsvFile(int iKey, std::string oDxfFilNam)
 {
   sstMisc01AscFilCls oCsvFil;
   std::string oCsvFilNam;
   //-----------------------------------------------------------------------------
   if ( iKey != 0) return -1;
 
-  // ===== Write all block data to Csv file
-  oCsvFilNam = oDxfFilNam + "_Block.csv";
+  // ===== Write all Insert to Csv file
+  oCsvFilNam = oDxfFilNam + "_HatchLoop.csv";
   int iStat = oCsvFil.fopenWr(0,(char*) oCsvFilNam.c_str());
   assert(iStat >= 0);
 
@@ -275,12 +243,12 @@ int sstDxf02FncBlkCls::WriteCsvFile(int iKey, std::string oDxfFilNam)
   for(dREC04RECNUMTYP kk = 1; kk <= this->count(); kk++)
   {
 
-    sstDxf02TypBlkCls oDxfBlk;
-    iStat = this->Read(0,kk,&oDxfBlk);
+    sstDxf02TypHatchLoopCls oDxfHatchLoop;
+    iStat = this->Read(0,kk,&oDxfHatchLoop);
 
-    oDxfBlk.setBlockID(kk);
+    oDxfHatchLoop.setRecordID(kk);
 
-    this->Csv_Write( 0, &oDxfBlk, &oCsvStr);
+    this->Csv_Write( 0, &oDxfHatchLoop, &oCsvStr);
     oCsvFil.Wr_StrDS1(0, &oCsvStr);
   }
 
