@@ -125,7 +125,7 @@ RS2::EntityType sstDxf02EntityTypeCls::String2Enum(std::string oTypeString)
   else if (oTypeString.compare("Graphic") == 0) eLocType = RS2::EntityGraphic;
   else if (oTypeString.compare("Point") == 0) eLocType = RS2::EntityPoint;
   else if (oTypeString.compare("Line") == 0) eLocType = RS2::EntityLine;
-  else if (oTypeString.compare("PolyLine") == 0) eLocType = RS2::EntityPolyline;
+  else if (oTypeString.compare("Polyline") == 0) eLocType = RS2::EntityPolyline;
   else if (oTypeString.compare("Vertex") == 0) eLocType = RS2::EntityVertex;
   else if (oTypeString.compare("Arc") == 0) eLocType = RS2::EntityArc;
   else if (oTypeString.compare("Circle") == 0) eLocType = RS2::EntityCircle;

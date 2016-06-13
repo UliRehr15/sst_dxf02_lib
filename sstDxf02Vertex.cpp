@@ -218,13 +218,13 @@ int sstDxf02FncVertexCls::Csv_Read(int iKey, std::string *oErrStr, std::string *
   if (iStat >= 0) osstDxf02TypVertexCls->setX(dLocX);
 
   if (iStat >= 0) iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxfLib_Str, &dLocY);
-  if (iStat >= 0) osstDxf02TypVertexCls->setX(dLocY);
+  if (iStat >= 0) osstDxf02TypVertexCls->setY(dLocY);
 
   if (iStat >= 0) iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxfLib_Str, &dLocZ);
-  if (iStat >= 0) osstDxf02TypVertexCls->setX(dLocZ);
+  if (iStat >= 0) osstDxf02TypVertexCls->setZ(dLocZ);
 
   if (iStat >= 0) iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxfLib_Str, &dLocBulge);
-  if (iStat >= 0) osstDxf02TypVertexCls->setX(dLocBulge);
+  if (iStat >= 0) osstDxf02TypVertexCls->setBulge(dLocBulge);
 
 
   *oErrStr = oCsvRow.GetErrorString();

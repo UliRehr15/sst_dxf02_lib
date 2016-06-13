@@ -164,6 +164,13 @@ void sstDxf02TypInsertCls::setIpz(double value)
 ipz = value;
 }
 //=============================================================================
+//sstDxf02TypBaseCls sstDxf02TypInsertCls::getBaseAttributes()
+//{
+//  sstDxf02TypBaseCls oLocBase;
+//  oLocBase.setLinetypeID(this->getLinetypeID());
+//  return oLocBase;
+//}
+//=============================================================================
 // Constructor
 sstDxf02FncInsertCls::sstDxf02FncInsertCls():sstDxf02FncBaseCls(sizeof(sstDxf02TypInsertCls))
 {
@@ -171,7 +178,10 @@ sstDxf02FncInsertCls::sstDxf02FncInsertCls():sstDxf02FncBaseCls(sizeof(sstDxf02T
 }
 //=============================================================================
 // Csv Read Function
-int sstDxf02FncInsertCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxfLib_Str, sstDxf02TypInsertCls *osstDxf02TypInsertCls)
+int sstDxf02FncInsertCls::Csv_Read(int iKey,
+                                   std::string *oErrTxt,
+                                   std::string *oCsvInsertStr,
+                                   sstDxf02TypInsertCls *oInsert)
 {
   DL_InsertData sDLInsert("",
                           0,0,0,
@@ -186,26 +196,26 @@ int sstDxf02FncInsertCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *
   int iTmpColor = 0;
   // sstStr01Cls oCsvRow;
   int iStat = 0;
-  int iRet  = 0;
+  // int iRet  = 0;
 //-----------------------------------------------------------------------------
   if ( iKey != 0) return -1;
 
   oCsvRow.SetReadPositon(0,0);
 
   if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpInsertID);
+    iStat = oCsvRow.CsvString2_UInt4( 0, oCsvInsertStr, &ulTmpInsertID);
   if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpLayerID);
+    iStat = oCsvRow.CsvString2_UInt4( 0, oCsvInsertStr, &ulTmpLayerID);
   if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpBlockID);
+    iStat = oCsvRow.CsvString2_UInt4( 0, oCsvInsertStr, &ulTmpBlockID);
   if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxfLib_Str, &sDLInsert.ipx);
+    iStat = oCsvRow.CsvString2_Dbl( 0, oCsvInsertStr, &sDLInsert.ipx);
   if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxfLib_Str, &sDLInsert.ipy);
+    iStat = oCsvRow.CsvString2_Dbl( 0, oCsvInsertStr, &sDLInsert.ipy);
   if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxfLib_Str, &sDLInsert.ipz);
-  if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_Int2( 0, ssstDxfLib_Str, &iTmpColor);
+    iStat = oCsvRow.CsvString2_Dbl( 0, oCsvInsertStr, &sDLInsert.ipz);
+//  if (iStat >= 0)
+//    iStat = oCsvRow.CsvString2_Int2( 0, oCsvInsertStr, &iTmpColor);
 //  if (iStat >= 0)
 //    iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxfLib_Str, &sDLInsert.radius);
 //  if (iStat >= 0)
@@ -213,26 +223,19 @@ int sstDxf02FncInsertCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *
 //  if (iStat >= 0)
 //    iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxfLib_Str, &sDLInsert.angle2);
 
-  *sErrTxt = oCsvRow.GetErrorString();
+  *oErrTxt = oCsvRow.GetErrorString();
 
-  osstDxf02TypInsertCls->ReadFromDL(sDLInsert);
+  oInsert->ReadFromDL(sDLInsert);
 
-  osstDxf02TypInsertCls->setInsertID(ulTmpInsertID);
-  osstDxf02TypInsertCls->setLayerID(ulTmpLayerID);
-  osstDxf02TypInsertCls->setBlockID(ulTmpBlockID);
-  osstDxf02TypInsertCls->setColor(iTmpColor);
+  oInsert->setInsertID(ulTmpInsertID);
+  oInsert->setLayerID(ulTmpLayerID);
+  oInsert->setBlockID(ulTmpBlockID);
+  oInsert->setColor(iTmpColor);
 
-  // Fatal Errors goes to an assert
-  if (iRet < 0)
-  {
-    // Expression (iRet >= 0) has to be fullfilled
-    assert(0);
-  }
+  // read base dxf attributes from csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseRead(0, oErrTxt, oCsvInsertStr, oInsert);
 
-  // Small Errors will given back
-  iRet = iStat;
-
-//  Bloc Function1 End
   return iStat;
 }
 //=============================================================================
@@ -259,24 +262,12 @@ int sstDxf02FncInsertCls::Csv_Write(int iKey, sstDxf02TypInsertCls *poSstInsert,
   if (iStat >= 0)
     iStat = oCsvRow.Csv_Dbl_2String ( 0, poSstInsert->getIpz(), ssstDxfLib_Str);
 
-  if (iStat >= 0)
-    iStat = oCsvRow.Csv_Int2_2String ( 0, poSstInsert->getColor(), ssstDxfLib_Str);
-
-
-//  if (iStat >= 0)
-//    iStat = oCsvRow.Csv_Dbl_2String( 0, poSstInsert->getCx(), ssstDxfLib_Str);
-//  if (iStat >= 0)
-//    iStat = oCsvRow.Csv_Dbl_2String ( 0, poSstInsert->getCy(), ssstDxfLib_Str);
-//  if (iStat >= 0)
-//    iStat = oCsvRow.Csv_Dbl_2String ( 0, poSstInsert->getCz(), ssstDxfLib_Str);
-//  if (iStat >= 0)
-//    iStat = oCsvRow.Csv_Dbl_2String ( 0, poSstInsert->getRadius(), ssstDxfLib_Str);
-//  if (iStat >= 0)
-//    iStat = oCsvRow.Csv_Dbl_2String ( 0, poSstInsert->getAngle1(), ssstDxfLib_Str);
-//  if (iStat >= 0)
-//    iStat = oCsvRow.Csv_Dbl_2String ( 0, poSstInsert->getAngle2(), ssstDxfLib_Str);
 //  if (iStat >= 0)
 //    iStat = oCsvRow.Csv_Int2_2String ( 0, poSstInsert->getColor(), ssstDxfLib_Str);
+
+  // write base dxf attributes to csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseWrite ( 0, *poSstInsert, ssstDxfLib_Str);
 
   return iStat;
 }
@@ -321,8 +312,11 @@ int sstDxf02FncInsertCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
 //  oTitelStr = "angle2";
 //  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
 
-  oTitelStr = "color";
-  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+//  oTitelStr = "color";
+//  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+
+  // append base attributes to insert csv titel row
+  this->Csv_BaseHeader(0,ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iStat < 0)

@@ -77,8 +77,13 @@ sstDxf02ReadCls::~sstDxf02ReadCls()
 
     sstDxf02FncLayCls *poLayFnc;
     poLayFnc = this->oDxfDb.getSstFncLay();
+
     sstDxf02FncBlkCls *poBlkFnc;
     poBlkFnc = this->oDxfDb.getSstFncBlk();
+
+    sstDxf02FncLTypeCls *poLTypeFnc;
+    poLTypeFnc = this->oDxfDb.getSstFncLType();
+
     sstDxf02FncMainCls *poMainFnc;
     poMainFnc = this->oDxfDb.getSstFncMain();
 
@@ -118,6 +123,10 @@ sstDxf02ReadCls::~sstDxf02ReadCls()
     iStat = poBlkFnc->WriteCsvFile(0,this->oDxfFilNam);
     assert(iStat == 0);
 
+    // write all Linetype data from table to csv file
+    iStat = poLTypeFnc->WriteCsvFile(0,this->oDxfFilNam);
+    assert(iStat == 0);
+
     // write all main data from table to csv file
     iStat = poMainFnc->WriteCsvFile(0,this->oDxfFilNam);
     assert(iStat == 0);
@@ -126,10 +135,15 @@ sstDxf02ReadCls::~sstDxf02ReadCls()
 //=============================================================================
 void sstDxf02ReadCls::addLayer(const DL_LayerData& data)
 {
-    sstDxf02TypLayCls LayDs;
-    dREC04RECNUMTYP dRecNo = 0;
-    sstDxf02FncLayCls *poLayFnc;
-    poLayFnc = this->oDxfDb.getSstFncLay();
+  sstDxf02TypLayCls LayDs;
+  sstDxf02FncLayCls *poLayFnc;
+  poLayFnc = this->oDxfDb.getSstFncLay();
+
+  sstDxf02TypLTypeCls oLTypeRec;
+  sstDxf02FncLTypeCls *poLTypeTab;
+  poLTypeTab = this->oDxfDb.getSstFncLType();
+
+  dREC04RECNUMTYP dRecNo = 0;
     int LayNamLen = 0;
     int iStat = 0;
   //-----------------------------------------------------------------------------
@@ -143,9 +157,16 @@ void sstDxf02ReadCls::addLayer(const DL_LayerData& data)
       // strncpy( LayDs.Nam, data.name.c_str(), dSSTDXFLAYERNAMELEN);
       LayDs.setName(data.name.c_str());
       LayDs.setFlags( data.flags);
+      LayDs.BaseReadFromDL(attributes);
+
+      // write new Linetype record into table if not exist
+      dREC04RECNUMTYP dLTypeRecNo = 0;
+      oLTypeRec.setName(attributes.getLineType());
+      iStat = poLTypeTab->WriteNewUnique( 0, oLTypeRec, &dLTypeRecNo);
+
+      LayDs.setLinetypeID(dLTypeRecNo);
 
       // Write new record into record memory and update all trees
-      // iStat = this->poDxfLayMem->TreWriteNew ( 0, &LayDs, &dRecNo);
       iStat = poLayFnc->TreWriteNew( 0, &LayDs, &dRecNo);
       assert(iStat == 0);
     }
@@ -163,11 +184,23 @@ void sstDxf02ReadCls::addBlock(const DL_BlockData& data)
   sstDxf02FncBlkCls *poBlkFnc;
   poBlkFnc = this->oDxfDb.getSstFncBlk();
 
+  sstDxf02TypLTypeCls oLTypeRec;
+  sstDxf02FncLTypeCls *poLTypeTab;
+  poLTypeTab = this->oDxfDb.getSstFncLType();
+
   oBlk.setName( data.name.c_str());
+  oBlk.BaseReadFromDL(attributes);
+
+  // write new Linetype record into table if not exist
+  dREC04RECNUMTYP dLTypeRecNo = 0;
+  oLTypeRec.setName(attributes.getLineType());
+  iStat = poLTypeTab->WriteNewUnique( 0, oLTypeRec, &dLTypeRecNo);
+
   oActBlockNam = data.name;
 
   // Write new record into record memory and update all trees
   // iStat = this->poDxfBlkMem->TreWriteNew ( 0, &oBlk, &dRecNo);
+  oBlk.setLinetypeID(dLTypeRecNo);
   iStat = poBlkFnc->TreWriteNew( 0, &oBlk, &dRecNo);
   assert(iStat == 0);
 }
@@ -345,20 +378,26 @@ void sstDxf02ReadCls::addCircle(const DL_CircleData& data) {
 void sstDxf02ReadCls::addPolyline(const DL_PolylineData& data)
 {
   int iStat = 0;
-  std::string oLayerStr;
 
   sstDxf02TypPolylineCls oDxfPolyline;
   oDxfPolyline.ReadFromDL(data);
   oDxfPolyline.BaseReadFromDL(attributes);
-  dREC04RECNUMTYP dRecNo=0;
+  dREC04RECNUMTYP dEntRecNo=0;
   dREC04RECNUMTYP dLayRecNo=0;
+  dREC04RECNUMTYP dLTypeRecNo=0;
 
   sstDxf02FncPolylineCls *poPolylineFnc;
   poPolylineFnc = this->oDxfDb.getSstFncPolyline();
+
   sstDxf02FncLayCls *poLayFnc;
   poLayFnc = this->oDxfDb.getSstFncLay();
+
+  sstDxf02FncLTypeCls *poLTypeFnc;
+  poLTypeFnc = this->oDxfDb.getSstFncLType();
+
   sstDxf02FncBlkCls *poBlkFnc;
   poBlkFnc = this->oDxfDb.getSstFncBlk();
+
   sstDxf02FncMainCls *poMainFnc;
   poMainFnc = this->oDxfDb.getSstFncMain();
 
@@ -372,21 +411,32 @@ void sstDxf02ReadCls::addPolyline(const DL_PolylineData& data)
   }
   else
   {  // Layer
+    std::string oLayerStr;
     oLayerStr = attributes.getLayer();
     // Find record with exact search value
     iStat = poLayFnc->TreSeaEQ( 0, poLayFnc->getNameSortKey(), (void*) oLayerStr.c_str(), &dLayRecNo);
     assert(iStat == 1);
     oDxfPolyline.setLayerID(dLayRecNo);
+
+    std::string oLTypeStr;
+    oLTypeStr = attributes.getLineType();
+
+    std::transform(oLTypeStr.begin(), oLTypeStr.end(),oLTypeStr.begin(), ::toupper);
+
+    // Find record with exact search value
+    iStat = poLTypeFnc->TreSeaEQ( 0, poLTypeFnc->getNameSortKey(), (void*) oLTypeStr.c_str(), &dLTypeRecNo);
+    assert(iStat == 1);
+    oDxfPolyline.setLinetypeID(dLTypeRecNo);
   }
-  iStat = poPolylineFnc->WritNew(0,&oDxfPolyline,&dRecNo);
+  iStat = poPolylineFnc->WritNew(0,&oDxfPolyline,&dEntRecNo);
 
   sstDxf02TypMainCls oMainRec;
 
   dREC04RECNUMTYP dMainRecNo = poMainFnc->count();
 
   oMainRec.setMainID(dMainRecNo+1);
-  oMainRec.setEntityType(RS2::EntityArc);
-  oMainRec.setTypeID(dRecNo);
+  oMainRec.setEntityType(RS2::EntityPolyline);
+  oMainRec.setTypeID(dEntRecNo);
 
   // is it layer or block??
   if (this->oActBlockNam.length() > 0)
@@ -399,7 +449,10 @@ void sstDxf02ReadCls::addPolyline(const DL_PolylineData& data)
     oMainRec.setLayBlockID(dLayRecNo);
     oMainRec.setSectString("L");
   }
-  iStat = poMainFnc->WritNew(0,&oMainRec,&dRecNo);
+  iStat = poMainFnc->WritNew(0,&oMainRec,&dMainRecNo);
+
+  this->oDxfDb.setActRecNo(dEntRecNo);
+  this->oDxfDb.setActEntType(RS2::EntityPolyline);
 
 }
 //=============================================================================
@@ -439,6 +492,9 @@ void sstDxf02ReadCls::addVertex(const DL_VertexData& data)
 //    assert(iStat == 1);
 //    oDxfVertex.setLayerID(dLayRecNo);
 //  }
+  oDxfVertex.setParentID(this->oDxfDb.getActRecNo());
+  oDxfVertex.setEntityType(this->oDxfDb.getActEntType());
+
   poVertexFnc->WritNew(0,&oDxfVertex,&dRecNo);
 
   sstDxf02TypMainCls oMainRec;
@@ -446,7 +502,7 @@ void sstDxf02ReadCls::addVertex(const DL_VertexData& data)
   dREC04RECNUMTYP dMainRecNo = poMainFnc->count();
 
   oMainRec.setMainID(dMainRecNo+1);
-  oMainRec.setEntityType(RS2::EntityArc);
+  oMainRec.setEntityType(RS2::EntityVertex);
   oMainRec.setTypeID(dRecNo);
 
   // is it layer or block??
@@ -481,7 +537,7 @@ void sstDxf02ReadCls::addHatch(const DL_HatchData& data)
   sstDxf02TypHatchCls oDxfHatch;
   oDxfHatch.ReadFromDL(data);
   oDxfHatch.BaseReadFromDL(attributes);
-  dREC04RECNUMTYP dRecNo=0;
+  dREC04RECNUMTYP dEntRecNo=0;
   dREC04RECNUMTYP dLayRecNo=0;
 
   sstDxf02FncHatchCls *poHatchFnc;
@@ -509,7 +565,7 @@ void sstDxf02ReadCls::addHatch(const DL_HatchData& data)
     assert(iStat == 1);
     oDxfHatch.setLayerID(dLayRecNo);
   }
-  iStat = poHatchFnc->WritNew(0,&oDxfHatch,&dRecNo);
+  iStat = poHatchFnc->WritNew(0,&oDxfHatch,&dEntRecNo);
   assert(iStat == 0);
 
   sstDxf02TypMainCls oMainRec;
@@ -518,7 +574,7 @@ void sstDxf02ReadCls::addHatch(const DL_HatchData& data)
 
   oMainRec.setMainID(dMainRecNo+1);
   oMainRec.setEntityType(RS2::EntityHatch);
-  oMainRec.setTypeID(dRecNo);
+  oMainRec.setTypeID(dEntRecNo);
 
   // is it layer or block??
   if (this->oActBlockNam.length() > 0)
@@ -531,8 +587,10 @@ void sstDxf02ReadCls::addHatch(const DL_HatchData& data)
     oMainRec.setLayBlockID(dLayRecNo);
     oMainRec.setSectString("L");
   }
-  iStat = poMainFnc->WritNew(0,&oMainRec,&dRecNo);
+  iStat = poMainFnc->WritNew(0,&oMainRec,&dMainRecNo);
   assert(iStat == 0);
+
+  this->oDxfDb.setActRecNo(dEntRecNo);
 
 }
 //=============================================================================
@@ -572,6 +630,8 @@ void sstDxf02ReadCls::addHatchEdge(const DL_HatchEdgeData& data)
 //    assert(iStat == 1);
 //    oDxfArc.setLayerID(dLayRecNo);
 //  }
+  oDxfHatchEdge.setParentID(this->oDxfDb.getActRecNo());
+
   iStat = poHatchEdgeFnc->WritNew(0,&oDxfHatchEdge,&dRecNo);
   assert(iStat == 0);
 

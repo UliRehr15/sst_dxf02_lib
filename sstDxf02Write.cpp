@@ -71,6 +71,8 @@ sstDxf02WriteCls::sstDxf02WriteCls (sstMisc01PrtFilCls *oTmpPrt):oDxfDb(oTmpPrt)
 
   this->poPrt = oTmpPrt;
 
+  this->dw = NULL;
+
 
 //  DL_Codes::version exportVersion = DL_Codes::AC1015;
 //  // *dw = (*dxf)->out("myfile.dxf", exportVersion);
@@ -101,11 +103,12 @@ sstDxf02WriteCls::~sstDxf02WriteCls ()
 //-----------------------------------------------------------------------------
 {
   //--- Write buffer to dxf file and close
-//  this->dxf->writeObjects(*this->dw);
-//  this->dxf->writeObjectsEnd(*this->dw);
-  this->dw->dxfEOF();
-  this->dw->close();
-  delete this->dw;
+  if (this->dw != NULL)
+  {
+    this->dw->dxfEOF();
+    this->dw->close();
+    delete this->dw;
+  }
   delete this->dxf;
 
 }
@@ -256,12 +259,9 @@ int sstDxf02WriteCls::WrtSecBlocks (int         iKey)
 //  oLocSstFncLay = this->oDxfDb.getSstFncLay();
 
   sstDxf02FncBlkCls *oLocSstFncBlk = NULL;              /**< Block recmem object */
-  sstDxf02TypLayCls oBlkRec;
+  sstDxf02TypBlkCls oBlkRec;
   oLocSstFncBlk = this->oDxfDb.getSstFncBlk();
 
-  sstDxf02FncArcCls *oLocSstFncArc = NULL;              /**< Arc recmem object */
-  sstDxf02TypArcCls oArcRec;
-  oLocSstFncArc = this->oDxfDb.getSstFncArc();
 
 //  sstDxf02FncInsertCls *oLocSstFncInsert = NULL;        /**< insert recmem object */
 //  sstDxf02TypInsertCls oInsertRec;
@@ -337,7 +337,8 @@ int sstDxf02WriteCls::WrtSecBlocks (int         iKey)
       if (oMainRec.getLayBlockID() != dActBlockID)
       {  // new block!!
         // if current block is not empty, write to dxf file
-        if (oBlkRec.getLayerID() != 0)
+        // if (oBlkRec.getLayerID() != 0)
+        if (dActBlockID != 0)
         {
           dxf->writeEndBlock(*dw, oBlkRec.getName());
         }
@@ -351,7 +352,11 @@ int sstDxf02WriteCls::WrtSecBlocks (int         iKey)
       {
         case RS2::EntityArc:
         {
-          iStat = oLocSstFncArc->Read(0,oMainRec.getTypeID(),&oArcRec);
+        sstDxf02FncArcCls *oLocSstFncArc = NULL;              /**< Arc recmem object */
+        sstDxf02TypArcCls oArcRec;
+        oLocSstFncArc = this->oDxfDb.getSstFncArc();
+
+        iStat = oLocSstFncArc->Read(0,oMainRec.getTypeID(),&oArcRec);
           DL_ArcData oDL_Arc( 0.0,0.0,0.0,
                               1.0,        // Radius
                               0.0,0.0);   // Angle1, angle2
@@ -512,103 +517,189 @@ int sstDxf02WriteCls::WrtSecEntities (int          iKey)
 
   this->dw->sectionEntities();
 
-  sstDxf02FncLayCls *oLocSstFncLay = NULL;              /**< layer recmem object */
+  sstDxf02FncMainCls *oLocSstFncMain = NULL;              /**< main Table object */
+  sstDxf02TypMainCls oMainRec;
+  oLocSstFncMain = this->oDxfDb.getSstFncMain();
+
+  sstDxf02FncLayCls *oLocSstFncLay = NULL;              /**< layer Table object */
   sstDxf02TypLayCls oLayRec;
   oLocSstFncLay = this->oDxfDb.getSstFncLay();
 
-  sstDxf02FncBlkCls *oLocSstFncBlk = NULL;              /**< Block recmem object */
+  sstDxf02FncBlkCls *oLocSstFncBlk = NULL;              /**< Block Table object */
   sstDxf02TypBlkCls oBlkRec;
   oLocSstFncBlk = this->oDxfDb.getSstFncBlk();
 
-  sstDxf02FncInsertCls *oLocSstFncInsert = NULL;        /**< insert recmem object */
-  oLocSstFncInsert = this->oDxfDb.getSstFncInsert();
-  dREC04RECNUMTYP dNumInserts = oLocSstFncInsert->count();
+  sstDxf02FncLTypeCls *oLocSstFncLType = NULL;              /**< LType Table object */
+  sstDxf02TypLTypeCls oLTypeRec;
+  oLocSstFncLType = this->oDxfDb.getSstFncLType();
 
-  // int numberOfLayers = 3;
-  // this->dw->tableLayers((int) dNumLayers);
+//  sstDxf02FncInsertCls *oLocSstFncInsert = NULL;        /**< insert recmem object */
+//  oLocSstFncInsert = this->oDxfDb.getSstFncInsert();
+  // dREC04RECNUMTYP dNumInserts = oLocSstFncInsert->count();
 
-  sstDxf02TypInsertCls oInsertRec;
-  DL_InsertData oDL_Insert("",
-                           0.0,0.0,0.0,
-                           1.0,1.0,0.0,
-                           0.0,
-                           1,1,
-                           1.0,1.0);
-
-  for (dREC04RECNUMTYP dd=1; dd <= dNumInserts; dd++)
+  dREC04RECNUMTYP dNumMains = oLocSstFncMain->count();
+  for (dREC04RECNUMTYP ii=1;ii <= dNumMains;ii++)
   {
-    iStat = oLocSstFncInsert->Read(0,dd,&oInsertRec);
-    assert(iStat == 0);
-    iStat = oLocSstFncLay->Read(0,oInsertRec.getLayerID(),&oLayRec);
-    assert(iStat == 0);
-    iStat = oLocSstFncBlk->Read(0,oInsertRec.getBlockID(),&oBlkRec);
-    assert(iStat == 0);
+    iStat = oLocSstFncMain->Read( 0, ii, &oMainRec);
+    std::string oSectStr = oMainRec.getSectString();
+    iStat = oSectStr.compare("L");
+    if(iStat == 0)
+    {  // we are inside Layer section
 
-    // write Insert record data to dxflib insert
-    oInsertRec.WritToDL(&oDL_Insert);
+      oLocSstFncLay->Read(0,oMainRec.getLayBlockID(),&oLayRec);
 
-    // set Blockname
-    // oDL_Insert.name = "myblock1";
-    oDL_Insert.name = oBlkRec.getName();
 
-    // write next insert into dxf file
-    this->dxf->writeInsert(  *this->dw,
-                              oDL_Insert,
-                              DL_Attributes(oLayRec.getName(), 256, -1, "BYLAYER"));
-  }
-
-  sstDxf02FncArcCls *oLocSstFncArc = NULL;        /**< insert recmem object */
-  oLocSstFncArc = this->oDxfDb.getSstFncArc();
-  dREC04RECNUMTYP dNumArcs = oLocSstFncArc->count();
-
-  // int numberOfLayers = 3;
-  // this->dw->tableLayers((int) dNumLayers);
-
-  sstDxf02TypArcCls oArcRec;
-  DL_ArcData oDL_Arc( 0.0,0.0,0.0,
-                      1.0,        // Radius
-                      0.0,0.0);   // Angle1, angle2
-
-  for (dREC04RECNUMTYP dd=1; dd <= dNumArcs; dd++)
-  {
-    iStat = oLocSstFncArc->Read(0,dd,&oArcRec);
-    assert(iStat == 0);
-
-    // If Arc is entity element
-    if(oArcRec.getLayerID() > 0)
+    switch (oMainRec.getEntityType())
     {
-      iStat = oLocSstFncLay->Read(0,oArcRec.getLayerID(),&oLayRec);
+      case RS2::EntityArc:
+      {
+
+        sstDxf02FncArcCls *oLocSstFncArc = NULL;              /**< Arc recmem object */
+        sstDxf02TypArcCls oArcRec;
+        oLocSstFncArc = this->oDxfDb.getSstFncArc();
+
+        // if new entity-type, then write open polyline or hatch and close
+        iStat = this->WriteOpenEntities(0);
+
+        iStat = oLocSstFncArc->Read(0,oMainRec.getTypeID(),&oArcRec);
+        DL_ArcData oDL_Arc( 0.0,0.0,0.0,
+                            1.0,        // Radius
+                            0.0,0.0);   // Angle1, angle2
+        oArcRec.WritToDL(&oDL_Arc);
+
+        // set Blockname
+        // oDL_Insert.name = "myblock1";
+
+        // write next insert into dxf file
+        this->dxf->writeArc(  *this->dw,
+                              oDL_Arc,
+                              DL_Attributes(oLayRec.getName(), 256, -1, "BYBLOCK"));
+
+        this->oDxfDb.setActEntType(oMainRec.getEntityType());
+        this->oDxfDb.setActRecNo(oMainRec.getTypeID());
+
+        break;
+      }
+    case RS2::EntityInsert:
+    {
+      sstDxf02FncInsertCls *oLocSstFncInsert = NULL;        /**< insert recmem object */
+      oLocSstFncInsert = this->oDxfDb.getSstFncInsert();
+
+      // if new entity-type, then write open polyline or hatch and close
+      iStat = this->WriteOpenEntities(0);
+
+      sstDxf02TypInsertCls oInsertRec;
+      DL_InsertData oDL_Insert("",
+                               0.0,0.0,0.0,
+                               1.0,1.0,0.0,
+                               0.0,
+                               1,1,
+                               1.0,1.0);
+
+      iStat = oLocSstFncInsert->Read(0,oMainRec.getTypeID(),&oInsertRec);
       assert(iStat == 0);
-      oArcRec.WritToDL(&oDL_Arc);
+      // iStat = oLocSstFncLay->Read(0,oInsertRec.getLayerID(),&oLayRec);
+      // assert(iStat == 0);
+      iStat = oLocSstFncBlk->Read(0,oInsertRec.getBlockID(),&oBlkRec);
+      assert(iStat == 0);
+
+      // write Insert record data to dxflib insert
+      oInsertRec.WritToDL(&oDL_Insert);
 
       // set Blockname
       // oDL_Insert.name = "myblock1";
+      oDL_Insert.name = oBlkRec.getName();
 
       // write next insert into dxf file
-      this->dxf->writeArc(  *this->dw,
-                            oDL_Arc,
-                            DL_Attributes(oLayRec.getName(), 256, -1, "BYLAYER"));
+      this->dxf->writeInsert(  *this->dw,
+                                oDL_Insert,
+                                DL_Attributes(oLayRec.getName(), 256, -1, "BYLAYER"));
 
+      this->oDxfDb.setActEntType(oMainRec.getEntityType());
+      this->oDxfDb.setActRecNo(oMainRec.getTypeID());
+
+      break;
     }
-  }
 
-  //  // write all your entities..
-  //  this->dxf->writePoint(
-  //      *this->dw,
-  //      DL_PointData(10.0,
-  //                   45.0,
-  //                   0.0),
-  //      DL_Attributes("mainlayer", 256, -1, "BYLAYER"));
+    case RS2::EntityPolyline:
+    {
+      sstDxf02TypPolylineCls oPolylineRec;
+      sstDxf02FncPolylineCls *oLocSstFncPolyline = NULL;
+      oLocSstFncPolyline = this->oDxfDb.getSstFncPolyline();
 
-//  this->dxf->writeLine(
-//      *this->dw,
-//      DL_LineData(25.0,   // start point
-//                  30.0,
-//                  0.0,
-//                  100.0,   // end point
-//                  120.0,
-//                  0.0),
-//      DL_Attributes("mainlayer", 256, -1, "BYLAYER"));
+      // if new entity-type, then write open polyline or hatch and close
+      iStat = this->WriteOpenEntities(0);
+
+      iStat = oLocSstFncPolyline->Read(0,oMainRec.getTypeID(),&oPolylineRec);
+      assert(iStat == 0);
+
+      // write record data to dxflib object
+      DL_PolylineData oDL_Polyline(0,0,0,0);
+      oPolylineRec.WritToDL(&oDL_Polyline);
+
+      iStat = oLocSstFncLType->Read ( 0, oPolylineRec.getLinetypeID(), &oLTypeRec);
+      assert(iStat == 0);
+
+
+      if ( strncmp( oLTypeRec.getName(), "BYLAYER", dSSTDXFLTYPENAMELEN) == 0)
+      {  // LineType / width by layer
+        // write next insert into dxf file
+
+        iStat = oLocSstFncLType->Read ( 0, oLayRec.getLinetypeID(), &oLTypeRec);
+        assert(iStat == 0);
+
+        this->dxf->writePolyline(  *this->dw,
+                                  oDL_Polyline,
+                                  DL_Attributes(oLayRec.getName(),
+                                  oPolylineRec.getColor(),
+                                  oLayRec.getWidth(),
+                                  oLTypeRec.getName()));
+      }
+      else
+      {
+        // write next insert into dxf file
+        this->dxf->writePolyline(  *this->dw,
+                                  oDL_Polyline,
+                                  DL_Attributes(oLayRec.getName(),
+                                  oPolylineRec.getColor(),
+                                  oPolylineRec.getWidth(),
+                                  oLTypeRec.getName()));
+      }
+
+
+      this->oDxfDb.setActEntType(oMainRec.getEntityType());
+      this->oDxfDb.setActRecNo(oMainRec.getTypeID());
+
+      break;
+    }
+    case RS2::EntityVertex:
+    {
+      sstDxf02FncVertexCls *oLocSstFncVertex = NULL;
+      oLocSstFncVertex = this->oDxfDb.getSstFncVertex();
+
+      sstDxf02TypVertexCls oVertexRec;
+      DL_VertexData oDL_Vertex(0.0,0.0,0.0,0.0);
+
+      iStat = oLocSstFncVertex->Read(0,oMainRec.getTypeID(),&oVertexRec);
+      assert(iStat == 0);
+
+      // write record data to dxflib object
+      oVertexRec.WritToDL(&oDL_Vertex);
+
+      // write next insert into dxf file
+      this->dxf->writeVertex(  *this->dw,
+                                oDL_Vertex);
+
+      break;
+    }
+      default:
+        break;
+      }
+
+    }  // End inside layer
+    }  // end switch
+
+
 
   this->dw->sectionEnd();
 
@@ -650,7 +741,7 @@ int sstDxf02WriteCls::WrtDss2PolyLine (int           iKey,
 //-----------------------------------------------------------------------------
   if ( iKey != 0) return -1;
 
-  // Die Anzahl der aktuell gespeicherten Datensätze zurückgeben.
+  // Die Anzahl der aktuell gespeicherten DatensÐ´tze zurÑŒckgeben.
   // iStat = DS1_DsAnz ( 0, sPntDss, &lAnzDs);
   lAnzDs = sPntDss->count();
 
@@ -695,3 +786,19 @@ int sstDxf02WriteCls::ReadAllCsvFiles(int iKey)
   return this->oDxfDb.ReadAllCsvFiles(0,this->oDxfFilNam);
 }
 //=============================================================================
+int sstDxf02WriteCls::WriteOpenEntities(int iKey)
+{
+  if ( iKey != 0) return -1;
+
+  RS2::EntityType eType = this->oDxfDb.getActEntType();
+
+  if(eType == RS2::EntityPolyline)
+  {
+    this->dxf->writePolylineEnd(*this->dw);
+    this->oDxfDb.setActEntType(RS2::EntityUnknown);
+  }
+
+  return 0;
+}
+//=============================================================================
+

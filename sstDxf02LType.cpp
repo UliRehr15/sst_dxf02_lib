@@ -22,7 +22,10 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  *
 **********************************************************************/
-// sstDxf02Block.cpp   26.02.16  Re.   26.02.16  Re.
+//  sstDxf02LType.cpp   10.06.16  Re.   10.06.16  Re.
+//
+//  Functions for sst Dxf LType Classes
+//
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,111 +46,100 @@
 #include <sstDxf02Lib.h>
 
 //=============================================================================
-sstDxf02TypBlkCls::sstDxf02TypBlkCls()
+sstDxf02TypLTypeCls::sstDxf02TypLTypeCls()
 {
-  this->ulBlockID = 0;
-  memset(this->Nam,0,dSSTDXFBLOCKNAMELEN);
-  this->flags = 0;
+
 }
 //=============================================================================
-int sstDxf02TypBlkCls::getFlags() const
-{
-return flags;
-}
-//=============================================================================
-void sstDxf02TypBlkCls::setFlags(int value)
-{
-flags = value;
-}
-//=============================================================================
-char* sstDxf02TypBlkCls::getName()
+char* sstDxf02TypLTypeCls::getName()
+// std::string sstDxf02TypLTypeCls::getName()
 {
   return this->Nam;
 }
 //=============================================================================
-void sstDxf02TypBlkCls::setName(const char* cTmpName)
+dREC04RECNUMTYP sstDxf02TypLTypeCls::getLineTypeID() const
 {
-  strncpy(this->Nam,cTmpName,dSSTDXFLAYERNAMELEN);
+return dLineTypeID;
 }
+//=============================================================================
+void sstDxf02TypLTypeCls::setLineTypeID(const dREC04RECNUMTYP &value)
+{
+dLineTypeID = value;
+}
+//=============================================================================
+void sstDxf02TypLTypeCls::setName(const std::string oTmpName)
+{
+  strncpy(this->Nam,oTmpName.c_str(),dSSTDXFLTYPENAMELEN);
+}
+//=============================================================================
+int sstDxf02TypLTypeCls::getSizeName() const
+{
+  return sizeof(this->Nam);
+}
+//=============================================================================
 
-unsigned long sstDxf02TypBlkCls::getBlockID() const
+sstDxf02FncLTypeCls::sstDxf02FncLTypeCls():sstDxf02FncBaseCls(sizeof(sstDxf02TypLTypeCls))
 {
-return ulBlockID;
-}
-
-void sstDxf02TypBlkCls::setBlockID(unsigned long value)
-{
-ulBlockID = value;
-}
-//=============================================================================
-void sstDxf02TypBlkCls::ReadFromDL(const DL_BlockData oDlBlk)
-{
-  strncpy(this->Nam, oDlBlk.name.c_str(), dSSTDXFBLOCKNAMELEN);
-  this->flags = oDlBlk.flags;
-}
-//=============================================================================
-void sstDxf02TypBlkCls::WritToDL(DL_BlockData *poDlBlk)
-{
-    poDlBlk->name = this->getName();
-    poDlBlk->flags = this->getFlags();
-}
-//=============================================================================
-// Constructor
-sstDxf02FncBlkCls::sstDxf02FncBlkCls():sstDxf02FncBaseCls(sizeof(sstDxf02TypBlkCls))
-{
-  sstDxf02TypBlkCls oBlkRec;
-  // Init new name Tree sorting object for Block RecMem object
-  int iStat = this->TreIni( 0, &oBlkRec, &oBlkRec.Nam, sizeof(oBlkRec.Nam), sstRecTyp_CC, &this->oBlockTree);
+  sstDxf02TypLTypeCls oLTypeRec;
+  // Init new name Tree sorting object for Linetype table object
+  int iStat = this->TreIni( 0, &oLTypeRec, oLTypeRec.getName(), oLTypeRec.getSizeName(), sstRecTyp_CC, &this->oLTypeTree);
   assert(iStat == 0);
-
 }
-
-// Csv Read Function
-int sstDxf02FncBlkCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxfLib_Str, sstDxf02TypBlkCls *oSstBlk)
+//=============================================================================
+int sstDxf02FncLTypeCls::WriteNewUnique(int iKey, sstDxf02TypLTypeCls oLTypeRec, dREC04RECNUMTYP *dLTypeRecNo)
 {
-  DL_BlockData sDlBlk("",0,0.0,0.0,0.0);
-  // sstStr01Cls oCsvRow;
-  unsigned long ulTmpBlockID = 0;
+  if ( iKey != 0) return -1;
+
   int iStat = 0;
-  int iRet  = 0;
+  // dREC04RECNUMTYP dLTypeRecNo = 0;
+
+  // Find record with exact search value
+  iStat = this->TreSeaEQ( 0, this->getNameSortKey(), (char*) oLTypeRec.getName(), dLTypeRecNo);
+
+  if (*dLTypeRecNo == 0)
+  {
+    *dLTypeRecNo = this->count();
+    oLTypeRec.setLineTypeID(*dLTypeRecNo+1);
+    // Write new record into record memory and update all trees
+    iStat = this->TreWriteNew( 0, &oLTypeRec, dLTypeRecNo);
+    assert(iStat == 0);
+  }
+
+  return iStat;
+}
+//=============================================================================
+int sstDxf02FncLTypeCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *oCsvStr, sstDxf02TypLTypeCls *oTypLType)
+{
+  unsigned long ulTmpLTypeID = 0;
+  std::string oTmpStr;
+  //int iTmpFlags = 0;
+
+  int iStat = 0;
 //-----------------------------------------------------------------------------
   if ( iKey != 0) return -1;
 
   oCsvRow.SetReadPositon(0,0);
 
   if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpBlockID);
+    iStat = oCsvRow.CsvString2_UInt4( 0, oCsvStr, &ulTmpLTypeID);
   if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_Str( 0, ssstDxfLib_Str, &sDlBlk.name);
+    iStat = oCsvRow.CsvString2_Str( 0, oCsvStr, &oTmpStr);
+
   if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_Int2( 0, ssstDxfLib_Str, &sDlBlk.flags);
-  if (iStat >= 0)
-
-  *sErrTxt = oCsvRow.GetErrorString();
-
-  oSstBlk->ReadFromDL(sDlBlk);
-  oSstBlk->setBlockID(ulTmpBlockID);
-
-  // read base dxf attributes from csv string
-  if (iStat >= 0)
-    iStat = this->Csv_BaseRead(0, sErrTxt, ssstDxfLib_Str, oSstBlk);
-
-  // Fatal Errors goes to an assert
-  if (iRet < 0)
   {
-    // Expression (iRet >= 0) has to be fullfilled
-    assert(0);
+    oTypLType->setLineTypeID(ulTmpLTypeID);
+    oTypLType->setName(oTmpStr.c_str());
+  }
+  else
+  {
+    *sErrTxt = oCsvRow.GetErrorString();
   }
 
-  // Small Errors will given back
-  iRet = iStat;
-
-//  Bloc Function1 End
   return iStat;
 }
 
 // Csv Write Function
-int sstDxf02FncBlkCls::Csv_Write(int iKey, sstDxf02TypBlkCls *poSstBlk, std::string *ssstDxfLib_Str)
+int sstDxf02FncLTypeCls::Csv_Write(int iKey, sstDxf02TypLTypeCls *poSstLType, std::string *ssstDxfLib_Str)
 {
   // sstStr01Cls oCsvRow;  // Csv String Convert object
   int iStat = 0;
@@ -159,15 +151,15 @@ int sstDxf02FncBlkCls::Csv_Write(int iKey, sstDxf02TypBlkCls *poSstBlk, std::str
   ssstDxfLib_Str->clear();
 
   if (iStat >= 0)
-    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstBlk->getBlockID(), ssstDxfLib_Str);
+    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstLType->getLineTypeID(), ssstDxfLib_Str);
   if (iStat >= 0)
-    iStat = oCsvRow.Csv_Char_2String( 0, poSstBlk->getName(), ssstDxfLib_Str);
-  if (iStat >= 0)
-    iStat = oCsvRow.Csv_Int2_2String ( 0, poSstBlk->getFlags(), ssstDxfLib_Str);
+    iStat = oCsvRow.Csv_Char_2String( 0, poSstLType->getName(), ssstDxfLib_Str);
+//  if (iStat >= 0)
+//    iStat = oCsvRow.Csv_Int2_2String ( 0, poSstLType->getFlags(), ssstDxfLib_Str);
 
   // write base dxf attributes to csv string
-  if (iStat >= 0)
-    iStat = this->Csv_BaseWrite ( 0, *poSstBlk, ssstDxfLib_Str);
+//  if (iStat >= 0)
+//    iStat = this->Csv_BaseWrite ( 0, *poSstLAY, ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iRet < 0)
@@ -183,27 +175,19 @@ int sstDxf02FncBlkCls::Csv_Write(int iKey, sstDxf02TypBlkCls *poSstBlk, std::str
   return iStat;
 }
 //=============================================================================
-int sstDxf02FncBlkCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
+int sstDxf02FncLTypeCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
 {
   std::string oTitelStr;
   int iStat = 0;
-
-//  char Nam[dSSTDXFBLOCKNAMELEN];  /**< Block Name */
-//  int  flags;               /**< Block Flags */
 
   if ( iKey != 0) return -1;
 
   ssstDxfLib_Str->clear();
 
-  oTitelStr = "BlockID";
+  oTitelStr = "LineTypeID";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
-  oTitelStr = "name";
+  oTitelStr = "Name";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
-  oTitelStr = "flags";
-  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
-
-  // append base attributes to block csv titel row
-  this->Csv_BaseHeader(0,ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iStat < 0)
@@ -215,12 +199,12 @@ int sstDxf02FncBlkCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
   return iStat;
 }
 //=============================================================================
-sstRec04TreeKeyCls* sstDxf02FncBlkCls::getNameSortKey()
+sstRec04TreeKeyCls* sstDxf02FncLTypeCls::getNameSortKey()
 {
-  return &this->oBlockTree;
+  return &this->oLTypeTree;
 }
 //=============================================================================
-int sstDxf02FncBlkCls::ReadCsvFile(int iKey, std::string oFilNam)
+int sstDxf02FncLTypeCls::ReadCsvFile(int iKey, std::string oFilNam)
 {
   sstMisc01AscFilCls oCsvFilLayer;
   int iStat = 0;
@@ -228,25 +212,26 @@ int sstDxf02FncBlkCls::ReadCsvFile(int iKey, std::string oFilNam)
   if ( iKey != 0) return -1;
 
   iStat = oCsvFilLayer.fopenRd(0,oFilNam.c_str());
-  if (iStat < 0) return -2;
   // assert(iStat==0);
+  if (iStat < 0) return -2;
 
   // sstDxf02FncLayCls oSstFncLay;  // layer recmem object
-  std::string oLayStr;
+  std::string oLTypeStr;
   std::string oErrStr;
   dREC04RECNUMTYP dRecNo = 0;
   int iStat1 = 0;
   // Read title row
-  iStat1 = oCsvFilLayer.Rd_StrDS1 ( 2, &oLayStr);
-  if (iStat1 < 0) return -3;
+  iStat1 = oCsvFilLayer.Rd_StrDS1 ( 2, &oLTypeStr);
+  if (iStat < 0) return -3;
 
   // Read first data row
-  iStat1 = oCsvFilLayer.Rd_StrDS1 ( 2, &oLayStr);
+  iStat1 = oCsvFilLayer.Rd_StrDS1 ( 2, &oLTypeStr);
+
   while (iStat1 >= 0)
   {
-    sstDxf02TypBlkCls oSstBlk;
+    sstDxf02TypLTypeCls oSstLType;
     // Read layer object from string row
-    iStat = this->Csv_Read( 0, &oErrStr, &oLayStr, &oSstBlk);
+    iStat = this->Csv_Read( 0, &oErrStr, &oLTypeStr, &oSstLType);
     if (iStat < 0)
     {
       iStat1 = -1;
@@ -254,11 +239,10 @@ int sstDxf02FncBlkCls::ReadCsvFile(int iKey, std::string oFilNam)
       break;
     }
     // write layer object to recmem
-    this->WritNew(0,&oSstBlk,&dRecNo);
-
+    this->WritNew(0,&oSstLType,&dRecNo);
     // Read next row from layer csv file
-    oLayStr.clear();
-    iStat1 = oCsvFilLayer.Rd_StrDS1 ( 2, &oLayStr);
+    oLTypeStr.clear();
+    iStat1 = oCsvFilLayer.Rd_StrDS1 ( 2, &oLTypeStr);
   }
 
   oCsvFilLayer.fcloseFil(0);
@@ -266,15 +250,15 @@ int sstDxf02FncBlkCls::ReadCsvFile(int iKey, std::string oFilNam)
   return iStat;
 }
 //=============================================================================
-int sstDxf02FncBlkCls::WriteCsvFile(int iKey, std::string oDxfFilNam)
+int sstDxf02FncLTypeCls::WriteCsvFile(int iKey, std::string oDxfFilNam)
 {
   sstMisc01AscFilCls oCsvFil;
   std::string oCsvFilNam;
   //-----------------------------------------------------------------------------
   if ( iKey != 0) return -1;
 
-  // ===== Write all block data to Csv file
-  oCsvFilNam = oDxfFilNam + "_Block.csv";
+  // ===== Write all Layer data to Csv file
+  oCsvFilNam = oDxfFilNam + "_Linetype.csv";
   int iStat = oCsvFil.fopenWr(0,(char*) oCsvFilNam.c_str());
   assert(iStat >= 0);
 
@@ -286,12 +270,12 @@ int sstDxf02FncBlkCls::WriteCsvFile(int iKey, std::string oDxfFilNam)
   for(dREC04RECNUMTYP kk = 1; kk <= this->count(); kk++)
   {
 
-    sstDxf02TypBlkCls oDxfBlk;
-    iStat = this->Read(0,kk,&oDxfBlk);
+    sstDxf02TypLTypeCls oDxfLType;
+    iStat = this->Read(0,kk,&oDxfLType);
 
-    oDxfBlk.setBlockID(kk);
+    //  oDxfLType.setLayerID(kk);
 
-    this->Csv_Write( 0, &oDxfBlk, &oCsvStr);
+    this->Csv_Write( 0, &oDxfLType, &oCsvStr);
     oCsvFil.Wr_StrDS1(0, &oCsvStr);
   }
 

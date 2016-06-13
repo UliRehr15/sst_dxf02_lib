@@ -69,15 +69,20 @@ void sstDxf02TypLayCls::setName(const char* cTmpName)
 {
   strncpy(this->Nam,cTmpName,dSSTDXFLAYERNAMELEN);
 }
-
+//=============================================================================
 unsigned long sstDxf02TypLayCls::getLayerID() const
 {
 return ulLayerID;
 }
-
+//=============================================================================
 void sstDxf02TypLayCls::setLayerID(unsigned long value)
 {
 ulLayerID = value;
+}
+//=============================================================================
+int sstDxf02TypLayCls::getSizeName() const
+{
+  return sizeof(this->Nam);
 }
 //=============================================================================
 void sstDxf02TypLayCls::ReadFromDL(const DL_LayerData oDlLay)
@@ -97,7 +102,7 @@ sstDxf02FncLayCls::sstDxf02FncLayCls():sstDxf02FncBaseCls(sizeof(sstDxf02TypLayC
 {
   sstDxf02TypLayCls oLayRec;
   // Init new name Tree sorting object for Layer RecMem object
-  int iStat = this->TreIni( 0, &oLayRec, &oLayRec.Nam, sizeof(oLayRec.Nam), sstRecTyp_CC, &this->oLayerTree);
+  int iStat = this->TreIni( 0, &oLayRec, oLayRec.getName(), oLayRec.getSizeName(), sstRecTyp_CC, &this->oLayerTree);
   assert(iStat == 0);
 }
 //=============================================================================
@@ -125,6 +130,11 @@ int sstDxf02FncLayCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *oCs
     oTypLay->setLayerID(ulTmpLayerID);
     oTypLay->setName(oTmpStr.c_str());
     oTypLay->setFlags(iTmpFlags);
+
+    // read base dxf attributes from csv string
+    if (iStat >= 0)
+      iStat = this->Csv_BaseRead(0, sErrTxt, oCsvStr, oTypLay);
+
   }
   else
   {
@@ -152,6 +162,10 @@ int sstDxf02FncLayCls::Csv_Write(int iKey, sstDxf02TypLayCls *poSstLAY, std::str
     iStat = oCsvRow.Csv_Char_2String( 0, poSstLAY->getName(), ssstDxfLib_Str);
   if (iStat >= 0)
     iStat = oCsvRow.Csv_Int2_2String ( 0, poSstLAY->getFlags(), ssstDxfLib_Str);
+
+  // write base dxf attributes to csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseWrite ( 0, *poSstLAY, ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iRet < 0)
@@ -185,6 +199,9 @@ int sstDxf02FncLayCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
   oTitelStr = "flags";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+
+  // append base attributes to layer csv titel row
+  this->Csv_BaseHeader(0,ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iStat < 0)

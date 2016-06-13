@@ -40,6 +40,7 @@
 
 #define dSSTDXFLAYERNAMELEN   256  /**< Layer Name length @ingroup sstDxf02Lib */
 #define dSSTDXFBLOCKNAMELEN   256  /**< Block Name length @ingroup sstDxf02Lib */
+#define dSSTDXFLTYPENAMELEN   256  /**< LineType Name length @ingroup sstDxf02Lib */
 
 //==============================================================================
 /**
@@ -108,17 +109,17 @@ class sstDxf02TypBaseCls
     sstDxf02TypBaseCls();  // Constructor
     //==============================================================================
     /**
-    * @brief // Get Cx Value  <BR>
+    * @brief // Get Value  <BR>
     *
-    * @return Cx
+    * @return value
     */
     // ----------------------------------------------------------------------------
     int getColor() const;
     //==============================================================================
     /**
-    * @brief // Set Cx Value  <BR>
+    * @brief // Set Value  <BR>
     *
-    * @param value [in] Set Cx
+    * @param value [in] Set Value
     */
     // ----------------------------------------------------------------------------
     void setColor(int value);
@@ -191,6 +192,71 @@ class sstDxf02TypBaseCls
     */
     // ----------------------------------------------------------------------------
     void setRecordID(const dREC04RECNUMTYP &value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return value
+    */
+    // ----------------------------------------------------------------------------
+    dREC04RECNUMTYP getLinetypeID() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Set Value
+    */
+    // ----------------------------------------------------------------------------
+    void setLinetypeID(const dREC04RECNUMTYP &value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return value
+    */
+    // ----------------------------------------------------------------------------
+    int getColor24() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Set Value
+    */
+    // ----------------------------------------------------------------------------
+    void setColor24(int value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return value
+    */
+    // ----------------------------------------------------------------------------
+    int getWidth() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Set Value
+    */
+    // ----------------------------------------------------------------------------
+    void setWidth(int value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return value
+    */
+    // ----------------------------------------------------------------------------
+    int getHandle() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Set Value
+    */
+    // ----------------------------------------------------------------------------
+    void setHandle(int value);
+    //==============================================================================
 
 private:
     // standard attributes
@@ -202,6 +268,63 @@ private:
     int color24;                 /**< color24 */
     int width;                   /**< width */
     int handle;                  /**< handle */
+};
+//==============================================================================
+/**
+* @brief LineType record class
+*
+* LineType record class <BR>
+*
+* Changed: 10.06.16  Re.
+*
+* @ingroup sstDxf02Lib
+*
+* @author Re.
+*
+* @date 10.06.16
+*/
+// ----------------------------------------------------------------------------
+class sstDxf02TypLTypeCls
+{
+  public:   // Public functions
+     sstDxf02TypLTypeCls();  // Constructor
+    //~sstTestBaseCls();  // Destructor
+     //==============================================================================
+     /**
+     * @brief // Set Linetype name <BR>
+     * oSstDxfLType.setName(iKey)
+     *
+     * @param oName [in] Set Name
+     */
+     // ----------------------------------------------------------------------------
+     void setName(const std::string oName);
+     //==============================================================================
+     /**
+     * @brief // Get LineType Name <BR>
+     * oSstDxfLType.getName(iKey)
+     *
+     * @return char Name
+     */
+     // ----------------------------------------------------------------------------
+     char* getName();
+     // std::string getName();
+     //==============================================================================
+     /**
+     * @brief // Get Size of Linetype Name <BR>
+     * iSizeNam = oSstDxfLType.GetSizeName();
+     *
+     * @return int size of name
+     */
+     // ----------------------------------------------------------------------------
+     int getSizeName() const;
+     //==============================================================================
+// ----------------------------------------------------------------------------
+     dREC04RECNUMTYP getLineTypeID() const;
+     void setLineTypeID(const dREC04RECNUMTYP &value);
+
+private:  // Private functions
+     dREC04RECNUMTYP dLineTypeID;   /**< Linetype ID */
+     char Nam[dSSTDXFLTYPENAMELEN]; /**< Linetype Name */
 };
 //==============================================================================
 /**
@@ -564,6 +687,7 @@ class sstDxf02TypInsertCls : public sstDxf02TypBaseCls
     */
     // ----------------------------------------------------------------------------
     void setIpz(double value);
+    // sstDxf02TypBaseCls getBaseAttributes();
 
 private:
 
@@ -1244,9 +1368,26 @@ class sstDxf02TypHatchEdgeCls  // : public sstDxf02TypBaseCls
     // ----------------------------------------------------------------------------
     void setEndTangentY(double value);
     //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return value
+    */
+    // ----------------------------------------------------------------------------
+    dREC04RECNUMTYP getParentID() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setParentID(const dREC04RECNUMTYP &value);
+    //==============================================================================
 
 private:
     dREC04RECNUMTYP dRecordID; /**< record id */
+    dREC04RECNUMTYP dParentID; /**< Parent id */
     bool defined;  //  * Set to true if this edge is fully defined.
     int type;   // * Edge type. 1=line, 2=arc, 3=elliptic arc, 4=spline.
     double x1;  /*! Start point (X). */
@@ -1676,15 +1817,15 @@ private:
 * @date 08.07.15
 */
 // ----------------------------------------------------------------------------
-class sstDxf02TypLayCls
+class sstDxf02TypLayCls : public sstDxf02TypBaseCls
 {
   public:   // Public functions
      sstDxf02TypLayCls();  // Constructor
     //~sstTestBaseCls();  // Destructor
      //==============================================================================
      /**
-     * @brief // Shortstory <BR>
-     * oSstDxfLay.Func_1(iKey)
+     * @brief // Set Layer name <BR>
+     * oSstDxfLay.setName(iKey)
      *
      * @param cName [in] Set Name
      */
@@ -1692,8 +1833,8 @@ class sstDxf02TypLayCls
      void setName(const char* cName);
      //==============================================================================
      /**
-     * @brief // Shortstory <BR>
-     * oSstDxfLay.Func_1(iKey)
+     * @brief // Get Layer Name <BR>
+     * oSstDxfLay.getName(iKey)
      *
      * @return char Name
      */
@@ -1770,13 +1911,20 @@ class sstDxf02TypLayCls
      // ----------------------------------------------------------------------------
      void setLayerID(unsigned long value);
      //==============================================================================
+     /**
+     * @brief // Get Size of Layer Name <BR>
+     * iSizeNam = oSstDxfLay.GetSizeName();
+     *
+     * @return int size of name
+     */
+     // ----------------------------------------------------------------------------
+     int getSizeName() const;
      //==============================================================================
 
-     char Nam[dSSTDXFLAYERNAMELEN]; /**< Layer Name */
-
-private:  // Private functions
-     unsigned long ulLayerID;
-  int flags;               /**< Layer flags. (1 = frozen, 2 = frozen by default, 4 = locked) */
+  private:  // Private functions
+    unsigned long ulLayerID;
+    int flags;               /**< Layer flags. (1 = frozen, 2 = frozen by default, 4 = locked) */
+    char Nam[dSSTDXFLAYERNAMELEN]; /**< Layer Name */
 
 };
 //-----------------------------------------------------------------------------
@@ -1795,7 +1943,7 @@ private:  // Private functions
 * @date 08.07.15
 */
 // ----------------------------------------------------------------------------
-class sstDxf02TypBlkCls
+class sstDxf02TypBlkCls : public sstDxf02TypBaseCls
 {
   public:   // Public functions
      sstDxf02TypBlkCls();  // Constructor
@@ -1921,8 +2069,198 @@ class sstDxf02FncBaseCls: public sstRec04Cls
   */
   // ----------------------------------------------------------------------------
     sstDxf02FncBaseCls(dREC04RECSIZTYP iSize);  // Constructor
+    //==============================================================================
+    /**
+    * @brief // read base attribute data from csv string to base object <BR>
+    * iStat = oDxfFncBase.Csv_BaseRead( iKey, oErrStr, oCsvArcStr, oArc);
+    *
+    * @param iKey         [in]  For the moment 0
+    * @param oErrStr      [out] string where interpret error occors
+    * @param oCsvBaseStr  [in]  Csv Arc string
+    * @param oAttributes  [out] return base dxf attribute object
+    *
+    * @return Errorstate
+    *
+    * @retval   = 0: OK
+    * @retval   < 0: Unspecified Error
+    */
+    // ----------------------------------------------------------------------------
+    int Csv_BaseRead(int iKey, std::string *oErrStr, std::string *oCsvBaseStr, sstDxf02TypBaseCls *oAttributes);
+    //==============================================================================
+    /**
+    * @brief // Shortstory <BR>
+    * iStat = oDxfFncArc.Func_1(iKey)
+    *
+    * @param iKey           [in] For the moment 0
+    * @param oAttributes   [in] base dxf attributes
+    * @param ssstDxfLib_Str [out] csv string with base dxf attributes
+    *
+    * @return Errorstate
+    *
+    * @retval   = 0: OK
+    * @retval   < 0: Unspecified Error
+    */
+    // ----------------------------------------------------------------------------
+    int Csv_BaseWrite(int iKey, sstDxf02TypBaseCls oAttributes, std::string *ssstDxfLib_Str);
+    //==============================================================================
+    /**
+    * @brief // write base attribtes titel row to csv file <BR>
+    * iStat = oDxfFncBase.Csv_BaseHeader ( 0, &oCsvStr)
+    *
+    * @param iKey    [in]  For the moment 0
+    * @param oCsvStr [out] return string titel row
+    *
+    * @return Errorstate
+    *
+    * @retval   = 0: OK
+    * @retval   < 0: Unspecified Error
+    */
+    // ----------------------------------------------------------------------------
+    int Csv_BaseHeader(int iKey, std::string *oCsvStr);
+
     sstStr01Cls oCsvRow;   /**< Csv String Convert object */
   private:
+};
+//==============================================================================
+/**
+* @brief LineType table class
+*
+* LineType table class <BR>
+*
+* Changed: 10.06.16  Re.
+*
+* @ingroup sstDxf02Lib
+*
+* @author Re.
+*
+* @date 10.06.16
+*/
+// ----------------------------------------------------------------------------
+class sstDxf02FncLTypeCls : public sstDxf02FncBaseCls
+{
+  public:   // Public functions
+     sstDxf02FncLTypeCls();  // Constructor
+    //~sstTestBaseCls();  // Destructor
+     //==============================================================================
+     /**
+     * @brief // write new record to table if unique LType name <BR>
+     * iStat = oLTypeTab.WriteNewUnique(iKey);
+     *
+     * @param iKey      [in] For the moment 0
+     * @param oLTypeRec [in] LType Record
+     * @param dLTypeRecNo [out] new LType Record number
+     *
+     * @return Errorstate
+     *
+     * @retval   = 1: New record written
+     * @retval   = 0: name already in table, not written
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int WriteNewUnique(int iKey,sstDxf02TypLTypeCls oLTypeRec, dREC04RECNUMTYP *dLTypeRecNo);
+     //==============================================================================
+     /**
+     * @brief // Read line type object from string row <BR>
+     * iStat = oSstFncLType.CsvRead ( iKey, oErrStr, oRowStr, oSstLay);
+     *
+     * @param iKey     [in]  For the moment 0
+     * @param oErrStr  [out] Read Error at string part
+     * @param oRowStr  [in]  read row
+     * @param oSstLType  [out] result line type object
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int Csv_Read(int                iKey,
+                  std::string       *oErrStr,
+                  std::string       *oRowStr,
+                  sstDxf02TypLTypeCls *oSstLType);  // Csv Read Function
+     //==============================================================================
+     /**
+     * @brief // Write linr type object to row string <BR>
+     * iStat = oSstFncLType.Csv_Write ( iKey, oSstLType, oRowStr);
+     *
+     * @param iKey    [in] For the moment 0
+     * @param oSstLType [in] Layer object
+     * @param sRowStr [out] Result Row string
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int Csv_Write(int                iKey,
+                   sstDxf02TypLTypeCls *oSstLType,
+                   std::string       *sRowStr);
+     //==============================================================================
+     /**
+     * @brief // write Layer titel row to csv file <BR>
+     * iStat = oSstFncLay.Csv_WriteHeader ( 0, &oCsvStr)
+     *
+     * @param iKey    [in]  For the moment 0
+     * @param oCsvStr [out] return string titel row
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int Csv_WriteHeader(int iKey, std::string *oCsvStr);
+     //==============================================================================
+
+     /**
+     * @brief // Return Linetype name sorting key <BR>
+     * poNameSortKey = oSstFncLType.GetNameSortKey();
+     *
+     * @return LType Name sorting key
+     */
+     // ----------------------------------------------------------------------------
+     sstRec04TreeKeyCls* getNameSortKey();
+     //==============================================================================
+     /**
+     * @brief // Read whole linetype csv file into sst_rec_mem <BR>
+     * iStat = oSstFncLType.ReadCsvFile ( iKey, oFilNam);
+     *
+     * @param iKey    [in] For the moment 0
+     * @param oFilNam [in] File name to import to rec mem
+     *
+     * @return Errorstate
+     *
+     * @retval   =  0: OK
+     * @retval   = -1: Wrong Key
+     * @retval   = -2: Open File Error
+     * @retval   = -3: General read error
+     * @retval   = -4: Record format read Error
+     * @retval   <  0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int ReadCsvFile(int iKey, std::string oFilNam);
+     //==============================================================================
+     /**
+     * @brief // write whole linetype data from table to csv file  <BR>
+     * iStat = oDxfFncLType.WriteCsvFile ( iKey, oDxfFilNam);
+     *
+     * @param iKey       [in] For the moment 0
+     * @param oDxfFilNam [in] File name to export to csv file
+     *
+     * @return Errorstate
+     *
+     * @retval   =  0: OK
+     * @retval   = -1: Wrong Key
+     */
+     // ----------------------------------------------------------------------------
+     int WriteCsvFile(int iKey, std::string oDxfFilNam);
+     //==============================================================================
+
+
+// ----------------------------------------------------------------------------
+  private:  // Private functions
+     sstRec04TreeKeyCls oLTypeTree; /**< sort tree for linetype names in table */
 };
 //==============================================================================
 /**
@@ -3247,10 +3585,19 @@ class sstDxf02DatabaseCls
      * @brief // get block table adress from dxf database <BR>
      * oBlkTab = oDxfDB.getSstFncBlk();
      *
-     * @return Layer table
+     * @return Block table adress
      */
      // ----------------------------------------------------------------------------
      sstDxf02FncBlkCls* getSstFncBlk();
+     //==============================================================================
+     /**
+     * @brief // get LType table adress from dxf database <BR>
+     * oBlkTab = oDxfDB.getSstFncLType();
+     *
+     * @return LineType table adress
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncLTypeCls* getSstFncLType();
      //==============================================================================
      /**
      * @brief // get arc table adress from dxf database <BR>
@@ -3324,19 +3671,54 @@ class sstDxf02DatabaseCls
      // ----------------------------------------------------------------------------
      sstDxf02FncMainCls* getSstFncMain();
      //==============================================================================
+     /**
+     * @brief // return record number <BR>
+     *
+     * @return Record number
+     */
+     // ----------------------------------------------------------------------------
+     dREC04RECNUMTYP getActRecNo() const;
+     //==============================================================================
+     /**
+     * @brief // Set record number <BR>
+     *
+     * @param value [in] record number
+     */
+     // ----------------------------------------------------------------------------
+     void setActRecNo(const dREC04RECNUMTYP &value);
+     //==============================================================================
+     /**
+     * @brief // return actual entity type <BR>
+     *
+     * @return actual entity type
+     */
+     // ----------------------------------------------------------------------------
+     RS2::EntityType getActEntType() const;
+     //==============================================================================
+     /**
+     * @brief // Set actual entity type <BR>
+     *
+     * @param value [in] actual entity type
+     */
+     // ----------------------------------------------------------------------------
+     void setActEntType(const RS2::EntityType &value);
+     //==============================================================================
 
 private:  // Private functions
   sstDxf02FncMainCls oSstFncMain;      /**< Main table object */
   sstDxf02FncLayCls oSstFncLay;        /**< layer table object */
   sstDxf02FncBlkCls oSstFncBlk;        /**< Block table object */
+  sstDxf02FncLTypeCls oSstFncLType;        /**< LineType table object */
   sstDxf02FncArcCls oSstFncArc;        /**< Arc table object */
   sstDxf02FncInsertCls oSstFncInsert;  /**< Insert table object */
   sstDxf02FncPolylineCls oSstFncPolyline;  /**< polyline table object */
   sstDxf02FncVertexCls oSstFncVertex;  /**< vertex table object */
-  sstDxf02FncHatchCls oSstFncHatch;  /**< hatch table object */
+  sstDxf02FncHatchCls oSstFncHatch;    /**< hatch table object */
   sstDxf02FncHatchEdgeCls oSstFncHatchEdge;  /**< hatch edge table object */
   sstDxf02FncHatchLoopCls oSstFncHatchLoop;  /**< hatch loop table object */
-  sstMisc01PrtFilCls *oPrt;            /**< Protocol object */
+  sstMisc01PrtFilCls *oPrt;                  /**< Protocol object */
+  dREC04RECNUMTYP dActRecNo;              // Actual Record Number
+  RS2::EntityType eActEntType;            // Actual Entity Type
 
 };
 //==============================================================================
@@ -3692,6 +4074,19 @@ class sstDxf02WriteCls
      */
      // ----------------------------------------------------------------------------
      int ReadAllCsvFiles(int iKey);
+     //==============================================================================
+     /**
+     * @brief // Close open object like polyline, if nessasary  <BR>
+     *
+     * @param iKey [in] For the moment 0
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int WriteOpenEntities(int iKey);
 // ----------------------------------------------------------------------------
 private:  // Private functions
   DL_Dxf* dxf;     /**< dxflib dxf */
@@ -4112,4 +4507,3 @@ int sstdxf_WrtDss2PolyLine (int           iKey,
 #endif
 //
 // --------------------------------------------------------------- File End ----
-

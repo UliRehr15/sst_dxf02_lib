@@ -223,6 +223,11 @@ int sstDxf02FncHatchCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *s
   if (iStat >= 0) iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxfLib_Str, &dLocOriginY);
   osstDxf02TypHatch->setOriginY(dLocOriginY);
 
+  // read base dxf attributes from csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseRead(0, sErrTxt, ssstDxfLib_Str, osstDxf02TypHatch);
+
+
   *sErrTxt = oCsvRow.GetErrorString();
 
   // Fatal Errors goes to an assert
@@ -265,6 +270,9 @@ int sstDxf02FncHatchCls::Csv_Write(int iKey, sstDxf02TypHatchCls *poSstHatch, st
   //  double originX;
   //  double originY;
 
+  // write base dxf attributes to csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseWrite ( 0, *poSstHatch, ssstDxfLib_Str);
 
   return iStat;
 }
@@ -302,6 +310,9 @@ int sstDxf02FncHatchCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
   oTitelStr = "OriginY";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+
+  // append base attributes to hatch csv titel row
+  this->Csv_BaseHeader(0,ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iStat < 0)

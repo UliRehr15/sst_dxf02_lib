@@ -145,7 +145,8 @@ int sstDxf02FncMainCls::Csv_Read(int iKey,
     iStat = oCsvRow.CsvString2_Str( 0, ssstDxfLib_Str, &oTmpTypeString);
     sstDxf02EntityTypeCls oEntityType;
     eEntityType = oEntityType.String2Enum(oTmpTypeString);
-    if (eEntityType == RS2::EntityUnknown) assert(0);
+    if (eEntityType == RS2::EntityUnknown)
+       assert(0);
   }
   if (iStat >= 0)
     iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &dTmpNumType);

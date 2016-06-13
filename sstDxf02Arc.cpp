@@ -219,6 +219,10 @@ int sstDxf02FncArcCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *sss
   osstDxf02TypArcCls->setLayerID(ulTmpLayerID);
   osstDxf02TypArcCls->setBlockID(ulTmpBlockID);
 
+  // read base dxf attributes from csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseRead(0, sErrTxt, ssstDxfLib_Str, osstDxf02TypArcCls);
+
   // Fatal Errors goes to an assert
   if (iRet < 0)
   {
@@ -260,8 +264,12 @@ int sstDxf02FncArcCls::Csv_Write(int iKey, sstDxf02TypArcCls *poSstARC, std::str
     iStat = oCsvRow.Csv_Dbl_2String ( 0, poSstARC->getAngle1(), ssstDxfLib_Str);
   if (iStat >= 0)
     iStat = oCsvRow.Csv_Dbl_2String ( 0, poSstARC->getAngle2(), ssstDxfLib_Str);
+//  if (iStat >= 0)
+//    iStat = oCsvRow.Csv_Int2_2String ( 0, poSstARC->getColor(), ssstDxfLib_Str);
+
+  // write base dxf attributes to csv string
   if (iStat >= 0)
-    iStat = oCsvRow.Csv_Int2_2String ( 0, poSstARC->getColor(), ssstDxfLib_Str);
+    iStat = this->Csv_BaseWrite ( 0, *poSstARC, ssstDxfLib_Str);
 
   return iStat;
 }
@@ -303,8 +311,11 @@ int sstDxf02FncArcCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
   oTitelStr = "angle2";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
-  oTitelStr = "color";
-  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+//  oTitelStr = "color";
+//  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+
+  // append base attributes to arc csv titel row
+  this->Csv_BaseHeader(0,ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iStat < 0)

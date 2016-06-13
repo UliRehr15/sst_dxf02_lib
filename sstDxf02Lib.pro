@@ -38,7 +38,8 @@ SOURCES		+=  \
     sstDxf02Polyline.cpp \
     sstDxf02Hatch.cpp \
     sstDxf02HatchLoop.cpp \
-    sstDxf02HatchEdge.cpp
+    sstDxf02HatchEdge.cpp \
+    sstDxf02LType.cpp
 
 OTHER_FILES += README.md
 

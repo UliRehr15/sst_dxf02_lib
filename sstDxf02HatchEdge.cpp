@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include <assert.h>
 
 #include <string>
@@ -51,6 +52,7 @@
 sstDxf02TypHatchEdgeCls::sstDxf02TypHatchEdgeCls()
 {
   this->dRecordID = 0;
+  this->dParentID = 0;
   this->angle1 = 0;
   this->angle2 = 0;
   this->ccw = 0;
@@ -112,6 +114,11 @@ void sstDxf02TypHatchEdgeCls::ReadFromDL(const DL_HatchEdgeData oDLHatchEdge)
   this->nKnots = oDLHatchEdge.nKnots;
   this->periodic = oDLHatchEdge.periodic;
   this->radius = oDLHatchEdge.radius;
+//  bool bResult = isnan(oDLHatchEdge.ratio);
+//  this->ratio = dSSTSTR01_UNDEF_DOUBLE;
+//  if (oDLHatchEdge.ratio <= dSSTSTR01_UNDEF_DOUBLE) this->ratio = dSSTSTR01_UNDEF_DOUBLE;
+//  else if (oDLHatchEdge.ratio >= -dSSTSTR01_UNDEF_DOUBLE) this->ratio = dSSTSTR01_UNDEF_DOUBLE;
+  //  else this->ratio = oDLHatchEdge.ratio;
   this->ratio = oDLHatchEdge.ratio;
   this->rational = oDLHatchEdge.rational;
   this->startTangentX = oDLHatchEdge.startTangentX;
@@ -167,6 +174,16 @@ return dRecordID;
 void sstDxf02TypHatchEdgeCls::setRecordID(const dREC04RECNUMTYP &value)
 {
 dRecordID = value;
+}
+//=============================================================================
+dREC04RECNUMTYP sstDxf02TypHatchEdgeCls::getParentID() const
+{
+return dParentID;
+}
+//=============================================================================
+void sstDxf02TypHatchEdgeCls::setParentID(const dREC04RECNUMTYP &value)
+{
+dParentID = value;
 }
 //=============================================================================
 bool sstDxf02TypHatchEdgeCls::getDefined() const
@@ -429,6 +446,7 @@ sstDxf02FncHatchEdgeCls::sstDxf02FncHatchEdgeCls():sstDxf02FncBaseCls(sizeof(sst
 int sstDxf02FncHatchEdgeCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxfLib_Str, sstDxf02TypHatchEdgeCls *osstDxf02TypHatchEdge)
 {
   dREC04RECNUMTYP dLocRecordID = 0;
+  dREC04RECNUMTYP dLocParentID = 0;
   bool bLocDefined;
   int iLocType;
   double dLocX1;
@@ -500,6 +518,9 @@ int sstDxf02FncHatchEdgeCls::Csv_Read(int iKey, std::string *sErrTxt, std::strin
 
   if (iStat >= 0) iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &dLocRecordID);
   if (iStat >= 0) osstDxf02TypHatchEdge->setRecordID(dLocRecordID);
+
+  if (iStat >= 0) iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &dLocParentID);
+  if (iStat >= 0) osstDxf02TypHatchEdge->setParentID(dLocParentID);
 
   if (iStat >= 0) iStat = oCsvRow.CsvString2_Bool( 0, ssstDxfLib_Str, &bLocDefined);
   if (iStat >= 0) osstDxf02TypHatchEdge->setDefined(bLocDefined);
@@ -602,6 +623,7 @@ int sstDxf02FncHatchEdgeCls::Csv_Write(int iKey, sstDxf02TypHatchEdgeCls *poSstH
   ssstDxfLib_Str->clear();
 
   if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, poSstHatchEdge->getRecordID(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, poSstHatchEdge->getParentID(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_Bool_2String( 0, poSstHatchEdge->getType(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getX1(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getY1(), ssstDxfLib_Str);
@@ -704,6 +726,8 @@ int sstDxf02FncHatchEdgeCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_S
   //  std::vector<std::vector<double> > vertices;
 
   oTitelStr = "RecordID";
+  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+  oTitelStr = "ParentID";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
   oTitelStr = "defined";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);

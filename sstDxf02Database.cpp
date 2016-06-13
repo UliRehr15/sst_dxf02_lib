@@ -45,6 +45,9 @@
 sstDxf02DatabaseCls::sstDxf02DatabaseCls(sstMisc01PrtFilCls *oTmpPrt)
 {
   this->oPrt = oTmpPrt;
+  dActRecNo = 0;              // Actual Record Number
+  eActEntType = RS2::EntityUnknown;            // Actual Entity Type
+
 }
 //=============================================================================
 int sstDxf02DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
@@ -61,6 +64,7 @@ int sstDxf02DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
 
   std::string oFilNamLayer;
   std::string oFilNamBlock;
+  std::string oFilNamLType;
   std::string oFilNamArc;
   std::string oFilNamInsert;
   std::string oFilNamPolyline;
@@ -72,6 +76,7 @@ int sstDxf02DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
 
   oFilNamLayer = oJobNam + "_Layer.csv";
   oFilNamBlock = oJobNam + "_Block.csv";
+  oFilNamLType = oJobNam + "_Linetype.csv";
   oFilNamArc = oJobNam + "_Arc.csv";
   oFilNamInsert = oJobNam + "_Insert.csv";
   oFilNamPolyline = oJobNam + "_Polyline.csv";
@@ -88,11 +93,7 @@ int sstDxf02DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
   if (iStat != 0)
   {
     // Write Message to Protocolfile and console
-    // iStat = oCsv2Dxf.SST_PrtWrtChar ( 1, (char*) oFilNamLayer.c_str(), (char*) "File not found: ");
     iStat = this->oPrt->SST_PrtWrtChar ( 1, (char*) oFilNamMain.c_str(), (char*) "File not found: ");
-
-    // Close Protocol
-    // iStat = oCsv2Dxf.SST_PrtZu ( 1);
     return -2;
   }
 
@@ -102,11 +103,8 @@ int sstDxf02DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
   if (iStat != 0)
   {
     // Write Message to Protocolfile and console
-    // iStat = oCsv2Dxf.SST_PrtWrtChar ( 1, (char*) oFilNamLayer.c_str(), (char*) "File not found: ");
     iStat = this->oPrt->SST_PrtWrtChar ( 1, (char*) oFilNamLayer.c_str(), (char*) "File not found: ");
 
-    // Close Protocol
-    // iStat = oCsv2Dxf.SST_PrtZu ( 1);
     return -2;
   }
 
@@ -115,8 +113,15 @@ int sstDxf02DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
   if (iStat != 0)
   {
     // Write Message to Protocolfile and console
-    // iStat = oCsv2Dxf.SST_PrtWrtChar ( 1, (char*) oFilNamBlock.c_str(), (char*) "File not found: ");
     iStat = this->oPrt->SST_PrtWrtChar ( 1, (char*) oFilNamBlock.c_str(), (char*) "File not found: ");
+  }
+
+  // Read whole linetype csv file into sst_rec_mem
+  iStat = oSstFncLType.ReadCsvFile ( 0, oFilNamLType);
+  if (iStat != 0)
+  {
+    // Write Message to Protocolfile and console
+    iStat = this->oPrt->SST_PrtWrtChar ( 1, (char*) oFilNamLType.c_str(), (char*) "File not found: ");
   }
 
   // Read whole insert csv file into sst_rec_mem
@@ -151,6 +156,11 @@ sstDxf02FncLayCls* sstDxf02DatabaseCls::getSstFncLay()
 sstDxf02FncBlkCls* sstDxf02DatabaseCls::getSstFncBlk()
 {
   return &this->oSstFncBlk;
+}
+//=============================================================================
+sstDxf02FncLTypeCls* sstDxf02DatabaseCls::getSstFncLType()
+{
+  return &this->oSstFncLType;
 }
 //=============================================================================
 sstDxf02FncArcCls* sstDxf02DatabaseCls::getSstFncArc()
@@ -191,5 +201,25 @@ sstDxf02FncHatchEdgeCls* sstDxf02DatabaseCls::getSstFncHatchEdge()
 sstDxf02FncMainCls* sstDxf02DatabaseCls::getSstFncMain()
 {
   return &this->oSstFncMain;
+}
+//=============================================================================
+dREC04RECNUMTYP sstDxf02DatabaseCls::getActRecNo() const
+{
+return dActRecNo;
+}
+//=============================================================================
+void sstDxf02DatabaseCls::setActRecNo(const dREC04RECNUMTYP &value)
+{
+dActRecNo = value;
+}
+//=============================================================================
+RS2::EntityType sstDxf02DatabaseCls::getActEntType() const
+{
+return eActEntType;
+}
+//=============================================================================
+void sstDxf02DatabaseCls::setActEntType(const RS2::EntityType &value)
+{
+eActEntType = value;
 }
 //=============================================================================

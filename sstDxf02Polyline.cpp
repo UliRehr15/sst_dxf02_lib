@@ -161,6 +161,10 @@ int sstDxf02FncPolylineCls::Csv_Read(int iKey, std::string *oErrStr, std::string
   if (iStat >= 0) iStat = oCsvRow.CsvString2_Int2( 0, ssstDxfLib_Str, &iLocFlags);
   if (iStat >= 0) osstDxf02TypPolylineCls->setFlags(iLocFlags);
 
+  // read base dxf attributes from csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseRead(0, oErrStr, ssstDxfLib_Str, osstDxf02TypPolylineCls);
+
   *oErrStr = oCsvRow.GetErrorString();
 
   // Fatal Errors goes to an assert
@@ -197,6 +201,9 @@ int sstDxf02FncPolylineCls::Csv_Write(int iKey, sstDxf02TypPolylineCls *poSstPol
   //  unsigned int n;
   //  int flags;
 
+  // write base dxf attributes to csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseWrite ( 0, *poSstPolyline, ssstDxfLib_Str);
 
 
   return iStat;
@@ -227,6 +234,8 @@ int sstDxf02FncPolylineCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_St
   oTitelStr = "Flags";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
 
+  // append base attributes to polyline csv titel row
+  this->Csv_BaseHeader(0,ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iStat < 0)
