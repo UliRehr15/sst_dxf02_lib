@@ -660,10 +660,10 @@ int sstDxf02WriteCls::WrtSecEntities (int          iKey)
         // write next insert into dxf file
         this->dxf->writePolyline(  *this->dw,
                                   oDL_Polyline,
-                                  DL_Attributes(oLayRec.getName(),
-                                  oPolylineRec.getColor(),
-                                  oPolylineRec.getWidth(),
-                                  oLTypeRec.getName()));
+                                   DL_Attributes(oLayRec.getName(),
+                                   oPolylineRec.getColor(),
+                                   oPolylineRec.getWidth(),
+                                   oLTypeRec.getName()));
       }
 
 
@@ -690,6 +690,75 @@ int sstDxf02WriteCls::WrtSecEntities (int          iKey)
       this->dxf->writeVertex(  *this->dw,
                                 oDL_Vertex);
 
+      break;
+    }
+    case RS2::EntityHatch:
+    {
+      sstDxf02FncHatchCls *oLocSstFncHatch = NULL;
+      oLocSstFncHatch = this->oDxfDb.getSstFncHatch();
+
+      sstDxf02TypHatchCls oHatchRec;
+      DL_HatchData oDL_Hatch;
+
+      iStat = oLocSstFncHatch->Read(0,oMainRec.getTypeID(),&oHatchRec);
+      assert(iStat == 0);
+
+      iStat = oLocSstFncLType->Read ( 0, oHatchRec.getLinetypeID(), &oLTypeRec);
+      assert(iStat == 0);
+
+      DL_Attributes oDL_Attributes;
+      oDL_Attributes.setLayer(oLayRec.getName());
+      oDL_Attributes.setColor( oHatchRec.getColor());
+      oDL_Attributes.setWidth( oHatchRec.getWidth());
+      oDL_Attributes.setHandle( oHatchRec.getHandle());
+      oDL_Attributes.setLineType( oLTypeRec.getName());
+
+
+      // write record data to dxflib object
+      oHatchRec.WritToDL(&oDL_Hatch);
+      oDL_Hatch.pattern = "SOLID";
+
+      // write next Hatch into dxf file
+      this->dxf->writeHatch1( *this->dw,
+                                oDL_Hatch, oDL_Attributes);
+      break;
+    }
+    case RS2::EntityHatchLoop:
+    {
+      sstDxf02FncHatchLoopCls *oLocSstFncHatchLoop = NULL;
+      oLocSstFncHatchLoop = this->oDxfDb.getSstFncHatchLoop();
+
+      sstDxf02TypHatchLoopCls oHatchLoopRec;
+      DL_HatchLoopData oDL_HatchLoop;
+
+      iStat = oLocSstFncHatchLoop->Read(0,oMainRec.getTypeID(),&oHatchLoopRec);
+      assert(iStat == 0);
+
+      // write record data to dxflib object
+      oHatchLoopRec.WritToDL(&oDL_HatchLoop);
+
+      // write next Hatch loop into dxf file
+      this->dxf->writeHatchLoop1( *this->dw,
+                                oDL_HatchLoop);
+      break;
+    }
+    case RS2::EntityHatchEdge:
+    {
+      sstDxf02FncHatchEdgeCls *oLocSstFncHatchEdge = NULL;
+      oLocSstFncHatchEdge = this->oDxfDb.getSstFncHatchEdge();
+
+      sstDxf02TypHatchEdgeCls oHatchEdgeRec;
+      DL_HatchEdgeData oDL_HatchEdge;
+
+      iStat = oLocSstFncHatchEdge->Read(0,oMainRec.getTypeID(),&oHatchEdgeRec);
+      assert(iStat == 0);
+
+      // write record data to dxflib object
+      oHatchEdgeRec.WritToDL(&oDL_HatchEdge);
+
+      // write next Hatch edge into dxf file
+      this->dxf->writeHatchEdge( *this->dw,
+                                oDL_HatchEdge);
       break;
     }
       default:

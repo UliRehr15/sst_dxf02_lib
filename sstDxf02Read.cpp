@@ -148,13 +148,10 @@ void sstDxf02ReadCls::addLayer(const DL_LayerData& data)
     int iStat = 0;
   //-----------------------------------------------------------------------------
 
-    // printf("LAYER: %s flags: %d\n", data.name.c_str(), data.flags);
-
     // Weiteren User-Datensatz in Datenspeicher schreiben.
     LayNamLen = strlen(data.name.c_str());
     if (LayNamLen < dSSTDXFLAYERNAMELEN)
     {
-      // strncpy( LayDs.Nam, data.name.c_str(), dSSTDXFLAYERNAMELEN);
       LayDs.setName(data.name.c_str());
       LayDs.setFlags( data.flags);
       LayDs.BaseReadFromDL(attributes);
@@ -199,7 +196,6 @@ void sstDxf02ReadCls::addBlock(const DL_BlockData& data)
   oActBlockNam = data.name;
 
   // Write new record into record memory and update all trees
-  // iStat = this->poDxfBlkMem->TreWriteNew ( 0, &oBlk, &dRecNo);
   oBlk.setLinetypeID(dLTypeRecNo);
   iStat = poBlkFnc->TreWriteNew( 0, &oBlk, &dRecNo);
   assert(iStat == 0);
@@ -243,7 +239,6 @@ void sstDxf02ReadCls::addInsert(const DL_InsertData& data)
   // is it element in section entities or block??
   if (this->oActBlockNam.length() > 0)
   {  // Block
-    // dREC04RECNUMTYP dNumBlocks = this->poDxfBlkMem->count();
     dNumBlocks = poBlkFnc->count();
     oDxfInsert.setBlockID(dNumBlocks);
   }
@@ -272,7 +267,6 @@ void sstDxf02ReadCls::addInsert(const DL_InsertData& data)
     // Find block record with block name
     oBlockStr = data.name;
     iStat = poBlkFnc->TreSeaEQ( 0, poBlkFnc->getNameSortKey(), (void*) oBlockStr.c_str(), &dBlkRecNo);
-    // assert(iStat >= 0);
     assert(iStat == 1);  // exit, if block not found in block table
     oDxfInsert.setBlockID(dBlkRecNo);
   }
@@ -427,6 +421,7 @@ void sstDxf02ReadCls::addPolyline(const DL_PolylineData& data)
     iStat = poLTypeFnc->TreSeaEQ( 0, poLTypeFnc->getNameSortKey(), (void*) oLTypeStr.c_str(), &dLTypeRecNo);
     assert(iStat == 1);
     oDxfPolyline.setLinetypeID(dLTypeRecNo);
+
   }
   iStat = poPolylineFnc->WritNew(0,&oDxfPolyline,&dEntRecNo);
 
@@ -469,29 +464,11 @@ void sstDxf02ReadCls::addVertex(const DL_VertexData& data)
 
   sstDxf02FncVertexCls *poVertexFnc;
   poVertexFnc = this->oDxfDb.getSstFncVertex();
-  // sstDxf02FncLayCls *poLayFnc;
-  // poLayFnc = this->oDxfDb.getSstFncLay();
-  // sstDxf02FncBlkCls *poBlkFnc;
-  // poBlkFnc = this->oDxfDb.getSstFncBlk();
   sstDxf02FncMainCls *poMainFnc;
   poMainFnc = this->oDxfDb.getSstFncMain();
 
   dREC04RECNUMTYP dNumBlocks = 0;
 
-//  // is it layer or block??
-//  if (this->oActBlockNam.length() > 0)
-//  {  // Block
-//    dNumBlocks = poBlkFnc->count();
-//    oDxfVertex.setBlockID(dNumBlocks);
-//  }
-//  else
-//  {  // Layer
-//    oLayerStr = attributes.getLayer();
-//    // Find record with exact search value
-//    iStat = poLayFnc->TreSeaEQ( 0, poLayFnc->getNameSortKey(), (void*) oLayerStr.c_str(), &dLayRecNo);
-//    assert(iStat == 1);
-//    oDxfVertex.setLayerID(dLayRecNo);
-//  }
   oDxfVertex.setParentID(this->oDxfDb.getActRecNo());
   oDxfVertex.setEntityType(this->oDxfDb.getActEntType());
 
@@ -539,6 +516,7 @@ void sstDxf02ReadCls::addHatch(const DL_HatchData& data)
   oDxfHatch.BaseReadFromDL(attributes);
   dREC04RECNUMTYP dEntRecNo=0;
   dREC04RECNUMTYP dLayRecNo=0;
+  dREC04RECNUMTYP dLTypeRecNo=0;
 
   sstDxf02FncHatchCls *poHatchFnc;
   poHatchFnc = this->oDxfDb.getSstFncHatch();
@@ -564,6 +542,23 @@ void sstDxf02ReadCls::addHatch(const DL_HatchData& data)
     iStat = poLayFnc->TreSeaEQ( 0, poLayFnc->getNameSortKey(), (void*) oLayerStr.c_str(), &dLayRecNo);
     assert(iStat == 1);
     oDxfHatch.setLayerID(dLayRecNo);
+
+    sstDxf02FncLTypeCls *poLTypeFnc;
+    poLTypeFnc = this->oDxfDb.getSstFncLType();
+
+    std::string oLTypeStr;
+    oLTypeStr = attributes.getLineType();
+
+    std::transform(oLTypeStr.begin(), oLTypeStr.end(),oLTypeStr.begin(), ::toupper);
+
+    // Find record with exact search value
+    iStat = poLTypeFnc->TreSeaEQ( 0, poLTypeFnc->getNameSortKey(), (void*) oLTypeStr.c_str(), &dLTypeRecNo);
+    assert(iStat == 1);
+    oDxfHatch.setLinetypeID(dLTypeRecNo);
+
+
+
+
   }
   iStat = poHatchFnc->WritNew(0,&oDxfHatch,&dEntRecNo);
   assert(iStat == 0);
@@ -607,29 +602,11 @@ void sstDxf02ReadCls::addHatchEdge(const DL_HatchEdgeData& data)
 
   sstDxf02FncHatchEdgeCls *poHatchEdgeFnc;
   poHatchEdgeFnc = this->oDxfDb.getSstFncHatchEdge();
-  // sstDxf02FncLayCls *poLayFnc;
-  // poLayFnc = this->oDxfDb.getSstFncLay();
-  // sstDxf02FncBlkCls *poBlkFnc;
-  // poBlkFnc = this->oDxfDb.getSstFncBlk();
   sstDxf02FncMainCls *poMainFnc;
   poMainFnc = this->oDxfDb.getSstFncMain();
 
   dREC04RECNUMTYP dNumBlocks = 0;
 
-//  // is it layer or block??
-//  if (this->oActBlockNam.length() > 0)
-//  {  // Block
-//    dNumBlocks = poBlkFnc->count();
-//    oDxfHatchEdge.setBlockID(dNumBlocks);
-//  }
-//  else
-//  {  // Layer
-//    oLayerStr = attributes.getLayer();
-//    // Find record with exact search value
-//    iStat = poLayFnc->TreSeaEQ( 0, poLayFnc->getNameSortKey(), (void*) oLayerStr.c_str(), &dLayRecNo);
-//    assert(iStat == 1);
-//    oDxfArc.setLayerID(dLayRecNo);
-//  }
   oDxfHatchEdge.setParentID(this->oDxfDb.getActRecNo());
 
   iStat = poHatchEdgeFnc->WritNew(0,&oDxfHatchEdge,&dRecNo);
@@ -666,35 +643,16 @@ void sstDxf02ReadCls::addHatchLoop(const DL_HatchLoopData& data)
 
   sstDxf02TypHatchLoopCls oDxfHatchLoop;
   oDxfHatchLoop.ReadFromDL(data);
-  // oDxfHatchLoop.BaseReadFromDL(attributes);
   dREC04RECNUMTYP dRecNo=0;
   dREC04RECNUMTYP dLayRecNo=0;
 
   sstDxf02FncHatchLoopCls *poHatchLoopFnc;
   poHatchLoopFnc = this->oDxfDb.getSstFncHatchLoop();
-  // sstDxf02FncLayCls *poLayFnc;
-  // poLayFnc = this->oDxfDb.getSstFncLay();
-  // sstDxf02FncBlkCls *poBlkFnc;
-  // poBlkFnc = this->oDxfDb.getSstFncBlk();
   sstDxf02FncMainCls *poMainFnc;
   poMainFnc = this->oDxfDb.getSstFncMain();
 
   dREC04RECNUMTYP dNumBlocks = 0;
 
-//  // is it layer or block??
-//  if (this->oActBlockNam.length() > 0)
-//  {  // Block
-//    dNumBlocks = poBlkFnc->count();
-//    oDxfArc.setBlockID(dNumBlocks);
-//  }
-//  else
-//  {  // Layer
-//    oLayerStr = attributes.getLayer();
-//    // Find record with exact search value
-//    iStat = poLayFnc->TreSeaEQ( 0, poLayFnc->getNameSortKey(), (void*) oLayerStr.c_str(), &dLayRecNo);
-//    assert(iStat == 1);
-//    oDxfArc.setLayerID(dLayRecNo);
-//  }
   iStat = poHatchLoopFnc->WritNew(0,&oDxfHatchLoop,&dRecNo);
   assert (iStat == 0);
 

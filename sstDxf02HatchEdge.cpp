@@ -102,16 +102,20 @@ void sstDxf02TypHatchEdgeCls::ReadFromDL(const DL_HatchEdgeData oDLHatchEdge)
   this->cx = oDLHatchEdge.cx;
   this->cy = oDLHatchEdge.cy;
   this->defined = oDLHatchEdge.defined;
-  this->degree = oDLHatchEdge.degree;
+  // this->degree = oDLHatchEdge.degree;
+  this->setDegree(oDLHatchEdge.degree);
   this->endTangentX = oDLHatchEdge.endTangentX;
   this->endTangentY = oDLHatchEdge.endTangentY;
   // this->angle1 = oDLHatchEdge.fitPoints;
   // this->angle1 = oDLHatchEdge.knots;
   this->mx = oDLHatchEdge.mx;
   this->my = oDLHatchEdge.my;
-  this->nControl = oDLHatchEdge.nControl;
-  this->nFit = oDLHatchEdge.nFit;
-  this->nKnots = oDLHatchEdge.nKnots;
+//  this->nControl = oDLHatchEdge.nControl;
+//  this->nFit = oDLHatchEdge.nFit;
+//  this->nKnots = oDLHatchEdge.nKnots;
+  this->setNControl(oDLHatchEdge.nControl);
+  this->setNFit(oDLHatchEdge.nFit);
+  this->setNKnots( oDLHatchEdge.nKnots);
   this->periodic = oDLHatchEdge.periodic;
   this->radius = oDLHatchEdge.radius;
 //  bool bResult = isnan(oDLHatchEdge.ratio);
@@ -343,7 +347,10 @@ return degree;
 //=============================================================================
 void sstDxf02TypHatchEdgeCls::setDegree(unsigned int value)
 {
-degree = value;
+  degree = dSSTSTR01_CUINT2_MAX;
+  if (value >= dSSTSTR01_CUINT2_MAX) return;
+//   if (value < 0) return;
+  degree = value;
 }
 //=============================================================================
 bool sstDxf02TypHatchEdgeCls::getRational() const
@@ -373,7 +380,10 @@ return nKnots;
 //=============================================================================
 void sstDxf02TypHatchEdgeCls::setNKnots(unsigned int value)
 {
-nKnots = value;
+  nKnots = dSSTSTR01_CUINT2_MAX;
+  if (value >= dSSTSTR01_CUINT2_MAX) return;
+//   if (value < 0) return;
+  nKnots = value;
 }
 //=============================================================================
 unsigned int sstDxf02TypHatchEdgeCls::getNControl() const
@@ -383,7 +393,10 @@ return nControl;
 //=============================================================================
 void sstDxf02TypHatchEdgeCls::setNControl(unsigned int value)
 {
-nControl = value;
+  nControl = dSSTSTR01_CUINT2_MAX;
+  if (value >= dSSTSTR01_CUINT2_MAX) return;
+//   if (value < 0) return;
+  nControl = value;
 }
 //=============================================================================
 unsigned int sstDxf02TypHatchEdgeCls::getNFit() const
@@ -393,7 +406,10 @@ return nFit;
 //=============================================================================
 void sstDxf02TypHatchEdgeCls::setNFit(unsigned int value)
 {
-nFit = value;
+  nFit = dSSTSTR01_CUINT2_MAX;
+  if (value >= dSSTSTR01_CUINT2_MAX) return;
+//   if (value < 0) return;
+  nFit = value;
 }
 //=============================================================================
 double sstDxf02TypHatchEdgeCls::getStartTangentX() const
@@ -624,7 +640,8 @@ int sstDxf02FncHatchEdgeCls::Csv_Write(int iKey, sstDxf02TypHatchEdgeCls *poSstH
 
   if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, poSstHatchEdge->getRecordID(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, poSstHatchEdge->getParentID(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Bool_2String( 0, poSstHatchEdge->getType(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Bool_2String( 0, poSstHatchEdge->getDefined(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Int2_2String( 0, poSstHatchEdge->getType(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getX1(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getY1(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getX2(), ssstDxfLib_Str);

@@ -52,7 +52,6 @@ sstDxf02TypLTypeCls::sstDxf02TypLTypeCls()
 }
 //=============================================================================
 char* sstDxf02TypLTypeCls::getName()
-// std::string sstDxf02TypLTypeCls::getName()
 {
   return this->Nam;
 }
@@ -91,7 +90,6 @@ int sstDxf02FncLTypeCls::WriteNewUnique(int iKey, sstDxf02TypLTypeCls oLTypeRec,
   if ( iKey != 0) return -1;
 
   int iStat = 0;
-  // dREC04RECNUMTYP dLTypeRecNo = 0;
 
   // Find record with exact search value
   iStat = this->TreSeaEQ( 0, this->getNameSortKey(), (char*) oLTypeRec.getName(), dLTypeRecNo);
@@ -112,7 +110,6 @@ int sstDxf02FncLTypeCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *o
 {
   unsigned long ulTmpLTypeID = 0;
   std::string oTmpStr;
-  //int iTmpFlags = 0;
 
   int iStat = 0;
 //-----------------------------------------------------------------------------
@@ -137,7 +134,7 @@ int sstDxf02FncLTypeCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *o
 
   return iStat;
 }
-
+//=============================================================================
 // Csv Write Function
 int sstDxf02FncLTypeCls::Csv_Write(int iKey, sstDxf02TypLTypeCls *poSstLType, std::string *ssstDxfLib_Str)
 {
@@ -154,12 +151,6 @@ int sstDxf02FncLTypeCls::Csv_Write(int iKey, sstDxf02TypLTypeCls *poSstLType, st
     iStat = oCsvRow.Csv_UInt4_2String( 0, poSstLType->getLineTypeID(), ssstDxfLib_Str);
   if (iStat >= 0)
     iStat = oCsvRow.Csv_Char_2String( 0, poSstLType->getName(), ssstDxfLib_Str);
-//  if (iStat >= 0)
-//    iStat = oCsvRow.Csv_Int2_2String ( 0, poSstLType->getFlags(), ssstDxfLib_Str);
-
-  // write base dxf attributes to csv string
-//  if (iStat >= 0)
-//    iStat = this->Csv_BaseWrite ( 0, *poSstLAY, ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iRet < 0)
@@ -215,11 +206,11 @@ int sstDxf02FncLTypeCls::ReadCsvFile(int iKey, std::string oFilNam)
   // assert(iStat==0);
   if (iStat < 0) return -2;
 
-  // sstDxf02FncLayCls oSstFncLay;  // layer recmem object
   std::string oLTypeStr;
   std::string oErrStr;
   dREC04RECNUMTYP dRecNo = 0;
   int iStat1 = 0;
+
   // Read title row
   iStat1 = oCsvFilLayer.Rd_StrDS1 ( 2, &oLTypeStr);
   if (iStat < 0) return -3;
@@ -272,8 +263,6 @@ int sstDxf02FncLTypeCls::WriteCsvFile(int iKey, std::string oDxfFilNam)
 
     sstDxf02TypLTypeCls oDxfLType;
     iStat = this->Read(0,kk,&oDxfLType);
-
-    //  oDxfLType.setLayerID(kk);
 
     this->Csv_Write( 0, &oDxfLType, &oCsvStr);
     oCsvFil.Wr_StrDS1(0, &oCsvStr);

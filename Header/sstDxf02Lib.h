@@ -307,7 +307,6 @@ class sstDxf02TypLTypeCls
      */
      // ----------------------------------------------------------------------------
      char* getName();
-     // std::string getName();
      //==============================================================================
      /**
      * @brief // Get Size of Linetype Name <BR>
@@ -318,9 +317,24 @@ class sstDxf02TypLTypeCls
      // ----------------------------------------------------------------------------
      int getSizeName() const;
      //==============================================================================
-// ----------------------------------------------------------------------------
+     /**
+     * @brief // Get Linetype ID <BR>
+     * dLineTypeID = oSstDxfLType.GetLineTypeID();
+     *
+     * @return Linetype ID
+     */
+     // ----------------------------------------------------------------------------
      dREC04RECNUMTYP getLineTypeID() const;
+     //==============================================================================
+     /**
+     * @brief // Set Linetype ID <BR>
+     * oSstDxfLType.setLineTypeID(value);
+     *
+     * @param value [in] Linetype ID
+     */
+     // ----------------------------------------------------------------------------
      void setLineTypeID(const dREC04RECNUMTYP &value);
+     //==============================================================================
 
 private:  // Private functions
      dREC04RECNUMTYP dLineTypeID;   /**< Linetype ID */
@@ -533,13 +547,6 @@ private:
     double radius;
     double angle1;
     double angle2;
-    // standard attributes
-    // std::string layer;
-    // int color;
-    // int color24;
-    // int width;
-    // std::string lineType;
-    // int handle;
 };
 //==============================================================================//==============================================================================
 /**
@@ -1927,7 +1934,6 @@ class sstDxf02TypLayCls : public sstDxf02TypBaseCls
     char Nam[dSSTDXFLAYERNAMELEN]; /**< Layer Name */
 
 };
-//-----------------------------------------------------------------------------
 //==============================================================================
 /**
 * @brief sst Dxf Block Class
@@ -2034,15 +2040,10 @@ class sstDxf02TypBlkCls : public sstDxf02TypBaseCls
      //==============================================================================
 
      char Nam[dSSTDXFBLOCKNAMELEN];  /**< Block Name */
-private:  // Private functions
+  private:  // Private functions
      unsigned long ulBlockID;
      int  flags;               /**< Block Flags */
-  // D3Pkt_stru Pkt;           /**< Block center point */
-
 };
-//-----------------------------------------------------------------------------
-
-
 //==============================================================================
 /**
 * @brief Base Class for sst DXF function class
@@ -2212,7 +2213,6 @@ class sstDxf02FncLTypeCls : public sstDxf02FncBaseCls
      // ----------------------------------------------------------------------------
      int Csv_WriteHeader(int iKey, std::string *oCsvStr);
      //==============================================================================
-
      /**
      * @brief // Return Linetype name sorting key <BR>
      * poNameSortKey = oSstFncLType.GetNameSortKey();
@@ -2371,8 +2371,6 @@ class sstDxf02FncArcCls : public sstDxf02FncBaseCls
     //==============================================================================
 
   private:
-    // sstRec04Cls *poDxfArcMem;     /**< record memory for sst dxf arc elements */
-
 };
 //==============================================================================
 /**
@@ -2687,7 +2685,6 @@ class sstDxf02FncHatchEdgeCls : public sstDxf02FncBaseCls
     // ----------------------------------------------------------------------------
     int ReadCsvFile(int iKey, std::string oFilNam);
     //==============================================================================
-    //==============================================================================
     /**
     * @brief // write block layer data from table to csv file  <BR>
     * iStat = oDxfFncBlock.WriteCsvFile ( iKey, oDxfFilNam);
@@ -2797,7 +2794,6 @@ class sstDxf02FncHatchLoopCls : public sstDxf02FncBaseCls
     */
     // ----------------------------------------------------------------------------
     int ReadCsvFile(int iKey, std::string oFilNam);
-    //==============================================================================
     //==============================================================================
     /**
     * @brief // write block layer data from table to csv file  <BR>
@@ -3019,7 +3015,6 @@ class sstDxf02FncVertexCls : public sstDxf02FncBaseCls
     */
     // ----------------------------------------------------------------------------
     int ReadCsvFile(int iKey, std::string oFilNam);
-    //==============================================================================
     //==============================================================================
     /**
     * @brief // write block layer data from table to csv file  <BR>
@@ -3425,21 +3420,6 @@ class sstDxf02FncMainCls : public sstDxf02FncBaseCls
      //==============================================================================
      /**
      * @brief // Shortstory <BR>
-     * iStat = oTestBase.Func_1(iKey);
-     *
-     * @param iKey [in] For the moment 0
-     *
-     * @return Errorstate
-     *
-     * @retval   = 0: OK
-     * @retval   < 0: Unspecified Error
-     */
-     // ----------------------------------------------------------------------------
-    // int Func_1(int iKey);
-// ----------------------------------------------------------------------------
-     //==============================================================================
-     /**
-     * @brief // Shortstory <BR>
      * iStat = oCsvArc.Func_1(iKey)
      *
      * @param iKey [in] For the moment 0
@@ -3745,7 +3725,6 @@ public:
   // ----------------------------------------------------------------------------
     sstDxf02ReadCls(sstMisc01PrtFilCls *oTmpPrt);
     ~sstDxf02ReadCls();
-
     //==============================================================================
     /**
     * @brief // Process imported Layer data <BR>
@@ -4091,13 +4070,11 @@ class sstDxf02WriteCls
 private:  // Private functions
   DL_Dxf* dxf;     /**< dxflib dxf */
   DL_WriterA* dw;  /**< dxflib dw */
-  // sstDxf02DatabaseCls *oDxfDB; /**< sst dxf database */
   sstDxf02DatabaseCls   oDxfDb; /**< sst dxf database with recmem tech */
   std::string oDxfFilNam;      /**< dxf file name without extension */
   sstMisc01PrtFilCls *poPrt;     /**< adress of protocol file */
 
 };
-//-----------------------------------------------------------------------------
 //==============================================================================
 /**
 * @brief Definition sstDxfBase_Cls
@@ -4196,11 +4173,7 @@ class sstDxfBase_Cls
   private:  // Private Funktionen
   char cName[33];  /**< Name of Dxf Element */
   unsigned long ulID;  /**< Identifier of Dxf Element */
-  // MIMA_2D_Struct sMiMa;          /**< MinMax of PLine  */
-
 };
-//-----------------------------------------------------------------------------
-
 //==============================================================================
 /**
 * @brief Definition sstDxfPolylineCls
@@ -4350,7 +4323,6 @@ class sstDxfPolylineCls : public sstDxfBase_Cls
      */
      //------------------------------------------------------------------------------
      int ResetGet(int iKey);
-
      //==============================================================================
      /**
      * @brief Clear all Vertex from Polyline memory
@@ -4402,7 +4374,6 @@ class sstDxfPolylineCls : public sstDxfBase_Cls
      */
      //------------------------------------------------------------------------------
      int GetNumVertex(int iKey, unsigned long *lNumVertex);
-
      //==============================================================================
      /**
      * @brief Write PolyLine to Dxf File
@@ -4464,13 +4435,9 @@ class sstDxfPolylineCls : public sstDxfBase_Cls
 
   private:  // Private Funktionen
   DL_PolylineData myTestpoly;    /**< Dxf polyline header */
-  // sstMisc01 SST_HPO_stru sVertexHeap;      /**< All Vertices in Heap */
   std::list <DL_VertexData>  sVertexHeap;      /**< All Vertices in Heap */
   long lActVertex;               /**< vertex number for getvertex */
-  // MIMA_3D_Struct sMiMa;          /**< MinMax of PLine  */
-
 };
-//-----------------------------------------------------------------------------
 //==============================================================================
 /**
 * @brief sstdxf_WrtDss2PolyLine

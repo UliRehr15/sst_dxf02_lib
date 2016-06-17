@@ -51,6 +51,7 @@ sstDxf02TypBaseCls::sstDxf02TypBaseCls()
 {
   this->dRecordID = 0;
   this->dLayerID = 0;
+  this->dBlockID = 0;
   this->dLinetypeID = 0;
   this->color = 0;
   this->color24 = 0;
@@ -80,6 +81,9 @@ void sstDxf02TypBaseCls::BaseReadFromDL(const DL_Attributes oDLAttrib)
 void sstDxf02TypBaseCls::BaseWritToDL(DL_Attributes *poDLAttrib)
 {
   poDLAttrib->setColor( this->color);
+  poDLAttrib->setColor24(this->color24);
+  poDLAttrib->setWidth(this->width);
+  poDLAttrib->setHandle(this->handle);
 }
 //=============================================================================
 dREC04RECNUMTYP sstDxf02TypBaseCls::getBlockID() const
@@ -155,8 +159,9 @@ handle = value;
 // Constructor
 sstDxf02FncBaseCls::sstDxf02FncBaseCls(dREC04RECSIZTYP iSize):sstRec04Cls(iSize)
 {
-  // this->oCsvRow.setDecType(1);  // set decimal point
   this->oCsvRow.SetBracket(0,(char*)"\x22");  // quotation marks
+  // Set Bool type 0 / 1
+  this->oCsvRow.SetBoolTyp( 0, 0);
 }
 //=============================================================================
 // Csv Read Function
@@ -165,12 +170,6 @@ int sstDxf02FncBaseCls::Csv_BaseRead(int                 iKey,
                                      std::string        *ssstDxfLib_Str,
                                      sstDxf02TypBaseCls *oAttributes)
 {
-//  dREC04RECNUMTYP dLocPLineID = 0;
-//  unsigned int uiLocNumber;
-//  unsigned int uiLocM;
-//  unsigned int uiLocN;
-//  int iLocFlags;
-
     dREC04RECNUMTYP dLocLinetypeID; /**< Identifier in Linetype table */
     int iLocColor;                   /**< color */
     int iLocColor24;                 /**< color24 */
@@ -181,14 +180,6 @@ int sstDxf02FncBaseCls::Csv_BaseRead(int                 iKey,
   int iRet  = 0;
 //-----------------------------------------------------------------------------
   if ( iKey != 0) return -1;
-
-  //  dREC04RECNUMTYP dLinetypeID; /**< Identifier in Linetype table */
-  //  int color;                   /**< color */
-  //  int color24;                 /**< color24 */
-  //  int width;                   /**< width */
-  //  int handle;                  /**< handle */
-
-  // oCsvRow.SetReadPositon(0,0);
 
   if (iStat >= 0) iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &dLocLinetypeID);
   if (iStat >= 0) oAttributes->setLinetypeID(dLocLinetypeID);
@@ -228,14 +219,6 @@ int sstDxf02FncBaseCls::Csv_BaseWrite(int iKey, sstDxf02TypBaseCls oAttributes, 
 
   if ( iKey != 0) return -1;
 
-  //  dREC04RECNUMTYP dLinetypeID; /**< Identifier in Linetype table */
-  //  int color;                   /**< color */
-  //  int color24;                 /**< color24 */
-  //  int width;                   /**< width */
-  //  int handle;                  /**< handle */
-
-  // ssstDxfLib_Str->clear();
-
   if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, oAttributes.getLinetypeID(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_UInt2_2String( 0, oAttributes.getColor(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_UInt2_2String( 0, oAttributes.getColor24(), ssstDxfLib_Str);
@@ -251,14 +234,6 @@ int sstDxf02FncBaseCls::Csv_BaseHeader(int iKey, std::string *ssstDxfLib_Str)
   int iStat = 0;
 
   if ( iKey != 0) return -1;
-
-  // ssstDxfLib_Str->clear();
-
-  //  dREC04RECNUMTYP dLinetypeID; /**< Identifier in Linetype table */
-  //  int color;                   /**< color */
-  //  int color24;                 /**< color24 */
-  //  int width;                   /**< width */
-  //  int handle;                  /**< handle */
 
   oTitelStr = "LineTypeID";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
