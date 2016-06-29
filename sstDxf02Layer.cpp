@@ -133,7 +133,7 @@ int sstDxf02FncLayCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *oCs
 
     // read base dxf attributes from csv string
     if (iStat >= 0)
-      iStat = this->Csv_BaseRead(0, sErrTxt, oCsvStr, oTypLay);
+      iStat = this->Csv_BaseRead2(0, sErrTxt, oCsvStr, oTypLay);
 
   }
   else
@@ -165,7 +165,7 @@ int sstDxf02FncLayCls::Csv_Write(int iKey, sstDxf02TypLayCls *poSstLAY, std::str
 
   // write base dxf attributes to csv string
   if (iStat >= 0)
-    iStat = this->Csv_BaseWrite ( 0, *poSstLAY, ssstDxfLib_Str);
+    iStat = this->Csv_BaseWrite2 ( 0, *poSstLAY, ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iRet < 0)
@@ -201,7 +201,7 @@ int sstDxf02FncLayCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
 
   // append base attributes to layer csv titel row
-  this->Csv_BaseHeader(0,ssstDxfLib_Str);
+  this->Csv_BaseHeader2(0,ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iStat < 0)

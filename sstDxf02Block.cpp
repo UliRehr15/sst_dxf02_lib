@@ -130,7 +130,7 @@ int sstDxf02FncBlkCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *sss
 
   // read base dxf attributes from csv string
   if (iStat >= 0)
-    iStat = this->Csv_BaseRead(0, sErrTxt, ssstDxfLib_Str, oSstBlk);
+    iStat = this->Csv_BaseRead2(0, sErrTxt, ssstDxfLib_Str, oSstBlk);
 
   // Fatal Errors goes to an assert
   if (iRet < 0)
@@ -167,7 +167,7 @@ int sstDxf02FncBlkCls::Csv_Write(int iKey, sstDxf02TypBlkCls *poSstBlk, std::str
 
   // write base dxf attributes to csv string
   if (iStat >= 0)
-    iStat = this->Csv_BaseWrite ( 0, *poSstBlk, ssstDxfLib_Str);
+    iStat = this->Csv_BaseWrite2 ( 0, *poSstBlk, ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iRet < 0)
@@ -203,7 +203,7 @@ int sstDxf02FncBlkCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
 
   // append base attributes to block csv titel row
-  this->Csv_BaseHeader(0,ssstDxfLib_Str);
+  this->Csv_BaseHeader2(0,ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iStat < 0)

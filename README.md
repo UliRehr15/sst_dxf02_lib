@@ -24,3 +24,5 @@ Structure of coding projects should be:
 30.05.16: Version 1.5: Tool Dxf2Csv: Support of HATCH and POLYLINE.  <BR>
 13.06.16: Version 1.6: Tool Csv2Dxf: Support of POLYLINE, extend support of attributes.  <BR>
 17.06.16: Version 1.7: Tool Csv2Dxf: Support of HATCH.  <BR>
+22.06.16: Version 1.8: General handling of layer/block data in entities.  <BR>
+29.06.16: Version 1.9: Support for POLYLINE/HATCH in Block data.  <BR>

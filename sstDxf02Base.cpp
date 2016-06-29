@@ -165,7 +165,80 @@ sstDxf02FncBaseCls::sstDxf02FncBaseCls(dREC04RECSIZTYP iSize):sstRec04Cls(iSize)
 }
 //=============================================================================
 // Csv Read Function
-int sstDxf02FncBaseCls::Csv_BaseRead(int                 iKey,
+int sstDxf02FncBaseCls::Csv_BaseRead1(int                 iKey,
+                                     std::string        *oErrStr,
+                                     std::string        *ssstDxfLib_Str,
+                                     sstDxf02TypBaseCls *oAttributes)
+{
+  dREC04RECNUMTYP dLocRecordNo = 0; // Record number in sst table
+
+  int iStat = 0;
+  int iRet  = 0;
+//-----------------------------------------------------------------------------
+  if ( iKey != 0) return -1;
+
+  if (iStat >= 0) iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &dLocRecordNo);
+  if (iStat >= 0) oAttributes->setRecordID(dLocRecordNo);
+
+  if (iStat >= 0) iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &dLocRecordNo);
+  if (iStat >= 0) oAttributes->setLayerID(dLocRecordNo);
+
+  if (iStat >= 0) iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &dLocRecordNo);
+  if (iStat >= 0) oAttributes->setBlockID(dLocRecordNo);
+
+  *oErrStr = oCsvRow.GetErrorString();
+
+  // Fatal Errors goes to an assert
+  if (iRet < 0)
+  {
+    // Expression (iRet >= 0) has to be fullfilled
+    assert(0);
+  }
+
+  // Small Errors will given back
+  iRet = iStat;
+
+//  Bloc Function1 End
+  return iStat;
+}
+//=============================================================================
+// Csv Write Function
+int sstDxf02FncBaseCls::Csv_BaseWrite1(int iKey, sstDxf02TypBaseCls oAttributes, std::string *ssstDxfLib_Str)
+{
+  int iStat = 0;
+
+  if ( iKey != 0) return -1;
+
+  if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, oAttributes.getRecordID(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, oAttributes.getLayerID(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, oAttributes.getBlockID(), ssstDxfLib_Str);
+
+  return iStat;
+}
+//=============================================================================
+int sstDxf02FncBaseCls::Csv_BaseHeader1(int iKey, std::string *ssstDxfLib_Str)
+{
+  std::string oTitelStr;
+  int iStat = 0;
+
+  // "RecordNo";"LayerNo";"BlockNo"
+
+  if ( iKey != 0) return -1;
+
+  oTitelStr = "RecordNo";  // Record number in type table
+  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+  oTitelStr = "LayerNo";  // record number in layer table
+  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+  oTitelStr = "BlockNo";  // record number in block table
+  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+
+  assert(iStat >= 0);
+
+  return iStat;
+}
+//=============================================================================
+// Csv Read Function
+int sstDxf02FncBaseCls::Csv_BaseRead2(int                 iKey,
                                      std::string        *oErrStr,
                                      std::string        *ssstDxfLib_Str,
                                      sstDxf02TypBaseCls *oAttributes)
@@ -213,7 +286,7 @@ int sstDxf02FncBaseCls::Csv_BaseRead(int                 iKey,
 }
 //=============================================================================
 // Csv Write Function
-int sstDxf02FncBaseCls::Csv_BaseWrite(int iKey, sstDxf02TypBaseCls oAttributes, std::string *ssstDxfLib_Str)
+int sstDxf02FncBaseCls::Csv_BaseWrite2(int iKey, sstDxf02TypBaseCls oAttributes, std::string *ssstDxfLib_Str)
 {
   int iStat = 0;
 
@@ -228,7 +301,7 @@ int sstDxf02FncBaseCls::Csv_BaseWrite(int iKey, sstDxf02TypBaseCls oAttributes, 
   return iStat;
 }
 //=============================================================================
-int sstDxf02FncBaseCls::Csv_BaseHeader(int iKey, std::string *ssstDxfLib_Str)
+int sstDxf02FncBaseCls::Csv_BaseHeader2(int iKey, std::string *ssstDxfLib_Str)
 {
   std::string oTitelStr;
   int iStat = 0;

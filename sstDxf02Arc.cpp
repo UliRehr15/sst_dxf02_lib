@@ -49,9 +49,9 @@
 // Constructor
 sstDxf02TypArcCls::sstDxf02TypArcCls()
 {
-  this->ulArcID = 0;
-  this->ulLayerID = 0;
-  this->ulBlockID = 0;
+//  this->ulArcID = 0;
+//  this->ulLayerID = 0;
+//  this->ulBlockID = 0;
   this->cx = 0.0;
   this->cy = 0.0;
   this->cz = 0.0;
@@ -142,34 +142,34 @@ void sstDxf02TypArcCls::setAngle2(double value)
   this->angle2 = value;
 }
 
-unsigned long sstDxf02TypArcCls::getLayerID() const
-{
-return ulLayerID;
-}
+//unsigned long sstDxf02TypArcCls::getLayerID() const
+//{
+//return this->getLayerID();
+//}
 
-void sstDxf02TypArcCls::setLayerID(unsigned long value)
-{
-ulLayerID = value;
-}
+//void sstDxf02TypArcCls::setLayerID(unsigned long value)
+//{
+//  this->dLayerID = value;
+//}
 
-unsigned long sstDxf02TypArcCls::getBlockID() const
-{
-return ulBlockID;
-}
+//unsigned long sstDxf02TypArcCls::getBlockID() const
+//{
+//return ulBlockID;
+//}
 
-void sstDxf02TypArcCls::setBlockID(unsigned long value)
-{
-ulBlockID = value;
-}
-unsigned long sstDxf02TypArcCls::getArcID() const
-{
-return ulArcID;
-}
+//void sstDxf02TypArcCls::setBlockID(unsigned long value)
+//{
+//ulBlockID = value;
+//}
+//unsigned long sstDxf02TypArcCls::getArcID() const
+//{
+//return ulArcID;
+//}
 
-void sstDxf02TypArcCls::setArcID(unsigned long value)
-{
-ulArcID = value;
-}
+//void sstDxf02TypArcCls::setArcID(unsigned long value)
+//{
+//ulArcID = value;
+//}
 //=============================================================================
 // Constructor
 sstDxf02FncArcCls::sstDxf02FncArcCls():sstDxf02FncBaseCls(sizeof(sstDxf02TypArcCls))
@@ -192,12 +192,16 @@ int sstDxf02FncArcCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *sss
 
   oCsvRow.SetReadPositon(0,0);
 
+  // read base dxf attributes from csv string
   if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpArcID);
-  if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpLayerID);
-  if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpBlockID);
+    iStat = this->Csv_BaseRead1(0, sErrTxt, ssstDxfLib_Str, osstDxf02TypArcCls);
+
+//  if (iStat >= 0)
+//    iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpArcID);
+//  if (iStat >= 0)
+//    iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpLayerID);
+//  if (iStat >= 0)
+//    iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &ulTmpBlockID);
   if (iStat >= 0)
     iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxfLib_Str, &sDLArc.cx);
   if (iStat >= 0)
@@ -215,13 +219,14 @@ int sstDxf02FncArcCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *sss
 
   osstDxf02TypArcCls->ReadFromDL(sDLArc);
 
-  osstDxf02TypArcCls->setArcID(ulTmpArcID);
+  // osstDxf02TypArcCls->setArcID(ulTmpArcID);
+  osstDxf02TypArcCls->setRecordID(ulTmpArcID);
   osstDxf02TypArcCls->setLayerID(ulTmpLayerID);
   osstDxf02TypArcCls->setBlockID(ulTmpBlockID);
 
   // read base dxf attributes from csv string
   if (iStat >= 0)
-    iStat = this->Csv_BaseRead(0, sErrTxt, ssstDxfLib_Str, osstDxf02TypArcCls);
+    iStat = this->Csv_BaseRead2(0, sErrTxt, ssstDxfLib_Str, osstDxf02TypArcCls);
 
   // Fatal Errors goes to an assert
   if (iRet < 0)
@@ -246,12 +251,16 @@ int sstDxf02FncArcCls::Csv_Write(int iKey, sstDxf02TypArcCls *poSstARC, std::str
 
   ssstDxfLib_Str->clear();
 
+  // write base dxf attributes to csv string
   if (iStat >= 0)
-    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstARC->getArcID(), ssstDxfLib_Str);
-  if (iStat >= 0)
-    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstARC->getLayerID(), ssstDxfLib_Str);
-  if (iStat >= 0)
-    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstARC->getBlockID(), ssstDxfLib_Str);
+    iStat = this->Csv_BaseWrite1 ( 0, *poSstARC, ssstDxfLib_Str);
+
+//  if (iStat >= 0)
+//    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstARC->getArcID(), ssstDxfLib_Str);
+//  if (iStat >= 0)
+//    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstARC->getLayerID(), ssstDxfLib_Str);
+//  if (iStat >= 0)
+//    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstARC->getBlockID(), ssstDxfLib_Str);
   if (iStat >= 0)
     iStat = oCsvRow.Csv_Dbl_2String( 0, poSstARC->getCx(), ssstDxfLib_Str);
   if (iStat >= 0)
@@ -269,7 +278,7 @@ int sstDxf02FncArcCls::Csv_Write(int iKey, sstDxf02TypArcCls *poSstARC, std::str
 
   // write base dxf attributes to csv string
   if (iStat >= 0)
-    iStat = this->Csv_BaseWrite ( 0, *poSstARC, ssstDxfLib_Str);
+    iStat = this->Csv_BaseWrite2 ( 0, *poSstARC, ssstDxfLib_Str);
 
   return iStat;
 }
@@ -293,12 +302,15 @@ int sstDxf02FncArcCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
 
   ssstDxfLib_Str->clear();
 
-  oTitelStr = "ArcID";
-  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
-  oTitelStr = "LayerID";
-  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
-  oTitelStr = "BlockID";
-  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+  // append base attributes to arc csv titel row
+  this->Csv_BaseHeader1 ( 0, ssstDxfLib_Str);
+
+  //  oTitelStr = "ArcID";
+//  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+//  oTitelStr = "LayerID";
+//  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+//  oTitelStr = "BlockID";
+//  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
   oTitelStr = "cx";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
   oTitelStr = "cy";
@@ -315,7 +327,7 @@ int sstDxf02FncArcCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
 //  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
 
   // append base attributes to arc csv titel row
-  this->Csv_BaseHeader(0,ssstDxfLib_Str);
+  this->Csv_BaseHeader2(0,ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iStat < 0)
@@ -393,7 +405,8 @@ int sstDxf02FncArcCls::WriteCsvFile(int iKey, std::string oDxfFilNam)
     sstDxf02TypArcCls oDxfArc;
     iStat = this->Read(0,kk,&oDxfArc);
 
-    oDxfArc.setArcID(kk);
+    // oDxfArc.setArcID(kk);
+    oDxfArc.setRecordID(kk);
 
     this->Csv_Write( 0, &oDxfArc, &oCsvStr);
     oCsvFil.Wr_StrDS1(0, &oCsvStr);

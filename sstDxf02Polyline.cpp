@@ -128,7 +128,7 @@ sstDxf02FncPolylineCls::sstDxf02FncPolylineCls():sstDxf02FncBaseCls(sizeof(sstDx
 // Csv Read Function
 int sstDxf02FncPolylineCls::Csv_Read(int iKey, std::string *oErrStr, std::string *ssstDxfLib_Str, sstDxf02TypPolylineCls *osstDxf02TypPolylineCls)
 {
-  dREC04RECNUMTYP dLocPLineID = 0;
+  // dREC04RECNUMTYP dLocPLineID = 0;
   unsigned int uiLocNumber;
   unsigned int uiLocM;
   unsigned int uiLocN;
@@ -146,8 +146,12 @@ int sstDxf02FncPolylineCls::Csv_Read(int iKey, std::string *oErrStr, std::string
   //  unsigned int n;
   //  int flags;
 
-  if (iStat >= 0) iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &dLocPLineID);
-  if (iStat >= 0) osstDxf02TypPolylineCls->setRecordID(dLocPLineID);
+  // read base dxf attributes from csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseRead1(0, oErrStr, ssstDxfLib_Str, osstDxf02TypPolylineCls);
+
+  // if (iStat >= 0) iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &dLocPLineID);
+  // if (iStat >= 0) osstDxf02TypPolylineCls->setRecordID(dLocPLineID);
 
   if (iStat >= 0) iStat = oCsvRow.CsvString2_UInt2( 0, ssstDxfLib_Str, &uiLocNumber);
   if (iStat >= 0) osstDxf02TypPolylineCls->setNumber(uiLocNumber);
@@ -163,7 +167,7 @@ int sstDxf02FncPolylineCls::Csv_Read(int iKey, std::string *oErrStr, std::string
 
   // read base dxf attributes from csv string
   if (iStat >= 0)
-    iStat = this->Csv_BaseRead(0, oErrStr, ssstDxfLib_Str, osstDxf02TypPolylineCls);
+    iStat = this->Csv_BaseRead2(0, oErrStr, ssstDxfLib_Str, osstDxf02TypPolylineCls);
 
   *oErrStr = oCsvRow.GetErrorString();
 
@@ -190,7 +194,11 @@ int sstDxf02FncPolylineCls::Csv_Write(int iKey, sstDxf02TypPolylineCls *poSstPol
 
   ssstDxfLib_Str->clear();
 
-  if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, poSstPolyline->getRecordID(), ssstDxfLib_Str);
+  // write base dxf attributes to csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseWrite1 ( 0, *poSstPolyline, ssstDxfLib_Str);
+
+  // if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, poSstPolyline->getRecordID(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_UInt2_2String( 0, poSstPolyline->getNumber(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_UInt2_2String( 0, poSstPolyline->getM(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_UInt2_2String( 0, poSstPolyline->getN(), ssstDxfLib_Str);
@@ -203,7 +211,7 @@ int sstDxf02FncPolylineCls::Csv_Write(int iKey, sstDxf02TypPolylineCls *poSstPol
 
   // write base dxf attributes to csv string
   if (iStat >= 0)
-    iStat = this->Csv_BaseWrite ( 0, *poSstPolyline, ssstDxfLib_Str);
+    iStat = this->Csv_BaseWrite2 ( 0, *poSstPolyline, ssstDxfLib_Str);
 
 
   return iStat;
@@ -223,8 +231,11 @@ int sstDxf02FncPolylineCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_St
   //  unsigned int n;
   //  int flags;
 
-  oTitelStr = "PolylineID";
-  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+  // append base attributes to polyline csv titel row
+  this->Csv_BaseHeader1(0,ssstDxfLib_Str);
+
+  // oTitelStr = "PolylineID";
+  // iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
   oTitelStr = "Number";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
   oTitelStr = "M";
@@ -235,7 +246,7 @@ int sstDxf02FncPolylineCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_St
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
 
   // append base attributes to polyline csv titel row
-  this->Csv_BaseHeader(0,ssstDxfLib_Str);
+  this->Csv_BaseHeader2(0,ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iStat < 0)

@@ -175,7 +175,7 @@ sstDxf02FncHatchCls::sstDxf02FncHatchCls():sstDxf02FncBaseCls(sizeof(sstDxf02Typ
 // Csv Read Function
 int sstDxf02FncHatchCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxfLib_Str, sstDxf02TypHatchCls *osstDxf02TypHatch)
 {
-  dREC04RECNUMTYP dLocRecordID = 0;
+  // dREC04RECNUMTYP dLocRecordID = 0;
   int iLocNumLoops;
   bool bLocSolid;
   double dLocScale;
@@ -199,8 +199,12 @@ int sstDxf02FncHatchCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *s
   //  double originX;
   //  double originY;
 
-  if (iStat >= 0) iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &dLocRecordID);
-  osstDxf02TypHatch->setRecordID(dLocRecordID);
+  // read base dxf attributes from csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseRead1(0, sErrTxt, ssstDxfLib_Str, osstDxf02TypHatch);
+
+//  if (iStat >= 0) iStat = oCsvRow.CsvString2_UInt4( 0, ssstDxfLib_Str, &dLocRecordID);
+//    osstDxf02TypHatch->setRecordID(dLocRecordID);
 
   if (iStat >= 0) iStat = oCsvRow.CsvString2_Int2( 0, ssstDxfLib_Str, &iLocNumLoops);
   osstDxf02TypHatch->setNumLoops(iLocNumLoops);
@@ -225,7 +229,7 @@ int sstDxf02FncHatchCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *s
 
   // read base dxf attributes from csv string
   if (iStat >= 0)
-    iStat = this->Csv_BaseRead(0, sErrTxt, ssstDxfLib_Str, osstDxf02TypHatch);
+    iStat = this->Csv_BaseRead2(0, sErrTxt, ssstDxfLib_Str, osstDxf02TypHatch);
 
 
   *sErrTxt = oCsvRow.GetErrorString();
@@ -253,7 +257,11 @@ int sstDxf02FncHatchCls::Csv_Write(int iKey, sstDxf02TypHatchCls *poSstHatch, st
 
   ssstDxfLib_Str->clear();
 
-  if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, poSstHatch->getRecordID(), ssstDxfLib_Str);
+  // write base dxf attributes to csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseWrite1 ( 0, *poSstHatch, ssstDxfLib_Str);
+
+  // if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, poSstHatch->getRecordID(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_Int2_2String( 0, poSstHatch->getNumLoops(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_Bool_2String( 0, poSstHatch->getSolid(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatch->getScale(), ssstDxfLib_Str);
@@ -272,7 +280,7 @@ int sstDxf02FncHatchCls::Csv_Write(int iKey, sstDxf02TypHatchCls *poSstHatch, st
 
   // write base dxf attributes to csv string
   if (iStat >= 0)
-    iStat = this->Csv_BaseWrite ( 0, *poSstHatch, ssstDxfLib_Str);
+    iStat = this->Csv_BaseWrite2 ( 0, *poSstHatch, ssstDxfLib_Str);
 
   return iStat;
 }
@@ -294,8 +302,11 @@ int sstDxf02FncHatchCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
   //  double originX;
   //  double originY;
 
-  oTitelStr = "RecordID";
-  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+  // append base attributes to hatch csv titel row
+  this->Csv_BaseHeader1(0,ssstDxfLib_Str);
+
+  // oTitelStr = "RecordID";
+  // iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
   oTitelStr = "NumLoops";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
   oTitelStr = "Solid";
@@ -312,7 +323,7 @@ int sstDxf02FncHatchCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
 
   // append base attributes to hatch csv titel row
-  this->Csv_BaseHeader(0,ssstDxfLib_Str);
+  this->Csv_BaseHeader2(0,ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iStat < 0)

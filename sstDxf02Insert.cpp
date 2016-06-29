@@ -49,9 +49,9 @@
 // Constructor
 sstDxf02TypInsertCls::sstDxf02TypInsertCls()
 {
-  this->ulInsertID = 0;
-  this->ulLayerID = 0;
-  this->ulBlockID = 0;
+//  this->ulInsertID = 0;
+//  this->ulLayerID = 0;
+//  this->ulBlockID = 0;
   // std::string name;
   this->ipx = 0.0;
   this->ipy = 0.0;
@@ -103,36 +103,36 @@ void sstDxf02TypInsertCls::WritToDL(DL_InsertData *poDLInsert)
   poDLInsert->colSp = this->colSp;
   poDLInsert->rowSp = this->rowSp;
 }
-//=============================================================================
-unsigned long sstDxf02TypInsertCls::getLayerID() const
-{
-return ulLayerID;
-}
-//=============================================================================
-void sstDxf02TypInsertCls::setLayerID(unsigned long value)
-{
-ulLayerID = value;
-}
-//=============================================================================
-unsigned long sstDxf02TypInsertCls::getBlockID() const
-{
-return ulBlockID;
-}
-//=============================================================================
-void sstDxf02TypInsertCls::setBlockID(unsigned long value)
-{
-ulBlockID = value;
-}
-//=============================================================================
-unsigned long sstDxf02TypInsertCls::getInsertID() const
-{
-return ulInsertID;
-}
-//=============================================================================
-void sstDxf02TypInsertCls::setInsertID(unsigned long value)
-{
-ulInsertID = value;
-}
+////=============================================================================
+//unsigned long sstDxf02TypInsertCls::getLayerID() const
+//{
+//return ulLayerID;
+//}
+////=============================================================================
+//void sstDxf02TypInsertCls::setLayerID(unsigned long value)
+//{
+//ulLayerID = value;
+//}
+////=============================================================================
+//unsigned long sstDxf02TypInsertCls::getBlockID() const
+//{
+//return ulBlockID;
+//}
+////=============================================================================
+//void sstDxf02TypInsertCls::setBlockID(unsigned long value)
+//{
+//ulBlockID = value;
+//}
+////=============================================================================
+//unsigned long sstDxf02TypInsertCls::getInsertID() const
+//{
+//return ulInsertID;
+//}
+////=============================================================================
+//void sstDxf02TypInsertCls::setInsertID(unsigned long value)
+//{
+//ulInsertID = value;
+//}
 //=============================================================================
 double sstDxf02TypInsertCls::getIpx() const
 {
@@ -190,10 +190,10 @@ int sstDxf02FncInsertCls::Csv_Read(int iKey,
                           1,1,
                           1,1);
   // DL_Attributes sDLAttribute("",0,0,"");
-  unsigned long ulTmpInsertID = 0;
-  unsigned long ulTmpLayerID = 0;
-  unsigned long ulTmpBlockID = 0;
-  int iTmpColor = 0;
+//  unsigned long ulTmpInsertID = 0;
+//  unsigned long ulTmpLayerID = 0;
+//  unsigned long ulTmpBlockID = 0;
+//  int iTmpColor = 0;
   // sstStr01Cls oCsvRow;
   int iStat = 0;
   // int iRet  = 0;
@@ -202,12 +202,16 @@ int sstDxf02FncInsertCls::Csv_Read(int iKey,
 
   oCsvRow.SetReadPositon(0,0);
 
+  // read base dxf attributes from csv string
   if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_UInt4( 0, oCsvInsertStr, &ulTmpInsertID);
-  if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_UInt4( 0, oCsvInsertStr, &ulTmpLayerID);
-  if (iStat >= 0)
-    iStat = oCsvRow.CsvString2_UInt4( 0, oCsvInsertStr, &ulTmpBlockID);
+    iStat = this->Csv_BaseRead1(0, oErrTxt, oCsvInsertStr, oInsert);
+
+//  if (iStat >= 0)
+//    iStat = oCsvRow.CsvString2_UInt4( 0, oCsvInsertStr, &ulTmpInsertID);
+//  if (iStat >= 0)
+//    iStat = oCsvRow.CsvString2_UInt4( 0, oCsvInsertStr, &ulTmpLayerID);
+//  if (iStat >= 0)
+//    iStat = oCsvRow.CsvString2_UInt4( 0, oCsvInsertStr, &ulTmpBlockID);
   if (iStat >= 0)
     iStat = oCsvRow.CsvString2_Dbl( 0, oCsvInsertStr, &sDLInsert.ipx);
   if (iStat >= 0)
@@ -227,14 +231,14 @@ int sstDxf02FncInsertCls::Csv_Read(int iKey,
 
   oInsert->ReadFromDL(sDLInsert);
 
-  oInsert->setInsertID(ulTmpInsertID);
-  oInsert->setLayerID(ulTmpLayerID);
-  oInsert->setBlockID(ulTmpBlockID);
-  oInsert->setColor(iTmpColor);
+  // oInsert->setInsertID(ulTmpInsertID);
+  //  oInsert->setLayerID(ulTmpLayerID);
+  //  oInsert->setBlockID(ulTmpBlockID);
+  //  oInsert->setColor(iTmpColor);
 
   // read base dxf attributes from csv string
   if (iStat >= 0)
-    iStat = this->Csv_BaseRead(0, oErrTxt, oCsvInsertStr, oInsert);
+    iStat = this->Csv_BaseRead2(0, oErrTxt, oCsvInsertStr, oInsert);
 
   return iStat;
 }
@@ -248,12 +252,16 @@ int sstDxf02FncInsertCls::Csv_Write(int iKey, sstDxf02TypInsertCls *poSstInsert,
 
   ssstDxfLib_Str->clear();
 
+  // write base dxf attributes to csv string
   if (iStat >= 0)
-    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstInsert->getInsertID(), ssstDxfLib_Str);
-  if (iStat >= 0)
-    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstInsert->getLayerID(), ssstDxfLib_Str);
-  if (iStat >= 0)
-    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstInsert->getBlockID(), ssstDxfLib_Str);
+    iStat = this->Csv_BaseWrite1 ( 0, *poSstInsert, ssstDxfLib_Str);
+
+//  if (iStat >= 0)
+//    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstInsert->getInsertID(), ssstDxfLib_Str);
+//  if (iStat >= 0)
+//    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstInsert->getLayerID(), ssstDxfLib_Str);
+//  if (iStat >= 0)
+//    iStat = oCsvRow.Csv_UInt4_2String( 0, poSstInsert->getBlockID(), ssstDxfLib_Str);
 
   if (iStat >= 0)
     iStat = oCsvRow.Csv_Dbl_2String( 0, poSstInsert->getIpx(), ssstDxfLib_Str);
@@ -267,7 +275,7 @@ int sstDxf02FncInsertCls::Csv_Write(int iKey, sstDxf02TypInsertCls *poSstInsert,
 
   // write base dxf attributes to csv string
   if (iStat >= 0)
-    iStat = this->Csv_BaseWrite ( 0, *poSstInsert, ssstDxfLib_Str);
+    iStat = this->Csv_BaseWrite2 ( 0, *poSstInsert, ssstDxfLib_Str);
 
   return iStat;
 }
@@ -291,12 +299,15 @@ int sstDxf02FncInsertCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
 
   ssstDxfLib_Str->clear();
 
-  oTitelStr = "TypeID";
-  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
-  oTitelStr = "LayerID";
-  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
-  oTitelStr = "BlockID";
-  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+  // append base attributes to insert csv titel row
+  this->Csv_BaseHeader1(0,ssstDxfLib_Str);
+
+//  oTitelStr = "TypeID";
+//  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+//  oTitelStr = "LayerID";
+//  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
+//  oTitelStr = "BlockID";
+//  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
 
   oTitelStr = "ipx";
   iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
@@ -316,7 +327,7 @@ int sstDxf02FncInsertCls::Csv_WriteHeader(int iKey, std::string *ssstDxfLib_Str)
 //  iStat = oCsvRow.Csv_Str_2String( 0, oTitelStr, ssstDxfLib_Str);
 
   // append base attributes to insert csv titel row
-  this->Csv_BaseHeader(0,ssstDxfLib_Str);
+  this->Csv_BaseHeader2(0,ssstDxfLib_Str);
 
   // Fatal Errors goes to an assert
   if (iStat < 0)

@@ -412,17 +412,18 @@ void sstDxf02ReadCls::addPolyline(const DL_PolylineData& data)
     assert(iStat == 1);
     oDxfPolyline.setLayerID(dLayRecNo);
 
-    std::string oLTypeStr;
-    oLTypeStr = attributes.getLineType();
-
-    std::transform(oLTypeStr.begin(), oLTypeStr.end(),oLTypeStr.begin(), ::toupper);
-
-    // Find record with exact search value
-    iStat = poLTypeFnc->TreSeaEQ( 0, poLTypeFnc->getNameSortKey(), (void*) oLTypeStr.c_str(), &dLTypeRecNo);
-    assert(iStat == 1);
-    oDxfPolyline.setLinetypeID(dLTypeRecNo);
 
   }
+  std::string oLTypeStr;
+  oLTypeStr = attributes.getLineType();
+
+  std::transform(oLTypeStr.begin(), oLTypeStr.end(),oLTypeStr.begin(), ::toupper);
+
+  // Find record with exact search value
+  iStat = poLTypeFnc->TreSeaEQ( 0, poLTypeFnc->getNameSortKey(), (void*) oLTypeStr.c_str(), &dLTypeRecNo);
+  assert(iStat == 1);
+  oDxfPolyline.setLinetypeID(dLTypeRecNo);
+
   iStat = poPolylineFnc->WritNew(0,&oDxfPolyline,&dEntRecNo);
 
   sstDxf02TypMainCls oMainRec;
@@ -542,24 +543,21 @@ void sstDxf02ReadCls::addHatch(const DL_HatchData& data)
     iStat = poLayFnc->TreSeaEQ( 0, poLayFnc->getNameSortKey(), (void*) oLayerStr.c_str(), &dLayRecNo);
     assert(iStat == 1);
     oDxfHatch.setLayerID(dLayRecNo);
-
-    sstDxf02FncLTypeCls *poLTypeFnc;
-    poLTypeFnc = this->oDxfDb.getSstFncLType();
-
-    std::string oLTypeStr;
-    oLTypeStr = attributes.getLineType();
-
-    std::transform(oLTypeStr.begin(), oLTypeStr.end(),oLTypeStr.begin(), ::toupper);
-
-    // Find record with exact search value
-    iStat = poLTypeFnc->TreSeaEQ( 0, poLTypeFnc->getNameSortKey(), (void*) oLTypeStr.c_str(), &dLTypeRecNo);
-    assert(iStat == 1);
-    oDxfHatch.setLinetypeID(dLTypeRecNo);
-
-
-
-
   }
+
+  sstDxf02FncLTypeCls *poLTypeFnc;
+  poLTypeFnc = this->oDxfDb.getSstFncLType();
+
+  std::string oLTypeStr;
+  oLTypeStr = attributes.getLineType();
+
+  std::transform(oLTypeStr.begin(), oLTypeStr.end(),oLTypeStr.begin(), ::toupper);
+
+  // Find record with exact search value
+  iStat = poLTypeFnc->TreSeaEQ( 0, poLTypeFnc->getNameSortKey(), (void*) oLTypeStr.c_str(), &dLTypeRecNo);
+  assert(iStat == 1);
+  oDxfHatch.setLinetypeID(dLTypeRecNo);
+
   iStat = poHatchFnc->WritNew(0,&oDxfHatch,&dEntRecNo);
   assert(iStat == 0);
 

@@ -494,7 +494,7 @@ class sstDxf02TypArcCls : public sstDxf02TypBaseCls
     * @return LayerID
     */
     // ----------------------------------------------------------------------------
-    unsigned long getLayerID() const;
+    // unsigned long getLayerID() const;
     //==============================================================================
     /**
     * @brief // Set Layer ID  <BR>
@@ -502,7 +502,7 @@ class sstDxf02TypArcCls : public sstDxf02TypBaseCls
     * @param value [in] Set Layer ID
     */
     // ----------------------------------------------------------------------------
-    void setLayerID(unsigned long value);
+    // void setLayerID(unsigned long value);
     //==============================================================================
     /**
     * @brief // Get Block ID  <BR>
@@ -510,7 +510,7 @@ class sstDxf02TypArcCls : public sstDxf02TypBaseCls
     * @return BlockID
     */
     // ----------------------------------------------------------------------------
-    unsigned long getBlockID() const;
+    // unsigned long getBlockID() const;
     //==============================================================================
     /**
     * @brief // Set Block ID  <BR>
@@ -518,7 +518,7 @@ class sstDxf02TypArcCls : public sstDxf02TypBaseCls
     * @param value [in] Set Block ID
     */
     // ----------------------------------------------------------------------------
-    void setBlockID(unsigned long value);
+    // void setBlockID(unsigned long value);
     //==============================================================================
     /**
     * @brief // Get Arc ID  <BR>
@@ -526,7 +526,7 @@ class sstDxf02TypArcCls : public sstDxf02TypBaseCls
     * @return unsigned long Arc ID
     */
     // ----------------------------------------------------------------------------
-    unsigned long getArcID() const;
+    // unsigned long getArcID() const;
     //==============================================================================
     /**
     * @brief // Set Arc ID  <BR>
@@ -534,13 +534,13 @@ class sstDxf02TypArcCls : public sstDxf02TypBaseCls
     * @param value [in] Arc ID
     */
     // ----------------------------------------------------------------------------
-    void setArcID(unsigned long value);
+    // void setArcID(unsigned long value);
     //==============================================================================
 
 private:
-    dREC04RECNUMTYP ulArcID;
-    dREC04RECNUMTYP ulLayerID;
-    dREC04RECNUMTYP ulBlockID;
+//    dREC04RECNUMTYP ulArcID;
+//    dREC04RECNUMTYP ulLayerID;
+//    dREC04RECNUMTYP ulBlockID;
     double cx;
     double cy;
     double cz;
@@ -605,7 +605,7 @@ class sstDxf02TypInsertCls : public sstDxf02TypBaseCls
     * @return LayerID
     */
     // ----------------------------------------------------------------------------
-    unsigned long getLayerID() const;
+    // unsigned long getLayerID() const;
     //==============================================================================
     /**
     * @brief // Set Layer ID  <BR>
@@ -613,7 +613,7 @@ class sstDxf02TypInsertCls : public sstDxf02TypBaseCls
     * @param value [in] Set Layer ID
     */
     // ----------------------------------------------------------------------------
-    void setLayerID(unsigned long value);
+    // void setLayerID(unsigned long value);
     //==============================================================================
     /**
     * @brief // Get Block ID  <BR>
@@ -621,7 +621,7 @@ class sstDxf02TypInsertCls : public sstDxf02TypBaseCls
     * @return BlockID
     */
     // ----------------------------------------------------------------------------
-    unsigned long getBlockID() const;
+    // unsigned long getBlockID() const;
     //==============================================================================
     /**
     * @brief // Set Block ID  <BR>
@@ -629,7 +629,7 @@ class sstDxf02TypInsertCls : public sstDxf02TypBaseCls
     * @param value [in] Set Block ID
     */
     // ----------------------------------------------------------------------------
-    void setBlockID(unsigned long value);
+    // void setBlockID(unsigned long value);
     //==============================================================================
     /**
     * @brief // Get insert ID  <BR>
@@ -637,7 +637,7 @@ class sstDxf02TypInsertCls : public sstDxf02TypBaseCls
     * @return unsigned long Arc ID
     */
     // ----------------------------------------------------------------------------
-    unsigned long getInsertID() const;
+    // unsigned long getInsertID() const;
     //==============================================================================
     /**
     * @brief // Set insert ID  <BR>
@@ -645,7 +645,7 @@ class sstDxf02TypInsertCls : public sstDxf02TypBaseCls
     * @param value [in] Arc ID
     */
     // ----------------------------------------------------------------------------
-    void setInsertID(unsigned long value);
+    // void setInsertID(unsigned long value);
     //==============================================================================
     /**
     * @brief // Get insert ipx  <BR>
@@ -698,9 +698,9 @@ class sstDxf02TypInsertCls : public sstDxf02TypBaseCls
 
 private:
 
-    unsigned long ulInsertID; // record number of Insert
-    unsigned long ulLayerID;  // record number of Layer
-    unsigned long ulBlockID;  // record number of Block
+//    unsigned long ulInsertID; // record number of Insert
+//    unsigned long ulLayerID;  // record number of Layer
+//    unsigned long ulBlockID;  // record number of Block
 
     /*! Name of the referred block. */
     // std::string name;
@@ -2073,7 +2073,9 @@ class sstDxf02FncBaseCls: public sstRec04Cls
     //==============================================================================
     /**
     * @brief // read base attribute data from csv string to base object <BR>
-    * iStat = oDxfFncBase.Csv_BaseRead( iKey, oErrStr, oCsvArcStr, oArc);
+    * iStat = oDxfFncBase1.Csv_BaseRead( iKey, oErrStr, oCsvArcStr, oArc);
+    *
+    * "RecordNo";"LayerNo";"BlockNo"
     *
     * @param iKey         [in]  For the moment 0
     * @param oErrStr      [out] string where interpret error occors
@@ -2086,11 +2088,13 @@ class sstDxf02FncBaseCls: public sstRec04Cls
     * @retval   < 0: Unspecified Error
     */
     // ----------------------------------------------------------------------------
-    int Csv_BaseRead(int iKey, std::string *oErrStr, std::string *oCsvBaseStr, sstDxf02TypBaseCls *oAttributes);
+    int Csv_BaseRead1(int iKey, std::string *oErrStr, std::string *oCsvBaseStr, sstDxf02TypBaseCls *oAttributes);
     //==============================================================================
     /**
-    * @brief // Shortstory <BR>
-    * iStat = oDxfFncArc.Func_1(iKey)
+    * @brief // // write base attribute data from base object to csv string <BR>
+    * iStat = oDxfFncBase.Csv_BaseWrite1( iKey, oAttributes, ssstDxfLib_Str);
+    *
+    * "RecordNo";"LayerNo";"BlockNo"
     *
     * @param iKey           [in] For the moment 0
     * @param oAttributes   [in] base dxf attributes
@@ -2102,11 +2106,13 @@ class sstDxf02FncBaseCls: public sstRec04Cls
     * @retval   < 0: Unspecified Error
     */
     // ----------------------------------------------------------------------------
-    int Csv_BaseWrite(int iKey, sstDxf02TypBaseCls oAttributes, std::string *ssstDxfLib_Str);
+    int Csv_BaseWrite1(int iKey, sstDxf02TypBaseCls oAttributes, std::string *ssstDxfLib_Str);
     //==============================================================================
     /**
-    * @brief // write base attribtes titel row to csv file <BR>
-    * iStat = oDxfFncBase.Csv_BaseHeader ( 0, &oCsvStr)
+    * @brief // write base attributes titel row to csv file <BR>
+    * iStat = oDxfFncBase.Csv_BaseHeader1 ( 0, &oCsvStr)
+    *
+    * "RecordNo";"LayerNo";"BlockNo"
     *
     * @param iKey    [in]  For the moment 0
     * @param oCsvStr [out] return string titel row
@@ -2117,7 +2123,61 @@ class sstDxf02FncBaseCls: public sstRec04Cls
     * @retval   < 0: Unspecified Error
     */
     // ----------------------------------------------------------------------------
-    int Csv_BaseHeader(int iKey, std::string *oCsvStr);
+    int Csv_BaseHeader1(int iKey, std::string *oCsvStr);
+    //==============================================================================
+    /**
+    * @brief // read base attribute data from csv string to base object <BR>
+    * iStat = oDxfFncBase.Csv_BaseRead2( iKey, oErrStr, oCsvArcStr, oArc);
+    *
+    * "LineTypeID";"Color";"Color24";"Width";"Handle"
+    *
+    * @param iKey         [in]  For the moment 0
+    * @param oErrStr      [out] string where interpret error occors
+    * @param oCsvBaseStr  [in]  Csv Arc string
+    * @param oAttributes  [out] return base dxf attribute object
+    *
+    * @return Errorstate
+    *
+    * @retval   = 0: OK
+    * @retval   < 0: Unspecified Error
+    */
+    // ----------------------------------------------------------------------------
+    int Csv_BaseRead2(int iKey, std::string *oErrStr, std::string *oCsvBaseStr, sstDxf02TypBaseCls *oAttributes);
+    //==============================================================================
+    /**
+    * @brief // // write base attribute data from base object to csv string <BR>
+    * iStat = oDxfFncBase.Csv_BaseWrite2( iKey, oAttributes, ssstDxfLib_Str);
+    *
+    * "LineTypeID";"Color";"Color24";"Width";"Handle"
+    *
+    * @param iKey           [in] For the moment 0
+    * @param oAttributes   [in] base dxf attributes
+    * @param ssstDxfLib_Str [out] csv string with base dxf attributes
+    *
+    * @return Errorstate
+    *
+    * @retval   = 0: OK
+    * @retval   < 0: Unspecified Error
+    */
+    // ----------------------------------------------------------------------------
+    int Csv_BaseWrite2(int iKey, sstDxf02TypBaseCls oAttributes, std::string *ssstDxfLib_Str);
+    //==============================================================================
+    /**
+    * @brief // write base attribtes titel row to csv file <BR>
+    * iStat = oDxfFncBase.Csv_BaseHeader2 ( 0, &oCsvStr)
+    *
+    * "LineTypeID";"Color";"Color24";"Width";"Handle"
+    *
+    * @param iKey    [in]  For the moment 0
+    * @param oCsvStr [out] return string titel row
+    *
+    * @return Errorstate
+    *
+    * @retval   = 0: OK
+    * @retval   < 0: Unspecified Error
+    */
+    // ----------------------------------------------------------------------------
+    int Csv_BaseHeader2(int iKey, std::string *oCsvStr);
 
     sstStr01Cls oCsvRow;   /**< Csv String Convert object */
   private:
