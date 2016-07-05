@@ -355,12 +355,16 @@ int sstDxf02WriteCls::WrtSecBlocks (int         iKey)
         DL_ArcData oDL_Arc( 0.0,0.0,0.0,
                             1.0,        // Radius
                             0.0,0.0);   // Angle1, angle2
+        // Write arc parameter to dxflib arc
         oArcRec.WritToDL(&oDL_Arc);
 
+        DL_Attributes oAttributes;  // Dxflib Attributes
+        oArcRec.BaseWritToDL(&oAttributes);
+        oAttributes.setLayer(oBlkRec.getName());
+        oAttributes.setLineType("BYBLOCK");
+
         // write next insert into dxf file
-        this->dxf->writeArc(  *this->dw,
-                              oDL_Arc,
-                              DL_Attributes(oBlkRec.getName(), 256, -1, "BYBLOCK"));
+        this->dxf->writeArc(  *this->dw, oDL_Arc, oAttributes);
 
       }
       break;
@@ -383,33 +387,38 @@ int sstDxf02WriteCls::WrtSecBlocks (int         iKey)
         iStat = oLocSstFncLType->Read ( 0, oPolylineRec.getLinetypeID(), &oLTypeRec);
         assert(iStat == 0);
 
+        DL_Attributes oAttributes;  // Dxflib Attributes
+        oPolylineRec.BaseWritToDL(&oAttributes);
+//        oAttributes.setColor(oPolylineRec.getColor());
+//        oAttributes.setColor24(oPolylineRec.getColor24());
+//        oAttributes.setHandle(oPolylineRec.getHandle());
+        oAttributes.setLayer(oBlkRec.getName());
+        oAttributes.setLineType(oLTypeRec.getName());
+//        oAttributes.setWidth(oPolylineRec.getWidth());
 
-        if ( strncmp( oLTypeRec.getName(), "BYLAYER", dSSTDXFLTYPENAMELEN) == 0)
+        if ( strncmp( oLTypeRec.getName(), "BYBLOCK", dSSTDXFLTYPENAMELEN) == 0)
         {  // LineType / width by layer
-          // write next insert into dxf file
 
-          // iStat = oLocSstFncLType->Read ( 0, oLayRec.getLinetypeID(), &oLTypeRec);
+          // Read linetype from layer
           iStat = oLocSstFncLType->Read ( 0, oBlkRec.getLinetypeID(), &oLTypeRec);
           assert(iStat == 0);
 
-          this->dxf->writePolyline(  *this->dw,
-                                    oDL_Polyline,
-                                    DL_Attributes(oBlkRec.getName(),
-                                    oPolylineRec.getColor(),
-                                    oBlkRec.getWidth(),
-                                    oLTypeRec.getName()));
-        }
-        else
-        {
-          // write next insert into dxf file
-          this->dxf->writePolyline(  *this->dw,
-                                    oDL_Polyline,
-                                     DL_Attributes(oBlkRec.getName(),
-                                     oPolylineRec.getColor(),
-                                     oPolylineRec.getWidth(),
-                                     oLTypeRec.getName()));
+          oAttributes.setLineType(oLTypeRec.getName());
+
         }
 
+        if ( oPolylineRec.getColor() == 256)
+        {  // Color by Layer
+          oAttributes.setColor(oBlkRec.getColor());
+        }
+
+        if ( oPolylineRec.getWidth() == -1)
+        {  // Color by Layer
+          oAttributes.setWidth(oBlkRec.getWidth());
+        }
+
+        // write next insert into dxf file
+        this->dxf->writePolyline(  *this->dw, oDL_Polyline, oAttributes);
 
         this->oDxfDb.setActEntType(oMainRec.getEntityType());
         this->oDxfDb.setActRecNo(oMainRec.getTypeID());
@@ -702,13 +711,15 @@ int sstDxf02WriteCls::WrtSecEntities (int          iKey)
                             0.0,0.0);   // Angle1, angle2
         oArcRec.WritToDL(&oDL_Arc);
 
+        DL_Attributes oAttributes;  // Dxflib Attributes
+        oArcRec.BaseWritToDL(&oAttributes);
+        oAttributes.setLayer(oLayRec.getName());
+        oAttributes.setLineType("BYBLOCK");
         // set Blockname
         // oDL_Insert.name = "myblock1";
 
         // write next insert into dxf file
-        this->dxf->writeArc(  *this->dw,
-                              oDL_Arc,
-                              DL_Attributes(oLayRec.getName(), 256, -1, "BYBLOCK"));
+        this->dxf->writeArc(  *this->dw, oDL_Arc, oAttributes);
 
         this->oDxfDb.setActEntType(oMainRec.getEntityType());
         this->oDxfDb.setActRecNo(oMainRec.getTypeID());
@@ -775,32 +786,37 @@ int sstDxf02WriteCls::WrtSecEntities (int          iKey)
       iStat = oLocSstFncLType->Read ( 0, oPolylineRec.getLinetypeID(), &oLTypeRec);
       assert(iStat == 0);
 
+      DL_Attributes oAttributes;  // Dxflib Attributes
+      oPolylineRec.BaseWritToDL(&oAttributes);
+//      oAttributes.setColor(oPolylineRec.getColor());
+//      oAttributes.setColor24(oPolylineRec.getColor24());
+//      oAttributes.setHandle(oPolylineRec.getHandle());
+      oAttributes.setLayer(oLayRec.getName());
+      oAttributes.setLineType(oLTypeRec.getName());
+//      oAttributes.setWidth(oPolylineRec.getWidth());
 
       if ( strncmp( oLTypeRec.getName(), "BYLAYER", dSSTDXFLTYPENAMELEN) == 0)
       {  // LineType / width by layer
-        // write next insert into dxf file
 
+        // Read linetype from layer
         iStat = oLocSstFncLType->Read ( 0, oLayRec.getLinetypeID(), &oLTypeRec);
         assert(iStat == 0);
 
-        this->dxf->writePolyline(  *this->dw,
-                                  oDL_Polyline,
-                                  DL_Attributes(oLayRec.getName(),
-                                  oPolylineRec.getColor(),
-                                  oLayRec.getWidth(),
-                                  oLTypeRec.getName()));
-      }
-      else
-      {
-        // write next insert into dxf file
-        this->dxf->writePolyline(  *this->dw,
-                                  oDL_Polyline,
-                                   DL_Attributes(oLayRec.getName(),
-                                   oPolylineRec.getColor(),
-                                   oPolylineRec.getWidth(),
-                                   oLTypeRec.getName()));
+        oAttributes.setLineType(oLTypeRec.getName());
+
       }
 
+      if ( oPolylineRec.getColor() == 256)
+      {  // Color by Layer
+        oAttributes.setColor(oLayRec.getColor());
+      }
+      if ( oPolylineRec.getWidth() == -1)
+      {  // Color by Layer
+        oAttributes.setWidth(oLayRec.getWidth());
+      }
+
+      // write next insert into dxf file
+      this->dxf->writePolyline(  *this->dw, oDL_Polyline, oAttributes);
 
       this->oDxfDb.setActEntType(oMainRec.getEntityType());
       this->oDxfDb.setActRecNo(oMainRec.getTypeID());
