@@ -27,3 +27,4 @@ Structure of coding projects should be:
 22.06.16: Version 1.8: General handling of layer/block data in entities.  <BR>
 29.06.16: Version 1.9: Support for POLYLINE/HATCH in Block data.  <BR>
 05.07.16: Version 1.10: Problems with color and width fixed.  <BR>
+13.07.16: Version 1.11: new testframe for general testing.  <BR>
