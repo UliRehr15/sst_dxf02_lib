@@ -207,9 +207,9 @@ void sstDxf02ReadCls::endBlock()
 }
 //=============================================================================
 void sstDxf02ReadCls::addPoint(const DL_PointData& data) {
-    printf("POINT    (%6.3f, %6.3f, %6.3f)\n",
-           data.x, data.y, data.z);
-    printAttributes();
+  printf("POINT    (%6.3f, %6.3f, %6.3f)\n",
+         data.x, data.y, data.z);
+  printAttributes();
 }
 //=============================================================================
 void sstDxf02ReadCls::addInsert(const DL_InsertData& data)
@@ -366,6 +366,16 @@ void sstDxf02ReadCls::addCircle(const DL_CircleData& data) {
     printf("CIRCLE   (%6.3f, %6.3f, %6.3f) %6.3f\n",
            data.cx, data.cy, data.cz,
            data.radius);
+    printAttributes();
+}
+//=============================================================================
+void sstDxf02ReadCls::addMText(const DL_MTextData& data) {
+    printf("MText \n");
+    printAttributes();
+}
+//=============================================================================
+void sstDxf02ReadCls::addText(const DL_TextData& data) {
+    printf("Text \n");
     printAttributes();
 }
 //=============================================================================

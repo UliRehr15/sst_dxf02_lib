@@ -4,6 +4,7 @@ fork from sst_dxf01_lib: change license
 change license to GNU General Public License version 2 because of use of LibreCAD.
 
 Based on dxflib, extended dxflib
+Uses functions from LibreCAD2
 
 Compile with QT 5.5 and QTCreator 3.5
 
@@ -11,6 +12,8 @@ Structure of coding projects should be:
 
 .. [libs]  <BR>
    [dxflib] from github <BR>
+   [muParser]  <BR>
+   [sstLibreCAD2Lib]  <BR>
    [sst_str01_lib]  <BR>
    [sst_misc01_lib]  <BR>
    [sst_rec04_lib]  <BR>
@@ -28,3 +31,4 @@ Structure of coding projects should be:
 29.06.16: Version 1.9: Support for POLYLINE/HATCH in Block data.  <BR>
 05.07.16: Version 1.10: Problems with color and width fixed.  <BR>
 13.07.16: Version 1.11: new testframe for general testing.  <BR>
+27.09.16: Version 1.12: Preparing works for entities circle, mtext, test. <BR>

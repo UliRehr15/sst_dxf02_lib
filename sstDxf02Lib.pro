@@ -39,7 +39,10 @@ SOURCES		+=  \
     sstDxf02Hatch.cpp \
     sstDxf02HatchLoop.cpp \
     sstDxf02HatchEdge.cpp \
-    sstDxf02LType.cpp
+    sstDxf02LType.cpp \
+    sstDxf02Circle.cpp \
+    sstDxf02MText.cpp \
+    sstDxf02Text.cpp
 
 OTHER_FILES += README.md
 

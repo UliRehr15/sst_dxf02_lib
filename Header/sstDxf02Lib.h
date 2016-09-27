@@ -3848,13 +3848,31 @@ public:
     virtual void addArc(const DL_ArcData& data);
     //==============================================================================
     /**
-    * @brief // Process imported Layer data <BR>
-    * oSstDxfReadDL.addLayer(data)
+    * @brief // Import circle data <BR>
+    * oSstDxfReadDL.addCircle(data)
     *
-    * @param data [in] LayerData
+    * @param data [in] Circle Data
     */
     // ----------------------------------------------------------------------------
     virtual void addCircle(const DL_CircleData& data);
+    //==============================================================================
+    /**
+    * @brief // Import MText data <BR>
+    * oSstDxfReadDL.addMText(data)
+    *
+    * @param data [in] MText Data
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addMText(const DL_MTextData& data);
+    //==============================================================================
+    /**
+    * @brief // Import Text data <BR>
+    * oSstDxfReadDL.addText(data)
+    *
+    * @param data [in] Text Data
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addText(const DL_TextData& data);
     //==============================================================================
     /**
     * @brief // Process imported Layer data <BR>
@@ -4498,6 +4516,297 @@ class sstDxfPolylineCls : public sstDxfBase_Cls
   std::list <DL_VertexData>  sVertexHeap;      /**< All Vertices in Heap */
   long lActVertex;               /**< vertex number for getvertex */
 };
+//==============================================================================
+/**
+* @brief sst Circle
+*
+* More Comment
+*
+* Used Type Definitions
+* sstDxf02;Circle;cx;DD;12;4
+* sstDxf02;Circle;cy;DD;12;4
+* sstDxf02;Circle;cz;DD;12;4
+* sstDxf02;Circle;radius;DD;12;4
+*
+* Changed: 06.07.16  Re.
+*
+* @ingroup sstDxf02Lib
+*
+* @author Re.
+*
+* @date 06.07.16
+*/
+// ----------------------------------------------------------------------------
+class sstDxf02TypCircleCls
+{
+  public:
+    //==============================================================================
+    /**
+    * @brief // sstDxf02TypCircleCls <BR>
+    */
+    // -----------------------------------------------------------------------------
+    sstDxf02TypCircleCls(); // Constructor
+    double cx;  /**< X Coordinate of center point. */
+    double cy;  /**< Y Coordinate of center point. */
+    double cz;  /**< Z Coordinate of center point. */
+    double radius;  /**< Radius of arc. */
+  private:
+};
+
+//==============================================================================
+/**
+* @brief Circle
+*
+* More Comment
+*
+* Changed:   Re.
+*
+* @ingroup sstDxf02Lib
+*
+* @author Re.
+*
+* @date
+*/
+// ----------------------------------------------------------------------------
+class sstDxf02FncCircleCls : public sstDxf02FncBaseCls
+{
+  public:
+    //==============================================================================
+    /**
+    * @brief // sstDxf02FncCircleCls <BR>
+    */
+    // -----------------------------------------------------------------------------
+    sstDxf02FncCircleCls(); // // Constructor
+    //==============================================================================
+    /**
+    * @brief // Csv_Read <BR>
+    * @param iKey
+    * @param *sErrTxt
+    * @param *ssstDxf02_Str
+    * @param *osstDxf02TypCircle
+    */
+    // -----------------------------------------------------------------------------
+    int Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxf02_Str, sstDxf02TypCircleCls *osstDxf02TypCircle); // // Csv Read Function
+    //==============================================================================
+    /**
+    * @brief // Csv_Write <BR>
+    * @param iKey
+    * @param *osstDxf02TypCircle
+    * @param *ssstDxf02_Str
+    */
+    // -----------------------------------------------------------------------------
+    int Csv_Write(int iKey, sstDxf02TypCircleCls *osstDxf02TypCircle, std::string *ssstDxf02_Str); // // Csv Write Function
+  private:
+};
+
+//==============================================================================
+/**
+* @brief sst MText
+*
+* More Comment
+*
+* Used Type Definitions
+* sstDxf02;MText;ipx;DD;12;4
+* sstDxf02;MText;ipy;DD;12;4
+* sstDxf02;MText;ipz;DD;12;4
+* sstDxf02;MText;dirx;DD;12;4
+* sstDxf02;MText;diry;DD;12;4
+* sstDxf02;MText;dirz;DD;12;4
+* sstDxf02;MText;height;DD;12;4
+* sstDxf02;MText;width;DD;12;4
+* sstDxf02;MText;attachmentPoint;II;6;0
+* sstDxf02;MText;drawingDirection;II;6;0
+* sstDxf02;MText;lineSpacingStyle;II;6;0
+* sstDxf02;MText;lineSpacingFactor;DD;12;4
+* sstDxf02;MText;text;CC;100;0
+* sstDxf02;MText;style_ID;UL;10;0
+* sstDxf02;MText;angle;DD;12;4
+*
+* Changed: 06.07.16  Re.
+*
+* @ingroup sstDxf02Lib
+*
+* @author Re.
+*
+* @date 06.07.16
+*/
+// ----------------------------------------------------------------------------
+class sstDxf02TypMTextCls
+{
+  public:
+    //==============================================================================
+    /**
+    * @brief // sstDxf02TypMTextCls <BR>
+    */
+    // -----------------------------------------------------------------------------
+    sstDxf02TypMTextCls(); // Constructor
+    double ipx;  /**< X Coordinate of insertion point */
+    double ipy;  /**< Y Coordinate of insertion point */
+    double ipz;  /**< Z Coordinate of insertion point */
+    double dirx;  /**< X Coordinate of X direction vec */
+    double diry;  /**< Y Coordinate of X direction vec */
+    double dirz;  /**< Z Coordinate of X direction vec */
+    double height;  /**< Text height */
+    double width;  /**< Width of the text box. */
+    int attachmentPoint;  /**< Attachment point. */
+    int drawingDirection;  /**< Drawing direction. */
+    int lineSpacingStyle;  /**< Line spacing style. */
+    double lineSpacingFactor;  /**< Line spacing factor. */
+    char text[101];  /**< Text string. */
+    unsigned long style_ID;  /**< Style string. */
+    double angle;  /**< Rotation angle. */
+  private:
+};
+
+//==============================================================================
+/**
+* @brief MText
+*
+* More Comment
+*
+* Changed:   Re.
+*
+* @ingroup sstDxf02Lib
+*
+* @author Re.
+*
+* @date
+*/
+// ----------------------------------------------------------------------------
+class sstDxf02FncMTextCls : public sstDxf02FncBaseCls
+{
+  public:
+    //==============================================================================
+    /**
+    * @brief // sstDxf02FncMTextCls <BR>
+    */
+    // -----------------------------------------------------------------------------
+    sstDxf02FncMTextCls(); // // Constructor
+    //==============================================================================
+    /**
+    * @brief // Csv_Read <BR>
+    * @param iKey
+    * @param *sErrTxt
+    * @param *ssstDxf02_Str
+    * @param *osstDxf02TypMText
+    */
+    // -----------------------------------------------------------------------------
+    int Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxf02_Str, sstDxf02TypMTextCls *osstDxf02TypMText); // // Csv Read Function
+    //==============================================================================
+    /**
+    * @brief // Csv_Write <BR>
+    * @param iKey
+    * @param *osstDxf02TypMText
+    * @param *ssstDxf02_Str
+    */
+    // -----------------------------------------------------------------------------
+    int Csv_Write(int iKey, sstDxf02TypMTextCls *osstDxf02TypMText, std::string *ssstDxf02_Str); // // Csv Write Function
+  private:
+};
+
+//==============================================================================
+/**
+* @brief sst Text
+*
+* More Comment
+*
+* Used Type Definitions
+* sstDxf02;Text;ipx;DD;12;4
+* sstDxf02;Text;ipy;DD;12;4
+* sstDxf02;Text;ipz;DD;12;4
+* sstDxf02;Text;apx;DD;12;4
+* sstDxf02;Text;apy;DD;12;4
+* sstDxf02;Text;apz;DD;12;4
+* sstDxf02;Text;height;DD;12;4
+* sstDxf02;Text;xScaleFactor;DD;12;4
+* sstDxf02;Text;textGenerationFlags;II;6;0
+* sstDxf02;Text;hJustification;II;6;0
+* sstDxf02;Text;vJustification;II;6;0
+* sstDxf02;Text;text;CC;100;0
+* sstDxf02;Text;style_ID;UL;10;0
+* sstDxf02;Text;angle;DD;12;4
+*
+* Changed: 06.07.16  Re.
+*
+* @ingroup sstDxf02Lib
+*
+* @author Re.
+*
+* @date 06.07.16
+*/
+// ----------------------------------------------------------------------------
+class sstDxf02TypTextCls
+{
+  public:
+    //==============================================================================
+    /**
+    * @brief // sstDxf02TypTextCls <BR>
+    */
+    // -----------------------------------------------------------------------------
+    sstDxf02TypTextCls(); // Constructor
+    double ipx;  /**< X Coordinate of insertion point */
+    double ipy;  /**< Y Coordinate of insertion point */
+    double ipz;  /**< Z Coordinate of insertion point */
+    double apx;  /**< X Coordinate of alignment point */
+    double apy;  /**< Y Coordinate of alignment point */
+    double apz;  /**< Z Coordinate of alignment point */
+    double height;  /**< Text height */
+    double xScaleFactor;  /**< Relative X scale factor. */
+    int textGenerationFlags;  /**< 0 = default, 2 = Backwards, 4 = */
+    int hJustification;  /**< Horizontal justification. */
+    int vJustification;  /**< Vertical justification. */
+    char text[101];  /**< Text string. */
+    unsigned long style_ID;  /**< Style (font). */
+    double angle;  /**< Rotation angle of dimension tex */
+  private:
+};
+
+//==============================================================================
+/**
+* @brief Text
+*
+* More Comment
+*
+* Changed:   Re.
+*
+* @ingroup sstDxf02Lib
+*
+* @author Re.
+*
+* @date
+*/
+// ----------------------------------------------------------------------------
+class sstDxf02FncTextCls : public sstDxf02FncBaseCls
+{
+  public:
+    //==============================================================================
+    /**
+    * @brief // sstDxf02FncTextCls <BR>
+    */
+    // -----------------------------------------------------------------------------
+    sstDxf02FncTextCls(); // // Constructor
+    //==============================================================================
+    /**
+    * @brief // Csv_Read <BR>
+    * @param iKey
+    * @param *sErrTxt
+    * @param *ssstDxf02_Str
+    * @param *osstDxf02TypText
+    */
+    // -----------------------------------------------------------------------------
+    int Csv_Read(int iKey, std::string *sErrTxt, std::string *ssstDxf02_Str, sstDxf02TypTextCls *osstDxf02TypText); // // Csv Read Function
+    //==============================================================================
+    /**
+    * @brief // Csv_Write <BR>
+    * @param iKey
+    * @param *osstDxf02TypText
+    * @param *ssstDxf02_Str
+    */
+    // -----------------------------------------------------------------------------
+    int Csv_Write(int iKey, sstDxf02TypTextCls *osstDxf02TypText, std::string *ssstDxf02_Str); // // Csv Write Function
+  private:
+};
+
 //==============================================================================
 /**
 * @brief sstdxf_WrtDss2PolyLine
