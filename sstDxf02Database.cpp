@@ -72,6 +72,9 @@ int sstDxf02DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
   std::string oFilNamHatch;
   std::string oFilNamHatchEdge;
   std::string oFilNamHatchLoop;
+  std::string oFilNamCircle;
+  std::string oFilNamMText;
+  std::string oFilNamText;
   std::string oFilNamMain;
 
   oFilNamLayer = oJobNam + "_Layer.csv";
@@ -84,6 +87,9 @@ int sstDxf02DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
   oFilNamHatch = oJobNam + "_Hatch.csv";
   oFilNamHatchEdge = oJobNam + "_HatchEdge.csv";
   oFilNamHatchLoop = oJobNam + "_HatchLoop.csv";
+  oFilNamCircle = oJobNam + "_Circle.csv";
+  oFilNamMText = oJobNam + "_MText.csv";
+  oFilNamText = oJobNam + "_Text.csv";
   oFilNamMain = oJobNam + "_Main.csv";
 
 
@@ -145,6 +151,15 @@ int sstDxf02DatabaseCls::ReadAllCsvFiles(int iKey, std::string oDxfFilNam)
   // Read whole hatch loop csv file into sst_rec_mem
   iStat = oSstFncHatchLoop.ReadCsvFile ( 0, oFilNamHatchLoop);
 
+  // Read whole hatch loop csv file into sst_rec_mem
+  iStat = oSstFncCircle.ReadCsvFile ( 0, oFilNamCircle);
+
+  // Read whole hatch loop csv file into sst_rec_mem
+  iStat = oSstFncMText.ReadCsvFile ( 0, oFilNamMText);
+
+  // Read whole hatch loop csv file into sst_rec_mem
+  iStat = oSstFncText.ReadCsvFile ( 0, oFilNamText);
+
   return 0;
 }
 //=============================================================================
@@ -166,6 +181,21 @@ sstDxf02FncLTypeCls* sstDxf02DatabaseCls::getSstFncLType()
 sstDxf02FncArcCls* sstDxf02DatabaseCls::getSstFncArc()
 {
   return &this->oSstFncArc;
+}
+//=============================================================================
+sstDxf02FncCircleCls* sstDxf02DatabaseCls::getSstFncCircle()
+{
+  return &this->oSstFncCircle;
+}
+//=============================================================================
+sstDxf02FncMTextCls* sstDxf02DatabaseCls::getSstFncMText()
+{
+  return &this->oSstFncMText;
+}
+//=============================================================================
+sstDxf02FncTextCls* sstDxf02DatabaseCls::getSstFncText()
+{
+  return &this->oSstFncText;
 }
 //=============================================================================
 sstDxf02FncInsertCls* sstDxf02DatabaseCls::getSstFncInsert()

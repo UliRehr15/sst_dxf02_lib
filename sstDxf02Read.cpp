@@ -75,6 +75,15 @@ sstDxf02ReadCls::~sstDxf02ReadCls()
     sstDxf02FncVertexCls *poVertexFnc;
     poVertexFnc = this->oDxfDb.getSstFncVertex();
 
+    sstDxf02FncCircleCls *poCircleFnc;
+    poCircleFnc = this->oDxfDb.getSstFncCircle();
+
+    sstDxf02FncMTextCls *poMTextFnc;
+    poMTextFnc = this->oDxfDb.getSstFncMText();
+
+    sstDxf02FncTextCls *poTextFnc;
+    poTextFnc = this->oDxfDb.getSstFncText();
+
     sstDxf02FncLayCls *poLayFnc;
     poLayFnc = this->oDxfDb.getSstFncLay();
 
@@ -113,6 +122,18 @@ sstDxf02ReadCls::~sstDxf02ReadCls()
 
     // write all vertex data from table to csv file
     iStat = poVertexFnc->WriteCsvFile(0,this->oDxfFilNam);
+    assert(iStat == 0);
+
+    // write all Circle data from table to csv file
+    iStat = poCircleFnc->WriteCsvFile(0,this->oDxfFilNam);
+    assert(iStat == 0);
+
+    // write all MText data from table to csv file
+    iStat = poMTextFnc->WriteCsvFile(0,this->oDxfFilNam);
+    assert(iStat == 0);
+
+    // write all Text data from table to csv file
+    iStat = poTextFnc->WriteCsvFile(0,this->oDxfFilNam);
     assert(iStat == 0);
 
     // write all layer data from table to csv file
@@ -207,9 +228,10 @@ void sstDxf02ReadCls::endBlock()
 }
 //=============================================================================
 void sstDxf02ReadCls::addPoint(const DL_PointData& data) {
-  printf("POINT    (%6.3f, %6.3f, %6.3f)\n",
-         data.x, data.y, data.z);
-  printAttributes();
+//  printf("POINT    (%6.3f, %6.3f, %6.3f)\n",
+//         data.x, data.y, data.z);
+//  printAttributes();
+  this->poPrt->SST_PrtWrtChar( 1,(char*)"POINT skiped",(char*)"Dxf Reading: ");
 }
 //=============================================================================
 void sstDxf02ReadCls::addInsert(const DL_InsertData& data)
@@ -298,12 +320,14 @@ void sstDxf02ReadCls::addInsert(const DL_InsertData& data)
 }
 //=============================================================================
 void sstDxf02ReadCls::addLine(const DL_LineData& data) {
-    printf("LINE     (%6.3f, %6.3f, %6.3f) (%6.3f, %6.3f, %6.3f)\n",
-           data.x1, data.y1, data.z1, data.x2, data.y2, data.z2);
-    printAttributes();
+//    printf("LINE     (%6.3f, %6.3f, %6.3f) (%6.3f, %6.3f, %6.3f)\n",
+//           data.x1, data.y1, data.z1, data.x2, data.y2, data.z2);
+//    printAttributes();
+    this->poPrt->SST_PrtWrtChar( 1,(char*)"LINE skiped",(char*)"Dxf Reading: ");
 }
 //=============================================================================
-void sstDxf02ReadCls::addArc(const DL_ArcData& data) {
+void sstDxf02ReadCls::addArc(const DL_ArcData& data)
+{
   int iStat = 0;
   std::string oLayerStr;
 
@@ -362,22 +386,197 @@ void sstDxf02ReadCls::addArc(const DL_ArcData& data) {
   iStat = poMainFnc->WritNew(0,&oMainRec,&dRecNo);
 }
 //=============================================================================
-void sstDxf02ReadCls::addCircle(const DL_CircleData& data) {
-    printf("CIRCLE   (%6.3f, %6.3f, %6.3f) %6.3f\n",
-           data.cx, data.cy, data.cz,
-           data.radius);
-    printAttributes();
+void sstDxf02ReadCls::addCircle(const DL_CircleData& data)
+{
+//    printf("CIRCLE   (%6.3f, %6.3f, %6.3f) %6.3f\n",
+//           data.cx, data.cy, data.cz,
+//           data.radius);
+//    printAttributes();
+  int iStat = 0;
+  std::string oLayerStr;
+
+  sstDxf02TypCircleCls oDxfCircle;
+  oDxfCircle.ReadFromDL(data);
+  oDxfCircle.BaseReadFromDL(attributes);
+  dREC04RECNUMTYP dRecNo=0;
+  dREC04RECNUMTYP dLayRecNo=0;
+
+  sstDxf02FncCircleCls *poCircleFnc;
+  poCircleFnc = this->oDxfDb.getSstFncCircle();
+  sstDxf02FncLayCls *poLayFnc;
+  poLayFnc = this->oDxfDb.getSstFncLay();
+  sstDxf02FncBlkCls *poBlkFnc;
+  poBlkFnc = this->oDxfDb.getSstFncBlk();
+  sstDxf02FncMainCls *poMainFnc;
+  poMainFnc = this->oDxfDb.getSstFncMain();
+
+  dREC04RECNUMTYP dNumBlocks = 0;
+
+  // is it layer or block??
+  if (this->oActBlockNam.length() > 0)
+  {  // Block
+    dNumBlocks = poBlkFnc->count();
+    oDxfCircle.setBlockID(dNumBlocks);
+  }
+  else
+  {  // Layer
+    oLayerStr = attributes.getLayer();
+    // Find record with exact search value
+    iStat = poLayFnc->TreSeaEQ( 0, poLayFnc->getNameSortKey(), (void*) oLayerStr.c_str(), &dLayRecNo);
+    assert(iStat == 1);
+    oDxfCircle.setLayerID(dLayRecNo);
+  }
+  iStat = poCircleFnc->WritNew(0,&oDxfCircle,&dRecNo);
+
+  sstDxf02TypMainCls oMainRec;
+
+  dREC04RECNUMTYP dMainRecNo = poMainFnc->count();
+
+  oMainRec.setMainID(dMainRecNo+1);
+  oMainRec.setEntityType(RS2::EntityCircle);
+  oMainRec.setTypeID(dRecNo);
+
+  // is it layer or block??
+  if (this->oActBlockNam.length() > 0)
+  {  // Block
+    oMainRec.setLayBlockID(dNumBlocks);
+    oMainRec.setSectString("B");
+  }
+  else
+  {  // Layer
+    oMainRec.setLayBlockID(dLayRecNo);
+    oMainRec.setSectString("L");
+  }
+  iStat = poMainFnc->WritNew(0,&oMainRec,&dRecNo);
+//     this->poPrt->SST_PrtWrtChar( 1,(char*)"CIRCLE skiped",(char*)"Dxf Reading: ");
 }
 //=============================================================================
 void sstDxf02ReadCls::addMText(const DL_MTextData& data) {
-    printf("MText \n");
-    printAttributes();
+//    printf("MText \n");
+//    printAttributes();
+  //  this->poPrt->SST_PrtWrtChar( 1,(char*)"MTEXT skiped",(char*)"Dxf Reading: ");
+  int iStat = 0;
+  std::string oLayerStr;
+
+  sstDxf02TypMTextCls oDxfMText;
+  oDxfMText.ReadFromDL(data);
+  oDxfMText.BaseReadFromDL(attributes);
+  dREC04RECNUMTYP dRecNo=0;
+  dREC04RECNUMTYP dLayRecNo=0;
+
+  sstDxf02FncMTextCls *poMTextFnc;
+  poMTextFnc = this->oDxfDb.getSstFncMText();
+  sstDxf02FncLayCls *poLayFnc;
+  poLayFnc = this->oDxfDb.getSstFncLay();
+  sstDxf02FncBlkCls *poBlkFnc;
+  poBlkFnc = this->oDxfDb.getSstFncBlk();
+  sstDxf02FncMainCls *poMainFnc;
+  poMainFnc = this->oDxfDb.getSstFncMain();
+
+  dREC04RECNUMTYP dNumBlocks = 0;
+
+  // is it layer or block??
+  if (this->oActBlockNam.length() > 0)
+  {  // Block
+    dNumBlocks = poBlkFnc->count();
+    oDxfMText.setBlockID(dNumBlocks);
+  }
+  else
+  {  // Layer
+    oLayerStr = attributes.getLayer();
+    // Find record with exact search value
+    iStat = poLayFnc->TreSeaEQ( 0, poLayFnc->getNameSortKey(), (void*) oLayerStr.c_str(), &dLayRecNo);
+    assert(iStat == 1);
+    oDxfMText.setLayerID(dLayRecNo);
+  }
+  iStat = poMTextFnc->WritNew(0,&oDxfMText,&dRecNo);
+
+  sstDxf02TypMainCls oMainRec;
+
+  dREC04RECNUMTYP dMainRecNo = poMainFnc->count();
+
+  oMainRec.setMainID(dMainRecNo+1);
+  oMainRec.setEntityType(RS2::EntityMText);
+  oMainRec.setTypeID(dRecNo);
+
+  // is it layer or block??
+  if (this->oActBlockNam.length() > 0)
+  {  // Block
+    oMainRec.setLayBlockID(dNumBlocks);
+    oMainRec.setSectString("B");
+  }
+  else
+  {  // Layer
+    oMainRec.setLayBlockID(dLayRecNo);
+    oMainRec.setSectString("L");
+  }
+  iStat = poMainFnc->WritNew(0,&oMainRec,&dRecNo);
 }
 //=============================================================================
 void sstDxf02ReadCls::addText(const DL_TextData& data) {
-    printf("Text \n");
-    printAttributes();
+//    printf("Text \n");
+//    printAttributes();
+    // this->poPrt->SST_PrtWrtChar( 1,(char*)"TEXT skiped",(char*)"Dxf Reading: ");
+  int iStat = 0;
+  std::string oLayerStr;
+
+  sstDxf02TypTextCls oDxfText;
+  oDxfText.ReadFromDL(data);
+  oDxfText.BaseReadFromDL(attributes);
+  dREC04RECNUMTYP dRecNo=0;
+  dREC04RECNUMTYP dLayRecNo=0;
+
+  sstDxf02FncTextCls *poTextFnc;
+  poTextFnc = this->oDxfDb.getSstFncText();
+  sstDxf02FncLayCls *poLayFnc;
+  poLayFnc = this->oDxfDb.getSstFncLay();
+  sstDxf02FncBlkCls *poBlkFnc;
+  poBlkFnc = this->oDxfDb.getSstFncBlk();
+  sstDxf02FncMainCls *poMainFnc;
+  poMainFnc = this->oDxfDb.getSstFncMain();
+
+  dREC04RECNUMTYP dNumBlocks = 0;
+
+  // is it layer or block??
+  if (this->oActBlockNam.length() > 0)
+  {  // Block
+    dNumBlocks = poBlkFnc->count();
+    oDxfText.setBlockID(dNumBlocks);
+  }
+  else
+  {  // Layer
+    oLayerStr = attributes.getLayer();
+    // Find record with exact search value
+    iStat = poLayFnc->TreSeaEQ( 0, poLayFnc->getNameSortKey(), (void*) oLayerStr.c_str(), &dLayRecNo);
+    assert(iStat == 1);
+    oDxfText.setLayerID(dLayRecNo);
+  }
+  iStat = poTextFnc->WritNew(0,&oDxfText,&dRecNo);
+
+  sstDxf02TypMainCls oMainRec;
+
+  dREC04RECNUMTYP dMainRecNo = poMainFnc->count();
+
+  oMainRec.setMainID(dMainRecNo+1);
+  oMainRec.setEntityType(RS2::EntityText);
+  oMainRec.setTypeID(dRecNo);
+
+  // is it layer or block??
+  if (this->oActBlockNam.length() > 0)
+  {  // Block
+    oMainRec.setLayBlockID(dNumBlocks);
+    oMainRec.setSectString("B");
+  }
+  else
+  {  // Layer
+    oMainRec.setLayBlockID(dLayRecNo);
+    oMainRec.setSectString("L");
+  }
+  iStat = poMainFnc->WritNew(0,&oMainRec,&dRecNo);
+//     this->poPrt->SST_PrtWrtChar( 1,(char*)"CIRCLE skiped",(char*)"Dxf Reading: ");
 }
+
+//}
 //=============================================================================
 void sstDxf02ReadCls::addPolyline(const DL_PolylineData& data)
 {
@@ -509,12 +708,13 @@ void sstDxf02ReadCls::addVertex(const DL_VertexData& data)
 }
 //=============================================================================
 void sstDxf02ReadCls::add3dFace(const DL_3dFaceData& data) {
-    printf("3DFACE\n");
-    for (int i=0; i<4; i++) {
-        printf("   corner %d: %6.3f %6.3f %6.3f\n",
-            i, data.x[i], data.y[i], data.z[i]);
-    }
-    printAttributes();
+//    printf("3DFACE\n");
+//    for (int i=0; i<4; i++) {
+//        printf("   corner %d: %6.3f %6.3f %6.3f\n",
+//            i, data.x[i], data.y[i], data.z[i]);
+//    }
+//    printAttributes();
+    this->poPrt->SST_PrtWrtChar( 1,(char*)"FACE skiped",(char*)"Dxf Reading: ");
 }
 //=============================================================================
 void sstDxf02ReadCls::addHatch(const DL_HatchData& data)
@@ -693,28 +893,28 @@ void sstDxf02ReadCls::addHatchLoop(const DL_HatchLoopData& data)
 //  // int iStat = 0;
 //}
 ////=============================================================================
-void sstDxf02ReadCls::printAttributes() {
-    printf("  Attributes: Layer: %s, ", attributes.getLayer().c_str());
-    printf(" Color: ");
-    if (attributes.getColor()==256)	{
-        printf("BYLAYER");
-    } else if (attributes.getColor()==0) {
-        printf("BYBLOCK");
-    } else {
-        printf("%d", attributes.getColor());
-    }
-    printf(" Width: ");
-    if (attributes.getWidth()==-1) {
-        printf("BYLAYER");
-    } else if (attributes.getWidth()==-2) {
-        printf("BYBLOCK");
-    } else if (attributes.getWidth()==-3) {
-        printf("DEFAULT");
-    } else {
-        printf("%d", attributes.getWidth());
-    }
-    printf(" Type: %s\n", attributes.getLineType().c_str());
-}
+//void sstDxf02ReadCls::printAttributes() {
+//    printf("  Attributes: Layer: %s, ", attributes.getLayer().c_str());
+//    printf(" Color: ");
+//    if (attributes.getColor()==256)	{
+//        printf("BYLAYER");
+//    } else if (attributes.getColor()==0) {
+//        printf("BYBLOCK");
+//    } else {
+//        printf("%d", attributes.getColor());
+//    }
+//    printf(" Width: ");
+//    if (attributes.getWidth()==-1) {
+//        printf("BYLAYER");
+//    } else if (attributes.getWidth()==-2) {
+//        printf("BYBLOCK");
+//    } else if (attributes.getWidth()==-3) {
+//        printf("DEFAULT");
+//    } else {
+//        printf("%d", attributes.getWidth());
+//    }
+//    printf(" Type: %s\n", attributes.getLineType().c_str());
+//}
 //=============================================================================
 void sstDxf02ReadCls::SetDxfFilNam(char* cTmpDxfFilNam)
 {

@@ -32,3 +32,4 @@ Structure of coding projects should be:
 05.07.16: Version 1.10: Problems with color and width fixed.  <BR>
 13.07.16: Version 1.11: new testframe for general testing.  <BR>
 27.09.16: Version 1.12: Preparing works for entities circle, mtext, test. <BR>
+21.10.16: Version 1.13: App Dxf2Csv: Full Support for circle, mtext, test. <BR>

@@ -600,54 +600,6 @@ class sstDxf02TypInsertCls : public sstDxf02TypBaseCls
     void WritToDL(DL_InsertData *poDLInsert);
     //==============================================================================
     /**
-    * @brief // Get Layer ID  <BR>
-    *
-    * @return LayerID
-    */
-    // ----------------------------------------------------------------------------
-    // unsigned long getLayerID() const;
-    //==============================================================================
-    /**
-    * @brief // Set Layer ID  <BR>
-    *
-    * @param value [in] Set Layer ID
-    */
-    // ----------------------------------------------------------------------------
-    // void setLayerID(unsigned long value);
-    //==============================================================================
-    /**
-    * @brief // Get Block ID  <BR>
-    *
-    * @return BlockID
-    */
-    // ----------------------------------------------------------------------------
-    // unsigned long getBlockID() const;
-    //==============================================================================
-    /**
-    * @brief // Set Block ID  <BR>
-    *
-    * @param value [in] Set Block ID
-    */
-    // ----------------------------------------------------------------------------
-    // void setBlockID(unsigned long value);
-    //==============================================================================
-    /**
-    * @brief // Get insert ID  <BR>
-    *
-    * @return unsigned long Arc ID
-    */
-    // ----------------------------------------------------------------------------
-    // unsigned long getInsertID() const;
-    //==============================================================================
-    /**
-    * @brief // Set insert ID  <BR>
-    *
-    * @param value [in] Arc ID
-    */
-    // ----------------------------------------------------------------------------
-    // void setInsertID(unsigned long value);
-    //==============================================================================
-    /**
     * @brief // Get insert ipx  <BR>
     *
     * @return double ipx
@@ -788,9 +740,9 @@ class sstDxf02TypHatchCls : public sstDxf02TypBaseCls
     int getNumLoops() const;
     //==============================================================================
     /**
-    * @brief // Set Arc ID  <BR>
+    * @brief // Set Value <BR>
     *
-    * @param value [in] Arc ID
+    * @param value [in] Value
     */
     // ----------------------------------------------------------------------------
     void setNumLoops(int value);
@@ -3568,591 +3520,8 @@ class sstDxf02FncMainCls : public sstDxf02FncBaseCls
 private:  // Private functions
 int Dum;        /**< Dummy */
 };
-//-----------------------------------------------------------------------------
 //==============================================================================
-/**
-* @brief sst dxf database class
-*
-* Stores all dxf types <BR>
-*
-* Changed: 06.04.16  Re.
-*
-* @ingroup sstDxf02Lib
-*
-* @author Re.
-*
-* @date 06.04.16
-*/
-// ----------------------------------------------------------------------------
-class sstDxf02DatabaseCls
-{
-  public:   // Public functions
-  //==============================================================================
-  /**
-  * @brief // dxf database constructor <BR>
-  *
-  * @param oTmpPrt [in] protocol output file
-  */
-  // ----------------------------------------------------------------------------
-     sstDxf02DatabaseCls(sstMisc01PrtFilCls *oTmpPrt);  // Constructor
-    //~sstTestBaseCls();  // Destructor
-     //==============================================================================
-     /**
-     * @brief // Read all Csv Files into dxf database <BR>
-     * iStat = oSstDxfDB.ReadAllCsvFiles(iKey);
-     *
-     * @param iKey       [in] For the moment 0
-     * @param oDxfFilNam [in] Dxf File Name for new dxf file
-     *
-     * @return Errorstate
-     *
-     * @retval   = 0: OK
-     * @retval   < 0: Unspecified Error
-     */
-     // ----------------------------------------------------------------------------
-     int ReadAllCsvFiles(int iKey, std::string oDxfFilNam);
-     //==============================================================================
-     /**
-     * @brief // get layer table adress from dxf database <BR>
-     * oLayTab = oDxfDB.getSstFncLay();
-     *
-     * @return Layer table
-     */
-     // ----------------------------------------------------------------------------
-     sstDxf02FncLayCls* getSstFncLay();
-     //==============================================================================
-     /**
-     * @brief // get block table adress from dxf database <BR>
-     * oBlkTab = oDxfDB.getSstFncBlk();
-     *
-     * @return Block table adress
-     */
-     // ----------------------------------------------------------------------------
-     sstDxf02FncBlkCls* getSstFncBlk();
-     //==============================================================================
-     /**
-     * @brief // get LType table adress from dxf database <BR>
-     * oBlkTab = oDxfDB.getSstFncLType();
-     *
-     * @return LineType table adress
-     */
-     // ----------------------------------------------------------------------------
-     sstDxf02FncLTypeCls* getSstFncLType();
-     //==============================================================================
-     /**
-     * @brief // get arc table adress from dxf database <BR>
-     * oArcTab = oDxfDB.getSstFncArc();
-     *
-     * @return Layer table
-     */
-     // ----------------------------------------------------------------------------
-     sstDxf02FncArcCls* getSstFncArc();
-     //==============================================================================
-     /**
-     * @brief // get insert table from dxf database <BR>
-     * oInsertTab = oDxfDB.getSstFncInsert();
-     *
-     * @return insert table
-     */
-     // ----------------------------------------------------------------------------
-     sstDxf02FncInsertCls* getSstFncInsert();
-     //==============================================================================
-     /**
-     * @brief // get polyline table from dxf database <BR>
-     * oInsertTab = oDxfDB.getSstFncPolyline();
-     *
-     * @return polyline table
-     */
-     // ----------------------------------------------------------------------------
-     sstDxf02FncPolylineCls* getSstFncPolyline();
-     //==============================================================================
-     /**
-     * @brief // get vertex table from dxf database <BR>
-     * oVertexTab = oDxfDB.getSstFncVertex();
-     *
-     * @return vertex table
-     */
-     // ----------------------------------------------------------------------------
-     sstDxf02FncVertexCls* getSstFncVertex();
-     //==============================================================================
-     /**
-     * @brief // get hatch table from dxf database <BR>
-     * oHatchTab = oDxfDB.getSstFncHatch();
-     *
-     * @return hatch table
-     */
-     // ----------------------------------------------------------------------------
-     sstDxf02FncHatchCls* getSstFncHatch();
-     //==============================================================================
-     /**
-     * @brief // get hatch edge table from dxf database <BR>
-     * oHatchEdgeTab = oDxfDB.getSstFncHatchEdge();
-     *
-     * @return hatch edge table
-     */
-     // ----------------------------------------------------------------------------
-     sstDxf02FncHatchEdgeCls* getSstFncHatchEdge();
-     //==============================================================================
-     /**
-     * @brief // get hatch loop table from dxf database <BR>
-     * oHatchLoopTab = oDxfDB.getSstFncHatchLoop();
-     *
-     * @return hatch Loop table
-     */
-     // ----------------------------------------------------------------------------
-     sstDxf02FncHatchLoopCls* getSstFncHatchLoop();
-     //==============================================================================
-     /**
-     * @brief // get main table from dxf database <BR>
-     * oMainTab = oDxfDB.getSstFncMain();
-     *
-     * @return Layer table
-     */
-     // ----------------------------------------------------------------------------
-     sstDxf02FncMainCls* getSstFncMain();
-     //==============================================================================
-     /**
-     * @brief // return record number <BR>
-     *
-     * @return Record number
-     */
-     // ----------------------------------------------------------------------------
-     dREC04RECNUMTYP getActRecNo() const;
-     //==============================================================================
-     /**
-     * @brief // Set record number <BR>
-     *
-     * @param value [in] record number
-     */
-     // ----------------------------------------------------------------------------
-     void setActRecNo(const dREC04RECNUMTYP &value);
-     //==============================================================================
-     /**
-     * @brief // return actual entity type <BR>
-     *
-     * @return actual entity type
-     */
-     // ----------------------------------------------------------------------------
-     RS2::EntityType getActEntType() const;
-     //==============================================================================
-     /**
-     * @brief // Set actual entity type <BR>
-     *
-     * @param value [in] actual entity type
-     */
-     // ----------------------------------------------------------------------------
-     void setActEntType(const RS2::EntityType &value);
-     //==============================================================================
 
-private:  // Private functions
-  sstDxf02FncMainCls oSstFncMain;      /**< Main table object */
-  sstDxf02FncLayCls oSstFncLay;        /**< layer table object */
-  sstDxf02FncBlkCls oSstFncBlk;        /**< Block table object */
-  sstDxf02FncLTypeCls oSstFncLType;        /**< LineType table object */
-  sstDxf02FncArcCls oSstFncArc;        /**< Arc table object */
-  sstDxf02FncInsertCls oSstFncInsert;  /**< Insert table object */
-  sstDxf02FncPolylineCls oSstFncPolyline;  /**< polyline table object */
-  sstDxf02FncVertexCls oSstFncVertex;  /**< vertex table object */
-  sstDxf02FncHatchCls oSstFncHatch;    /**< hatch table object */
-  sstDxf02FncHatchEdgeCls oSstFncHatchEdge;  /**< hatch edge table object */
-  sstDxf02FncHatchLoopCls oSstFncHatchLoop;  /**< hatch loop table object */
-  sstMisc01PrtFilCls *oPrt;                  /**< Protocol object */
-  dREC04RECNUMTYP dActRecNo;              // Actual Record Number
-  RS2::EntityType eActEntType;            // Actual Entity Type
-
-};
-//==============================================================================
-/**
-* @brief Dxf Import Data Class <BR>
-*
-* Changed: 09.07.15  Re.
-*
-* @ingroup sstDxf02Lib
-*
-* @author Re.
-*
-* @date 09.07.15
-*/
-// ----------------------------------------------------------------------------
-class sstDxf02ReadCls : public DL_CreationAdapter {
-public:
-  //==============================================================================
-  /**
-  * @brief // dxf read object <BR>
-  *
-  * @param oTmpPrt [in] protocol output file
-  */
-  // ----------------------------------------------------------------------------
-    sstDxf02ReadCls(sstMisc01PrtFilCls *oTmpPrt);
-    ~sstDxf02ReadCls();
-    //==============================================================================
-    /**
-    * @brief // Process imported Layer data <BR>
-    * oSstDxfReadDL.addLayer(data)
-    *
-    * @param data [in] LayerData
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addLayer(const DL_LayerData& data);
-    //==============================================================================
-    /**
-    * @brief // Process imported Block data <BR>
-    * oSstDxfReadDL.addBlock(data)
-    *
-    * @param data [in] BlockData
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addBlock(const DL_BlockData& data);
-    //==============================================================================
-    /**
-    * @brief // process end block situation <BR>
-    * oSstDxfReadDL.endBlock()
-    */
-    // ----------------------------------------------------------------------------
-    virtual void endBlock();
-    //==============================================================================
-    /**
-    * @brief // Process imported Point data <BR>
-    * oSstDxfReadDL.addPoint(data)
-    *
-    * @param data [in] Point data
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addPoint(const DL_PointData& data);
-    //==============================================================================
-    /**
-    * @brief // Process imported insert data <BR>
-    * oSstDxfReadDL.addInsert(data)
-    *
-    * @param data [in] insert data
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addInsert(const DL_InsertData& data);
-    //==============================================================================
-    /**
-    * @brief // Process imported Layer data <BR>
-    * oSstDxfReadDL.addLayer(data)
-    *
-    * @param data [in] LayerData
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addLine(const DL_LineData& data);
-    //==============================================================================
-    /**
-    * @brief // Process imported Layer data <BR>
-    * oSstDxfReadDL.addLayer(data)
-    *
-    * @param data [in] LayerData
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addArc(const DL_ArcData& data);
-    //==============================================================================
-    /**
-    * @brief // Import circle data <BR>
-    * oSstDxfReadDL.addCircle(data)
-    *
-    * @param data [in] Circle Data
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addCircle(const DL_CircleData& data);
-    //==============================================================================
-    /**
-    * @brief // Import MText data <BR>
-    * oSstDxfReadDL.addMText(data)
-    *
-    * @param data [in] MText Data
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addMText(const DL_MTextData& data);
-    //==============================================================================
-    /**
-    * @brief // Import Text data <BR>
-    * oSstDxfReadDL.addText(data)
-    *
-    * @param data [in] Text Data
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addText(const DL_TextData& data);
-    //==============================================================================
-    /**
-    * @brief // Process imported Layer data <BR>
-    * oSstDxfReadDL.addLayer(data)
-    *
-    * @param data [in] LayerData
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addPolyline(const DL_PolylineData& data);
-    //==============================================================================
-    /**
-    * @brief // Process imported Layer data <BR>
-    * oSstDxfReadDL.addLayer(data)
-    *
-    * @param data [in] LayerData
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addVertex(const DL_VertexData& data);
-    //==============================================================================
-    /**
-    * @brief // Process imported Layer data <BR>
-    * oSstDxfReadDL.addLayer(data)
-    *
-    * @param data [in] LayerData
-    */
-    // ----------------------------------------------------------------------------
-    virtual void add3dFace(const DL_3dFaceData& data);
-    //==============================================================================
-    /**
-    * @brief // Process imported Layer data <BR>
-    * oSstDxfReadDL.addLayer(data)
-    *
-    * @param data [in] LayerData
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addHatch(const DL_HatchData& data);
-    //==============================================================================
-    /**
-    * @brief // Process imported Layer data <BR>
-    * oSstDxfReadDL.addLayer(data)
-    *
-    * @param data [in] LayerData
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addHatchEdge(const DL_HatchEdgeData& data);
-    //==============================================================================
-    /**
-    * @brief // Process imported Layer data <BR>
-    * oSstDxfReadDL.addLayer(data)
-    *
-    * @param data [in] LayerData
-    */
-    // ----------------------------------------------------------------------------
-    virtual void addHatchLoop(const DL_HatchLoopData& data);
-    // virtual void addSolid(const DL_SolidData& data);
-    //==============================================================================
-    /**
-    * @brief // Print Attributes <BR>
-    * oSstDxfReadDL.printAttributes()
-    */
-    // ----------------------------------------------------------------------------
-    void printAttributes();
-    //==============================================================================
-    /**
-    * @brief // Set Dxf File Name into object <BR>
-    * oSstDxfReadDL.SetDxfFilNam(cDxfFilNam);
-    *
-    * @param cDxfFilNam [in] Set Dxf File Name
-    *
-    */
-    // ----------------------------------------------------------------------------
-    void SetDxfFilNam(char* cDxfFilNam);
-    //==============================================================================
-private:
-    sstDxf02DatabaseCls   oDxfDb; /**< sst dxf database with recmem tech */
-
-    std::string oDxfFilNam;        /**< dxf file name without extension */
-    std::string oActBlockNam;      /**< actual block name */
-    sstMisc01PrtFilCls *poPrt;     /**< adress of protocol file */
-};
-
-//==============================================================================
-/**
-* @brief dxf write class
-*
-* Read all csv files, create sst dxf database and export to dxf file <BR>
-*
-* Changed: 08.07.15  Re.
-*
-* @ingroup sstDxf02Lib
-*
-* @author Re.
-*
-* @date 08.07.15
-*/
-// ----------------------------------------------------------------------------
-class sstDxf02WriteCls
-{
-  public:   // Public functions
-  //==============================================================================
-  /**
-  * @brief // Constructor <BR>
-  *
-  * @param oTmpPrt [in] protocol file object
-  */
-  // ----------------------------------------------------------------------------
-     sstDxf02WriteCls(sstMisc01PrtFilCls *oTmpPrt);  // Constructor
-    ~sstDxf02WriteCls();  // Destructor
-     //==============================================================================
-     /**
-     * @brief // Open new dxf file <BR>
-     * iStat = oSstDxfWrite.OpenNewDxfFile ( iKey, oDxfFilNam);
-     *
-     * @param iKey       [in] For the moment 0
-     * @param oDxfFilNam [in] Dxf file name
-     *
-     * @return Errorstate
-     *
-     * @retval   = 0: OK
-     * @retval   < 0: Unspecified Error
-     */
-     // ----------------------------------------------------------------------------
-     int OpenNewDxfFile (int iKey, std::string oDxfFilNam);
-     //==============================================================================
-     /**
-     * @brief // Write dxf section header <BR>
-     * iStat = oSstDxfWrite.WrtSecHeader(iKey);
-     *
-     * @param iKey [in] For the moment 0
-     *
-     * @return Errorstate
-     *
-     * @retval   = 0: OK
-     * @retval   < 0: Unspecified Error
-     */
-     // ----------------------------------------------------------------------------
-     int WrtSecHeader (int         iKey);
-     //==============================================================================
-     /**
-     * @brief // Write Dxf Section layers <BR>
-     * iStat = oSstDxfWrite.WrtSecLayers(iKey);
-     *
-     * @param iKey [in] For the moment 0
-     *
-     * @return Errorstate
-     *
-     * @retval   = 0: OK
-     * @retval   < 0: Unspecified Error
-     */
-     // ----------------------------------------------------------------------------
-     int WrtSecLayers (int         iKey);
-     //==============================================================================
-     /**
-     * @brief // Write Dxf Section Blocks <BR>
-     * iStat = oSstDxfWrite.WrtSecBlocks(iKey);
-     *
-     * @param iKey [in] For the moment 0
-     *
-     * @return Errorstate
-     *
-     * @retval   = 0: OK
-     * @retval   < 0: Unspecified Error
-     */
-     // ----------------------------------------------------------------------------
-     int WrtSecBlocks (int         iKey);
-     //==============================================================================
-     /**
-     * @brief // Write Dxf Section Types <BR>
-     * iStat = oSstDxfWrite.WrtSecTypes(iKey);
-     *
-     * @param iKey [in] For the moment 0
-     *
-     * @return Errorstate
-     *
-     * @retval   = 0: OK
-     * @retval   < 0: Unspecified Error
-     */
-     // ----------------------------------------------------------------------------
-     int WrtSecTypes (int          iKey);
-     //==============================================================================
-     /**
-     * @brief // Write Dxf Sectin Styles <BR>
-     * iStat = oSstDxfWrite.WrtSecStyles(iKey);
-     *
-     * @param iKey [in] For the moment 0
-     *
-     * @return Errorstate
-     *
-     * @retval   = 0: OK
-     * @retval   < 0: Unspecified Error
-     */
-     // ----------------------------------------------------------------------------
-     int WrtSecStyles (int          iKey);
-     //==============================================================================
-     /**
-     * @brief // Shortstory <BR>
-     * iStat = oSstDxfWrite.Func_1(iKey)
-     *
-     * @param iKey [in] For the moment 0
-     *
-     * @return Errorstate
-     *
-     * @retval   = 0: OK
-     * @retval   < 0: Unspecified Error
-     */
-     // ----------------------------------------------------------------------------
-     int WrtSecEntities (int          iKey);
-     //==============================================================================
-     /**
-     * @brief // Write Dxf Section objects <BR>
-     * iStat = oSstDxfWrite.WrtSecObjects(iKey)
-     *
-     * @param iKey [in] For the moment 0
-     *
-     * @return Errorstate
-     *
-     * @retval   = 0: OK
-     * @retval   < 0: Unspecified Error
-     */
-     // ----------------------------------------------------------------------------
-     int WrtSecObjects (int          iKey);
-     //==============================================================================
-     /**
-     * @brief // Write Polyline into section entities <BR>
-     * iStat = oSstDxfWrite.WrtDss2Polyline(iKey,sPntDss);
-     *
-     * @param iKey    [in] For the moment 0
-     * @param sPntDss [in] For the moment 0
-     *
-     * @return Errorstate
-     *
-     * @retval   = 0: OK
-     * @retval   < 0: Unspecified Error
-     */
-     // ----------------------------------------------------------------------------
-     int WrtDss2PolyLine (int           iKey,
-                          sstRec04Cls  *sPntDss);
-     //==============================================================================
-     /**
-     * @brief Set Dxf File name
-     *
-     * @param oDxfFilNam [in] Dxf File Name
-     */
-     // ----------------------------------------------------------------------------
-     void SetDxfFilNam(std::string oDxfFilNam);
-     //==============================================================================
-     /**
-     * @brief // Shortstory  <BR>
-     *
-     * @param iKey [in] For the moment 0
-     *
-     * @return Errorstate
-     *
-     * @retval   = 0: OK
-     * @retval   < 0: Unspecified Error
-     */
-     // ----------------------------------------------------------------------------
-     int ReadAllCsvFiles(int iKey);
-     //==============================================================================
-     /**
-     * @brief // Close open object like polyline, if nessasary  <BR>
-     *
-     * @param iKey [in] For the moment 0
-     *
-     * @return Errorstate
-     *
-     * @retval   = 0: OK
-     * @retval   < 0: Unspecified Error
-     */
-     // ----------------------------------------------------------------------------
-     int WriteOpenEntities(int iKey);
-// ----------------------------------------------------------------------------
-private:  // Private functions
-  DL_Dxf* dxf;     /**< dxflib dxf */
-  DL_WriterA* dw;  /**< dxflib dw */
-  sstDxf02DatabaseCls   oDxfDb; /**< sst dxf database with recmem tech */
-  std::string oDxfFilNam;      /**< dxf file name without extension */
-  sstMisc01PrtFilCls *poPrt;     /**< adress of protocol file */
-
-};
 //==============================================================================
 /**
 * @brief Definition sstDxfBase_Cls
@@ -4518,7 +3887,7 @@ class sstDxfPolylineCls : public sstDxfBase_Cls
 };
 //==============================================================================
 /**
-* @brief sst Circle
+* @brief sst Dxf Circle
 *
 * More Comment
 *
@@ -4537,7 +3906,7 @@ class sstDxfPolylineCls : public sstDxfBase_Cls
 * @date 06.07.16
 */
 // ----------------------------------------------------------------------------
-class sstDxf02TypCircleCls
+class sstDxf02TypCircleCls  : public sstDxf02TypBaseCls
 {
   public:
     //==============================================================================
@@ -4546,16 +3915,100 @@ class sstDxf02TypCircleCls
     */
     // -----------------------------------------------------------------------------
     sstDxf02TypCircleCls(); // Constructor
+    //==============================================================================
+    /**
+    * @brief // read circle data from dxflib circle <BR>
+    * oSstDxfCircle.ReadFromDL(poDLCircle);
+    *
+    * @param poDLCircle [in] dxflib circle structure
+    */
+    // ----------------------------------------------------------------------------
+    void ReadFromDL(const DL_CircleData poDLCircle);
+    //==============================================================================
+    /**
+    * @brief // write circle data to dxflib circle <BR>
+    * oSstDxfCircle.WritToDL(poDLCircle);
+    *
+    * @param poDLCircle [out] dxflib circle structure
+    */
+    // ----------------------------------------------------------------------------
+    void WritToDL(DL_CircleData *poDLCircle);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return value
+    */
+    // ----------------------------------------------------------------------------
+    double getCx() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setCx(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return value
+    */
+    // ----------------------------------------------------------------------------
+    double getCy() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setCy(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return value
+    */
+    // ----------------------------------------------------------------------------
+    double getCz() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setCz(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return value
+    */
+    // ----------------------------------------------------------------------------
+    double getRadius() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setRadius(double value);
+    //==============================================================================
+
+private:
     double cx;  /**< X Coordinate of center point. */
     double cy;  /**< Y Coordinate of center point. */
     double cz;  /**< Z Coordinate of center point. */
     double radius;  /**< Radius of arc. */
-  private:
 };
 
 //==============================================================================
 /**
-* @brief Circle
+* @brief function class for sst Dxf Circle
 *
 * More Comment
 *
@@ -4580,6 +4033,7 @@ class sstDxf02FncCircleCls : public sstDxf02FncBaseCls
     //==============================================================================
     /**
     * @brief // Csv_Read <BR>
+    *
     * @param iKey
     * @param *sErrTxt
     * @param *ssstDxf02_Str
@@ -4590,18 +4044,70 @@ class sstDxf02FncCircleCls : public sstDxf02FncBaseCls
     //==============================================================================
     /**
     * @brief // Csv_Write <BR>
+    *
     * @param iKey
     * @param *osstDxf02TypCircle
     * @param *ssstDxf02_Str
     */
     // -----------------------------------------------------------------------------
     int Csv_Write(int iKey, sstDxf02TypCircleCls *osstDxf02TypCircle, std::string *ssstDxf02_Str); // // Csv Write Function
+    //==============================================================================
+    /**
+    * @brief // write ARC titel row to csv file <BR>
+    * iStat = oDxfFncArc.Csv_WriteHeader ( 0, &oCsvStr)
+    *
+    * @param iKey    [in]  For the moment 0
+    * @param oCsvStr [out] return string titel row
+    *
+    * @return Errorstate
+    *
+    * @retval   = 0: OK
+    * @retval   < 0: Unspecified Error
+    */
+    // ----------------------------------------------------------------------------
+    int Csv_WriteHeader(int iKey, std::string *oCsvStr);
+    //==============================================================================
+    //==============================================================================
+    /**
+    * @brief // Read whole layer csv file into sst_rec_mem <BR>
+    * iStat = oDxfFncArc.ReadCsvFile ( iKey, oFilNam);
+    *
+    * @param iKey    [in] For the moment 0
+    * @param oFilNam [in] File name to import to rec mem
+    *
+    * @return Errorstate
+    *
+    * @retval   =  0: OK
+    * @retval   = -1: Wrong Key
+    * @retval   = -2: Open File Error
+    * @retval   = -3: General read error
+    * @retval   = -4: Record format read Error
+    * @retval   <  0: Unspecified Error
+    */
+    // ----------------------------------------------------------------------------
+    int ReadCsvFile(int iKey, std::string oFilNam);
+    //==============================================================================
+    /**
+    * @brief // write whole arc data from table to csv file  <BR>
+    * iStat = oSstFncArc.WriteCsvFile ( iKey, oDxfFilNam);
+    *
+    * @param iKey       [in] For the moment 0
+    * @param oDxfFilNam [in] File name to export to csv file
+    *
+    * @return Errorstate
+    *
+    * @retval   =  0: OK
+    * @retval   = -1: Wrong Key
+    */
+    // ----------------------------------------------------------------------------
+    int WriteCsvFile(int iKey, std::string oDxfFilNam);
+    //==============================================================================
   private:
 };
 
 //==============================================================================
 /**
-* @brief sst MText
+* @brief sst Dxf MText
 *
 * More Comment
 *
@@ -4631,7 +4137,7 @@ class sstDxf02FncCircleCls : public sstDxf02FncBaseCls
 * @date 06.07.16
 */
 // ----------------------------------------------------------------------------
-class sstDxf02TypMTextCls
+class sstDxf02TypMTextCls : public sstDxf02TypBaseCls
 {
   public:
     //==============================================================================
@@ -4640,6 +4146,267 @@ class sstDxf02TypMTextCls
     */
     // -----------------------------------------------------------------------------
     sstDxf02TypMTextCls(); // Constructor
+    //==============================================================================
+    /**
+    * @brief // read arc data from dxflib arc <BR>
+    * oSstDxfArc.ReadFromDL(poDLArc);
+    *
+    * @param poDLMText [in] dxflib MText structure
+    */
+    // ----------------------------------------------------------------------------
+    void ReadFromDL(const DL_MTextData poDLMText);
+    //==============================================================================
+    /**
+    * @brief // write arc data to dxflib arc <BR>
+    * oSstDxfArc.WritToDL(poDLArc);
+    *
+    * @param poDLMText [out] dxflib MText structure
+    */
+    // ----------------------------------------------------------------------------
+    void WritToDL(DL_MTextData *poDLMText);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    double getIpx() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setIpx(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    double getIpy() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setIpy(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    double getIpz() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setIpz(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    double getDirx() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setDirx(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    double getDiry() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setDiry(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    double getDirz() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setDirz(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    double getHeight() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setHeight(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    double getWidth() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setWidth(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    int getAttachmentPoint() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setAttachmentPoint(int value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    int getDrawingDirection() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setDrawingDirection(int value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    int getLineSpacingStyle() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setLineSpacingStyle(int value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    double getLineSpacingFactor() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setLineSpacingFactor(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    std::string getText() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setText(std::string value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    unsigned long getStyle_ID() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setStyle_ID(unsigned long value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    double getAngle() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setAngle(double value);
+    //==============================================================================
+
+private:
     double ipx;  /**< X Coordinate of insertion point */
     double ipy;  /**< Y Coordinate of insertion point */
     double ipz;  /**< Z Coordinate of insertion point */
@@ -4655,12 +4422,11 @@ class sstDxf02TypMTextCls
     char text[101];  /**< Text string. */
     unsigned long style_ID;  /**< Style string. */
     double angle;  /**< Rotation angle. */
-  private:
 };
 
 //==============================================================================
 /**
-* @brief MText
+* @brief Funcion class for sst Dxf MText
 *
 * More Comment
 *
@@ -4701,12 +4467,63 @@ class sstDxf02FncMTextCls : public sstDxf02FncBaseCls
     */
     // -----------------------------------------------------------------------------
     int Csv_Write(int iKey, sstDxf02TypMTextCls *osstDxf02TypMText, std::string *ssstDxf02_Str); // // Csv Write Function
+    //==============================================================================
+    /**
+    * @brief // write ARC titel row to csv file <BR>
+    * iStat = oDxfFncArc.Csv_WriteHeader ( 0, &oCsvStr)
+    *
+    * @param iKey    [in]  For the moment 0
+    * @param oCsvStr [out] return string titel row
+    *
+    * @return Errorstate
+    *
+    * @retval   = 0: OK
+    * @retval   < 0: Unspecified Error
+    */
+    // ----------------------------------------------------------------------------
+    int Csv_WriteHeader(int iKey, std::string *oCsvStr);
+    //==============================================================================
+    //==============================================================================
+    /**
+    * @brief // Read whole layer csv file into sst_rec_mem <BR>
+    * iStat = oDxfFncArc.ReadCsvFile ( iKey, oFilNam);
+    *
+    * @param iKey    [in] For the moment 0
+    * @param oFilNam [in] File name to import to rec mem
+    *
+    * @return Errorstate
+    *
+    * @retval   =  0: OK
+    * @retval   = -1: Wrong Key
+    * @retval   = -2: Open File Error
+    * @retval   = -3: General read error
+    * @retval   = -4: Record format read Error
+    * @retval   <  0: Unspecified Error
+    */
+    // ----------------------------------------------------------------------------
+    int ReadCsvFile(int iKey, std::string oFilNam);
+    //==============================================================================
+    /**
+    * @brief // write whole arc data from table to csv file  <BR>
+    * iStat = oSstFncArc.WriteCsvFile ( iKey, oDxfFilNam);
+    *
+    * @param iKey       [in] For the moment 0
+    * @param oDxfFilNam [in] File name to export to csv file
+    *
+    * @return Errorstate
+    *
+    * @retval   =  0: OK
+    * @retval   = -1: Wrong Key
+    */
+    // ----------------------------------------------------------------------------
+    int WriteCsvFile(int iKey, std::string oDxfFilNam);
+    //==============================================================================
   private:
 };
 
 //==============================================================================
 /**
-* @brief sst Text
+* @brief sst Dxf Text
 *
 * More Comment
 *
@@ -4735,7 +4552,7 @@ class sstDxf02FncMTextCls : public sstDxf02FncBaseCls
 * @date 06.07.16
 */
 // ----------------------------------------------------------------------------
-class sstDxf02TypTextCls
+class sstDxf02TypTextCls : public sstDxf02TypBaseCls
 {
   public:
     //==============================================================================
@@ -4744,6 +4561,251 @@ class sstDxf02TypTextCls
     */
     // -----------------------------------------------------------------------------
     sstDxf02TypTextCls(); // Constructor
+    //==============================================================================
+    /**
+    * @brief // read text data from dxflib text <BR>
+    * oSstDxfText.ReadFromDL(poDLText);
+    *
+    * @param poDLText [in] dxflib text structure
+    */
+    // ----------------------------------------------------------------------------
+    void ReadFromDL(const DL_TextData poDLText);
+    //==============================================================================
+    /**
+    * @brief // write text data to dxflib text <BR>
+    * oSstDxfText.WritToDL(poDLText);
+    *
+    * @param poDLText [out] dxflib text structure
+    */
+    // ----------------------------------------------------------------------------
+    void WritToDL(DL_TextData *poDLText);
+    //==============================================================================
+    /**
+    * @brief // Get Cx Value  <BR>
+    *
+    * @return Cx
+    */
+    // ----------------------------------------------------------------------------
+    double getIpx() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setIpx(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Cx Value  <BR>
+    *
+    * @return Cx
+    */
+    // ----------------------------------------------------------------------------
+    double getIpy() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setIpy(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Cx Value  <BR>
+    *
+    * @return Cx
+    */
+    // ----------------------------------------------------------------------------
+    double getIpz() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setIpz(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Cx Value  <BR>
+    *
+    * @return Cx
+    */
+    // ----------------------------------------------------------------------------
+    double getApx() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setApx(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Cx Value  <BR>
+    *
+    * @return Cx
+    */
+    // ----------------------------------------------------------------------------
+    double getApy() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setApy(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return value
+    */
+    // ----------------------------------------------------------------------------
+    double getApz() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setApz(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Cx Value  <BR>
+    *
+    * @return Cx
+    */
+    // ----------------------------------------------------------------------------
+    double getHeight() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setHeight(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Cx Value  <BR>
+    *
+    * @return Cx
+    */
+    // ----------------------------------------------------------------------------
+    double getXScaleFactor() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setXScaleFactor(double value);
+    //==============================================================================
+    /**
+    * @brief // Get Cx Value  <BR>
+    *
+    * @return Cx
+    */
+    // ----------------------------------------------------------------------------
+    int getTextGenerationFlags() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setTextGenerationFlags(int value);
+    //==============================================================================
+    /**
+    * @brief // Get Cx Value  <BR>
+    *
+    * @return Cx
+    */
+    // ----------------------------------------------------------------------------
+    int getHJustification() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setHJustification(int value);
+    //==============================================================================
+    /**
+    * @brief // Get Cx Value  <BR>
+    *
+    * @return Cx
+    */
+    // ----------------------------------------------------------------------------
+    int getVJustification() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setVJustification(int value);
+    //==============================================================================
+    /**
+    * @brief // Get Cx Value  <BR>
+    *
+    * @return Cx
+    */
+    // ----------------------------------------------------------------------------
+    std::string getText() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setText(std::string value);
+    //==============================================================================
+    /**
+    * @brief // Get Cx Value  <BR>
+    *
+    * @return Cx
+    */
+    // ----------------------------------------------------------------------------
+    unsigned long getStyle_ID() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setStyle_ID(unsigned long value);
+    //==============================================================================
+    /**
+    * @brief // Get Value  <BR>
+    *
+    * @return Value
+    */
+    // ----------------------------------------------------------------------------
+    double getAngle() const;
+    //==============================================================================
+    /**
+    * @brief // Set Value  <BR>
+    *
+    * @param value [in] Value
+    */
+    // ----------------------------------------------------------------------------
+    void setAngle(double value);
+    //==============================================================================
+
+private:
     double ipx;  /**< X Coordinate of insertion point */
     double ipy;  /**< Y Coordinate of insertion point */
     double ipz;  /**< Z Coordinate of insertion point */
@@ -4758,12 +4820,11 @@ class sstDxf02TypTextCls
     char text[101];  /**< Text string. */
     unsigned long style_ID;  /**< Style (font). */
     double angle;  /**< Rotation angle of dimension tex */
-  private:
 };
 
 //==============================================================================
 /**
-* @brief Text
+* @brief function class for sst Dxf Text
 *
 * More Comment
 *
@@ -4804,9 +4865,671 @@ class sstDxf02FncTextCls : public sstDxf02FncBaseCls
     */
     // -----------------------------------------------------------------------------
     int Csv_Write(int iKey, sstDxf02TypTextCls *osstDxf02TypText, std::string *ssstDxf02_Str); // // Csv Write Function
+    //==============================================================================
+    /**
+    * @brief // write ARC titel row to csv file <BR>
+    * iStat = oDxfFncArc.Csv_WriteHeader ( 0, &oCsvStr)
+    *
+    * @param iKey    [in]  For the moment 0
+    * @param oCsvStr [out] return string titel row
+    *
+    * @return Errorstate
+    *
+    * @retval   = 0: OK
+    * @retval   < 0: Unspecified Error
+    */
+    // ----------------------------------------------------------------------------
+    int Csv_WriteHeader(int iKey, std::string *oCsvStr);
+    //==============================================================================
+    //==============================================================================
+    /**
+    * @brief // Read whole layer csv file into sst_rec_mem <BR>
+    * iStat = oDxfFncArc.ReadCsvFile ( iKey, oFilNam);
+    *
+    * @param iKey    [in] For the moment 0
+    * @param oFilNam [in] File name to import to rec mem
+    *
+    * @return Errorstate
+    *
+    * @retval   =  0: OK
+    * @retval   = -1: Wrong Key
+    * @retval   = -2: Open File Error
+    * @retval   = -3: General read error
+    * @retval   = -4: Record format read Error
+    * @retval   <  0: Unspecified Error
+    */
+    // ----------------------------------------------------------------------------
+    int ReadCsvFile(int iKey, std::string oFilNam);
+    //==============================================================================
+    /**
+    * @brief // write whole arc data from table to csv file  <BR>
+    * iStat = oSstFncArc.WriteCsvFile ( iKey, oDxfFilNam);
+    *
+    * @param iKey       [in] For the moment 0
+    * @param oDxfFilNam [in] File name to export to csv file
+    *
+    * @return Errorstate
+    *
+    * @retval   =  0: OK
+    * @retval   = -1: Wrong Key
+    */
+    // ----------------------------------------------------------------------------
+    int WriteCsvFile(int iKey, std::string oDxfFilNam);
+    //==============================================================================
   private:
 };
+//==============================================================================
+/**
+* @brief sst dxf database class
+*
+* Stores all dxf types <BR>
+*
+* Changed: 06.04.16  Re.
+*
+* @ingroup sstDxf02Lib
+*
+* @author Re.
+*
+* @date 06.04.16
+*/
+// ----------------------------------------------------------------------------
+class sstDxf02DatabaseCls
+{
+  public:   // Public functions
+  //==============================================================================
+  /**
+  * @brief // dxf database constructor <BR>
+  *
+  * @param oTmpPrt [in] protocol output file
+  */
+  // ----------------------------------------------------------------------------
+     sstDxf02DatabaseCls(sstMisc01PrtFilCls *oTmpPrt);  // Constructor
+    //~sstTestBaseCls();  // Destructor
+     //==============================================================================
+     /**
+     * @brief // Read all Csv Files into dxf database <BR>
+     * iStat = oSstDxfDB.ReadAllCsvFiles(iKey);
+     *
+     * @param iKey       [in] For the moment 0
+     * @param oDxfFilNam [in] Dxf File Name for new dxf file
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int ReadAllCsvFiles(int iKey, std::string oDxfFilNam);
+     //==============================================================================
+     /**
+     * @brief // get layer table adress from dxf database <BR>
+     * oLayTab = oDxfDB.getSstFncLay();
+     *
+     * @return Layer table
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncLayCls* getSstFncLay();
+     //==============================================================================
+     /**
+     * @brief // get block table adress from dxf database <BR>
+     * oBlkTab = oDxfDB.getSstFncBlk();
+     *
+     * @return Block table adress
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncBlkCls* getSstFncBlk();
+     //==============================================================================
+     /**
+     * @brief // get LType table adress from dxf database <BR>
+     * oBlkTab = oDxfDB.getSstFncLType();
+     *
+     * @return LineType table adress
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncLTypeCls* getSstFncLType();
+     //==============================================================================
+     /**
+     * @brief // get arc table adress from dxf database <BR>
+     * oArcTab = oDxfDB.getSstFncArc();
+     *
+     * @return Layer table
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncArcCls* getSstFncArc();
+     //==============================================================================
+     /**
+     * @brief // get circle table adress from dxf database <BR>
+     * oCircleTab = oDxfDB.getSstFncCircle();
+     *
+     * @return Circle table adress
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncCircleCls* getSstFncCircle();
+     //==============================================================================
+     /**
+     * @brief // get mtext table adress from dxf database <BR>
+     * oMTextTab = oDxfDB.getSstFncMText();
+     *
+     * @return MText table adress
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncMTextCls* getSstFncMText();
+     //==============================================================================
+     /**
+     * @brief // get text table adress from dxf database <BR>
+     * oTextTab = oDxfDB.getSstFncText();
+     *
+     * @return Text table adress
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncTextCls* getSstFncText();
+     //==============================================================================
+     /**
+     * @brief // get insert table from dxf database <BR>
+     * oInsertTab = oDxfDB.getSstFncInsert();
+     *
+     * @return insert table
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncInsertCls* getSstFncInsert();
+     //==============================================================================
+     /**
+     * @brief // get polyline table from dxf database <BR>
+     * oInsertTab = oDxfDB.getSstFncPolyline();
+     *
+     * @return polyline table
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncPolylineCls* getSstFncPolyline();
+     //==============================================================================
+     /**
+     * @brief // get vertex table from dxf database <BR>
+     * oVertexTab = oDxfDB.getSstFncVertex();
+     *
+     * @return vertex table
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncVertexCls* getSstFncVertex();
+     //==============================================================================
+     /**
+     * @brief // get hatch table from dxf database <BR>
+     * oHatchTab = oDxfDB.getSstFncHatch();
+     *
+     * @return hatch table
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncHatchCls* getSstFncHatch();
+     //==============================================================================
+     /**
+     * @brief // get hatch edge table from dxf database <BR>
+     * oHatchEdgeTab = oDxfDB.getSstFncHatchEdge();
+     *
+     * @return hatch edge table
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncHatchEdgeCls* getSstFncHatchEdge();
+     //==============================================================================
+     /**
+     * @brief // get hatch loop table from dxf database <BR>
+     * oHatchLoopTab = oDxfDB.getSstFncHatchLoop();
+     *
+     * @return hatch Loop table
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncHatchLoopCls* getSstFncHatchLoop();
+     //==============================================================================
+     /**
+     * @brief // get main table from dxf database <BR>
+     * oMainTab = oDxfDB.getSstFncMain();
+     *
+     * @return Layer table
+     */
+     // ----------------------------------------------------------------------------
+     sstDxf02FncMainCls* getSstFncMain();
+     //==============================================================================
+     /**
+     * @brief // return record number <BR>
+     *
+     * @return Record number
+     */
+     // ----------------------------------------------------------------------------
+     dREC04RECNUMTYP getActRecNo() const;
+     //==============================================================================
+     /**
+     * @brief // Set record number <BR>
+     *
+     * @param value [in] record number
+     */
+     // ----------------------------------------------------------------------------
+     void setActRecNo(const dREC04RECNUMTYP &value);
+     //==============================================================================
+     /**
+     * @brief // return actual entity type <BR>
+     *
+     * @return actual entity type
+     */
+     // ----------------------------------------------------------------------------
+     RS2::EntityType getActEntType() const;
+     //==============================================================================
+     /**
+     * @brief // Set actual entity type <BR>
+     *
+     * @param value [in] actual entity type
+     */
+     // ----------------------------------------------------------------------------
+     void setActEntType(const RS2::EntityType &value);
+     //==============================================================================
 
+private:  // Private functions
+  sstDxf02FncMainCls oSstFncMain;      /**< Main table object */
+  sstDxf02FncLayCls oSstFncLay;        /**< layer table object */
+  sstDxf02FncBlkCls oSstFncBlk;        /**< Block table object */
+  sstDxf02FncLTypeCls oSstFncLType;        /**< LineType table object */
+  sstDxf02FncArcCls oSstFncArc;        /**< Arc table object */
+  sstDxf02FncCircleCls oSstFncCircle;        /**< Circle table object */
+  sstDxf02FncMTextCls oSstFncMText;        /**< MText table object */
+  sstDxf02FncTextCls oSstFncText;        /**< Text table object */
+  sstDxf02FncInsertCls oSstFncInsert;  /**< Insert table object */
+  sstDxf02FncPolylineCls oSstFncPolyline;  /**< polyline table object */
+  sstDxf02FncVertexCls oSstFncVertex;  /**< vertex table object */
+  sstDxf02FncHatchCls oSstFncHatch;    /**< hatch table object */
+  sstDxf02FncHatchEdgeCls oSstFncHatchEdge;  /**< hatch edge table object */
+  sstDxf02FncHatchLoopCls oSstFncHatchLoop;  /**< hatch loop table object */
+  sstMisc01PrtFilCls *oPrt;                  /**< Protocol object */
+  dREC04RECNUMTYP dActRecNo;              // Actual Record Number
+  RS2::EntityType eActEntType;            // Actual Entity Type
+
+};
+/**
+* @brief Dxf Import Data Class <BR>
+*
+* Changed: 09.07.15  Re.
+*
+* @ingroup sstDxf02Lib
+*
+* @author Re.
+*
+* @date 09.07.15
+*/
+// ----------------------------------------------------------------------------
+class sstDxf02ReadCls : public DL_CreationAdapter {
+public:
+  //==============================================================================
+  /**
+  * @brief // dxf read object <BR>
+  *
+  * @param oTmpPrt [in] protocol output file
+  */
+  // ----------------------------------------------------------------------------
+    sstDxf02ReadCls(sstMisc01PrtFilCls *oTmpPrt);
+    ~sstDxf02ReadCls();
+    //==============================================================================
+    /**
+    * @brief // Process imported Layer data <BR>
+    * oSstDxfReadDL.addLayer(data)
+    *
+    * @param data [in] LayerData
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addLayer(const DL_LayerData& data);
+    //==============================================================================
+    /**
+    * @brief // Process imported Block data <BR>
+    * oSstDxfReadDL.addBlock(data)
+    *
+    * @param data [in] BlockData
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addBlock(const DL_BlockData& data);
+    //==============================================================================
+    /**
+    * @brief // process end block situation <BR>
+    * oSstDxfReadDL.endBlock()
+    */
+    // ----------------------------------------------------------------------------
+    virtual void endBlock();
+    //==============================================================================
+    /**
+    * @brief // Process imported Point data <BR>
+    * oSstDxfReadDL.addPoint(data)
+    *
+    * @param data [in] Point data
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addPoint(const DL_PointData& data);
+    //==============================================================================
+    /**
+    * @brief // Process imported insert data <BR>
+    * oSstDxfReadDL.addInsert(data)
+    *
+    * @param data [in] insert data
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addInsert(const DL_InsertData& data);
+    //==============================================================================
+    /**
+    * @brief // Process imported Layer data <BR>
+    * oSstDxfReadDL.addLayer(data)
+    *
+    * @param data [in] LayerData
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addLine(const DL_LineData& data);
+    //==============================================================================
+    /**
+    * @brief // Process imported Layer data <BR>
+    * oSstDxfReadDL.addLayer(data)
+    *
+    * @param data [in] LayerData
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addArc(const DL_ArcData& data);
+    //==============================================================================
+    /**
+    * @brief // Import circle data <BR>
+    * oSstDxfReadDL.addCircle(data)
+    *
+    * @param data [in] Circle Data
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addCircle(const DL_CircleData& data);
+    //==============================================================================
+    /**
+    * @brief // Import MText data <BR>
+    * oSstDxfReadDL.addMText(data)
+    *
+    * @param data [in] MText Data
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addMText(const DL_MTextData& data);
+    //==============================================================================
+    /**
+    * @brief // Import Text data <BR>
+    * oSstDxfReadDL.addText(data)
+    *
+    * @param data [in] Text Data
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addText(const DL_TextData& data);
+    //==============================================================================
+    /**
+    * @brief // Process imported Layer data <BR>
+    * oSstDxfReadDL.addLayer(data)
+    *
+    * @param data [in] LayerData
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addPolyline(const DL_PolylineData& data);
+    //==============================================================================
+    /**
+    * @brief // Process imported Layer data <BR>
+    * oSstDxfReadDL.addLayer(data)
+    *
+    * @param data [in] LayerData
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addVertex(const DL_VertexData& data);
+    //==============================================================================
+    /**
+    * @brief // Process imported Layer data <BR>
+    * oSstDxfReadDL.addLayer(data)
+    *
+    * @param data [in] LayerData
+    */
+    // ----------------------------------------------------------------------------
+    virtual void add3dFace(const DL_3dFaceData& data);
+    //==============================================================================
+    /**
+    * @brief // Process imported Layer data <BR>
+    * oSstDxfReadDL.addLayer(data)
+    *
+    * @param data [in] LayerData
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addHatch(const DL_HatchData& data);
+    //==============================================================================
+    /**
+    * @brief // Process imported Layer data <BR>
+    * oSstDxfReadDL.addLayer(data)
+    *
+    * @param data [in] LayerData
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addHatchEdge(const DL_HatchEdgeData& data);
+    //==============================================================================
+    /**
+    * @brief // Process imported Layer data <BR>
+    * oSstDxfReadDL.addLayer(data)
+    *
+    * @param data [in] LayerData
+    */
+    // ----------------------------------------------------------------------------
+    virtual void addHatchLoop(const DL_HatchLoopData& data);
+    // virtual void addSolid(const DL_SolidData& data);
+    //==============================================================================
+    /**
+    * @brief // Print Attributes <BR>
+    * oSstDxfReadDL.printAttributes()
+    */
+    // ----------------------------------------------------------------------------
+    // void printAttributes();
+    //==============================================================================
+    /**
+    * @brief // Set Dxf File Name into object <BR>
+    * oSstDxfReadDL.SetDxfFilNam(cDxfFilNam);
+    *
+    * @param cDxfFilNam [in] Set Dxf File Name
+    *
+    */
+    // ----------------------------------------------------------------------------
+    void SetDxfFilNam(char* cDxfFilNam);
+    //==============================================================================
+private:
+    sstDxf02DatabaseCls   oDxfDb; /**< sst dxf database with recmem tech */
+
+    std::string oDxfFilNam;        /**< dxf file name without extension */
+    std::string oActBlockNam;      /**< actual block name */
+    sstMisc01PrtFilCls *poPrt;     /**< adress of protocol file */
+};
+//==============================================================================
+/**
+* @brief dxf write class
+*
+* Read all csv files, create sst dxf database and export to dxf file <BR>
+*
+* Changed: 08.07.15  Re.
+*
+* @ingroup sstDxf02Lib
+*
+* @author Re.
+*
+* @date 08.07.15
+*/
+// ----------------------------------------------------------------------------
+class sstDxf02WriteCls
+{
+  public:   // Public functions
+  //==============================================================================
+  /**
+  * @brief // Constructor <BR>
+  *
+  * @param oTmpPrt [in] protocol file object
+  */
+  // ----------------------------------------------------------------------------
+     sstDxf02WriteCls(sstMisc01PrtFilCls *oTmpPrt);  // Constructor
+    ~sstDxf02WriteCls();  // Destructor
+     //==============================================================================
+     /**
+     * @brief // Open new dxf file <BR>
+     * iStat = oSstDxfWrite.OpenNewDxfFile ( iKey, oDxfFilNam);
+     *
+     * @param iKey       [in] For the moment 0
+     * @param oDxfFilNam [in] Dxf file name
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int OpenNewDxfFile (int iKey, std::string oDxfFilNam);
+     //==============================================================================
+     /**
+     * @brief // Write dxf section header <BR>
+     * iStat = oSstDxfWrite.WrtSecHeader(iKey);
+     *
+     * @param iKey [in] For the moment 0
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int WrtSecHeader (int         iKey);
+     //==============================================================================
+     /**
+     * @brief // Write Dxf Section layers <BR>
+     * iStat = oSstDxfWrite.WrtSecLayers(iKey);
+     *
+     * @param iKey [in] For the moment 0
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int WrtSecLayers (int         iKey);
+     //==============================================================================
+     /**
+     * @brief // Write Dxf Section Blocks <BR>
+     * iStat = oSstDxfWrite.WrtSecBlocks(iKey);
+     *
+     * @param iKey [in] For the moment 0
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int WrtSecBlocks (int         iKey);
+     //==============================================================================
+     /**
+     * @brief // Write Dxf Section Types <BR>
+     * iStat = oSstDxfWrite.WrtSecTypes(iKey);
+     *
+     * @param iKey [in] For the moment 0
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int WrtSecTypes (int          iKey);
+     //==============================================================================
+     /**
+     * @brief // Write Dxf Sectin Styles <BR>
+     * iStat = oSstDxfWrite.WrtSecStyles(iKey);
+     *
+     * @param iKey [in] For the moment 0
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int WrtSecStyles (int          iKey);
+     //==============================================================================
+     /**
+     * @brief // Shortstory <BR>
+     * iStat = oSstDxfWrite.Func_1(iKey)
+     *
+     * @param iKey [in] For the moment 0
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int WrtSecEntities (int          iKey);
+     //==============================================================================
+     /**
+     * @brief // Write Dxf Section objects <BR>
+     * iStat = oSstDxfWrite.WrtSecObjects(iKey)
+     *
+     * @param iKey [in] For the moment 0
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int WrtSecObjects (int          iKey);
+     //==============================================================================
+     /**
+     * @brief // Write Polyline into section entities <BR>
+     * iStat = oSstDxfWrite.WrtDss2Polyline(iKey,sPntDss);
+     *
+     * @param iKey    [in] For the moment 0
+     * @param sPntDss [in] For the moment 0
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int WrtDss2PolyLine (int           iKey,
+                          sstRec04Cls  *sPntDss);
+     //==============================================================================
+     /**
+     * @brief Set Dxf File name
+     *
+     * @param oDxfFilNam [in] Dxf File Name
+     */
+     // ----------------------------------------------------------------------------
+     void SetDxfFilNam(std::string oDxfFilNam);
+     //==============================================================================
+     /**
+     * @brief // Shortstory  <BR>
+     *
+     * @param iKey [in] For the moment 0
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int ReadAllCsvFiles(int iKey);
+     //==============================================================================
+     /**
+     * @brief // Close open object like polyline, if nessasary  <BR>
+     *
+     * @param iKey [in] For the moment 0
+     *
+     * @return Errorstate
+     *
+     * @retval   = 0: OK
+     * @retval   < 0: Unspecified Error
+     */
+     // ----------------------------------------------------------------------------
+     int WriteOpenEntities(int iKey);
+// ----------------------------------------------------------------------------
+private:  // Private functions
+  DL_Dxf* dxf;     /**< dxflib dxf */
+  DL_WriterA* dw;  /**< dxflib dw */
+  sstDxf02DatabaseCls   oDxfDb; /**< sst dxf database with recmem tech */
+  std::string oDxfFilNam;      /**< dxf file name without extension */
+  sstMisc01PrtFilCls *poPrt;     /**< adress of protocol file */
+
+};
 //==============================================================================
 /**
 * @brief sstdxf_WrtDss2PolyLine
