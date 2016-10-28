@@ -888,10 +888,11 @@ void sstDxf02ReadCls::addHatchLoop(const DL_HatchLoopData& data)
 
 }
 //=============================================================================
-//void sstDxf02ReadCls::addSolid(const DL_SolidData& data)
-//{
-//  // int iStat = 0;
-//}
+void sstDxf02ReadCls::addSolid(const DL_SolidData& data)
+{
+  this->poPrt->SST_PrtWrtChar( 1,(char*)"SOLID skiped",(char*)"Dxf Reading: ");
+  // int iStat = 0;
+}
 ////=============================================================================
 //void sstDxf02ReadCls::printAttributes() {
 //    printf("  Attributes: Layer: %s, ", attributes.getLayer().c_str());

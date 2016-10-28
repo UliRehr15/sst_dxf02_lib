@@ -640,17 +640,6 @@ int sstDxf02FncHatchEdgeCls::Csv_Write(int iKey, sstDxf02TypHatchEdgeCls *poSstH
 
   if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, poSstHatchEdge->getRecordID(), ssstDxfLib_Str);
   if (iStat >= 0) iStat = oCsvRow.Csv_UInt4_2String( 0, poSstHatchEdge->getParentID(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Bool_2String( 0, poSstHatchEdge->getDefined(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Int2_2String( 0, poSstHatchEdge->getType(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getX1(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getY1(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getX2(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getY2(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getCx(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getCy(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getRadius(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getAngle1(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getAngle2(), ssstDxfLib_Str);
 
   //  bool defined;
   //  int type;
@@ -663,17 +652,17 @@ int sstDxf02FncHatchEdgeCls::Csv_Write(int iKey, sstDxf02TypHatchEdgeCls *poSstH
   //  double radius;
   //  double angle1;
   //  double angle2;
-
-  if (iStat >= 0) iStat = oCsvRow.Csv_Bool_2String( 0, poSstHatchEdge->getCcw(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getMx(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getMy(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getRatio(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_UInt2_2String( 0, poSstHatchEdge->getDegree(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Bool_2String( 0, poSstHatchEdge->getRational(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Bool_2String( 0, poSstHatchEdge->getPeriodic(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_UInt2_2String( 0, poSstHatchEdge->getNKnots(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_UInt2_2String( 0, poSstHatchEdge->getNControl(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_UInt2_2String( 0, poSstHatchEdge->getNFit(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Bool_2String( 0, poSstHatchEdge->getDefined(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Int2_2String( 0, poSstHatchEdge->getType(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getX1(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getY1(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getX2(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getY2(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getCx(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getCy(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getRadius(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getAngle1(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getAngle2(), ssstDxfLib_Str);
 
   //  bool ccw;
   //  double mx;
@@ -689,15 +678,26 @@ int sstDxf02FncHatchEdgeCls::Csv_Write(int iKey, sstDxf02TypHatchEdgeCls *poSstH
   //  std::vector<double> knots;
   //  std::vector<double> weights;
   //  std::vector<std::vector<double> > fitPoints;
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getStartTangentX(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getStartTangentY(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getEndTangentX(), ssstDxfLib_Str);
-  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getEndTangentY(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Bool_2String( 0, poSstHatchEdge->getCcw(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getMx(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getMy(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getRatio(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_UInt2_2String( 0, poSstHatchEdge->getDegree(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Bool_2String( 0, poSstHatchEdge->getRational(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Bool_2String( 0, poSstHatchEdge->getPeriodic(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_UInt2_2String( 0, poSstHatchEdge->getNKnots(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_UInt2_2String( 0, poSstHatchEdge->getNControl(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_UInt2_2String( 0, poSstHatchEdge->getNFit(), ssstDxfLib_Str);
+
   //  double startTangentX;
   //  double startTangentY;
   //  double endTangentX;
   //  double endTangentY;
   //  std::vector<std::vector<double> > vertices;
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getStartTangentX(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getStartTangentY(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getEndTangentX(), ssstDxfLib_Str);
+  if (iStat >= 0) iStat = oCsvRow.Csv_Dbl_2String( 0, poSstHatchEdge->getEndTangentY(), ssstDxfLib_Str);
 
   return iStat;
 }

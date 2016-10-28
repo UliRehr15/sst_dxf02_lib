@@ -89,7 +89,7 @@ void sstDxf02TypMTextCls::WritToDL(DL_MTextData *poDLMText)
   poDLMText->lineSpacingFactor = this->lineSpacingFactor;  // ->;DD;12;4
   poDLMText->text = this->text;  // >;CC;100;0
   // poDLMText->style_ID = this->style_ID;  // ->;UL;10;0
-  poDLMText->style = "style";  // ->;UL;10;0
+  poDLMText->style = "standard";  // ->;UL;10;0
   poDLMText->angle = this->angle;  // ->;DD;12;4
 }
 //=============================================================================
@@ -263,6 +263,12 @@ int sstDxf02FncMTextCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *s
 //-----------------------------------------------------------------------------
   if ( iKey != 0) return -1;
  
+  oCsvRow.SetReadPositon(0,0);
+
+  // read base dxf attributes from csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseRead1(0, sErrTxt, ssstDxf02_Str, osstDxf02TypMText);
+
   if (iStat >= 0)
   {
     // iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxf02_Str, &osstDxf02TypMText->ipx);
@@ -357,6 +363,11 @@ int sstDxf02FncMTextCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *s
     // iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxf02_Str, &osstDxf02TypMText->angle);
     osstDxf02TypMText->setAngle(dVal);
   }
+
+  // read base dxf attributes from csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseRead2(0, sErrTxt, ssstDxf02_Str, osstDxf02TypMText);
+
 
   *sErrTxt = oCsvRow.GetErrorString();
  

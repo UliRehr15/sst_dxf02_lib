@@ -130,6 +130,12 @@ int sstDxf02FncCircleCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *
 //-----------------------------------------------------------------------------
   if ( iKey != 0) return -1;
  
+  oCsvRow.SetReadPositon(0,0);
+
+  // read base dxf attributes from csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseRead1(0, sErrTxt, ssstDxf02_Str, osstDxf02TypCircle);
+
   if (iStat >= 0)
     iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxf02_Str, &dLoc);
       // iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxf02_Str, &osstDxf02TypCircle->cx);
@@ -156,6 +162,11 @@ int sstDxf02FncCircleCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *
     osstDxf02TypCircle->setRadius(dLoc);
   }
 
+  // read base dxf attributes from csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseRead2(0, sErrTxt, ssstDxf02_Str, osstDxf02TypCircle);
+
+
   *sErrTxt = oCsvRow.GetErrorString();
  
   // Fatal Errors goes to an assert
@@ -171,7 +182,7 @@ int sstDxf02FncCircleCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *
 //  Bloc Function1 End
   return iStat;
 }
- 
+//=============================================================================
 // // Csv Write Function
 int sstDxf02FncCircleCls::Csv_Write(int iKey, sstDxf02TypCircleCls *osstDxf02TypCircle, std::string *ssstDxf02_Str)
 {
@@ -179,6 +190,7 @@ int sstDxf02FncCircleCls::Csv_Write(int iKey, sstDxf02TypCircleCls *osstDxf02Typ
 //  Bloc Function Write Start
   int iRet  = 0;
   if ( iKey != 0) return -1;
+
   ssstDxf02_Str->clear();
 
   // write base dxf attributes to csv string
@@ -197,7 +209,6 @@ int sstDxf02FncCircleCls::Csv_Write(int iKey, sstDxf02TypCircleCls *osstDxf02Typ
   // write base dxf attributes to csv string
   if (iStat >= 0)
     iStat = this->Csv_BaseWrite2 ( 0, *osstDxf02TypCircle, ssstDxf02_Str);
-
  
   // Fatal Errors goes to an assert
   if (iRet < 0)

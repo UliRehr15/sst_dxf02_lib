@@ -2132,6 +2132,7 @@ class sstDxf02FncBaseCls: public sstRec04Cls
     int Csv_BaseHeader2(int iKey, std::string *oCsvStr);
 
     sstStr01Cls oCsvRow;   /**< Csv String Convert object */
+    // char cDbleFrmt[10];
   private:
 };
 //==============================================================================
@@ -5305,7 +5306,7 @@ public:
     */
     // ----------------------------------------------------------------------------
     virtual void addHatchLoop(const DL_HatchLoopData& data);
-    // virtual void addSolid(const DL_SolidData& data);
+    virtual void addSolid(const DL_SolidData& data);
     //==============================================================================
     /**
     * @brief // Print Attributes <BR>

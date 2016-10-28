@@ -179,55 +179,33 @@ int sstDxf02WriteCls::WrtSecLayers (int         iKey)
 
   //--- Section Tables -------------------------------------------------------------
 
-
-//  this->dxf->writeLayer(*this->dw,
-//                 DL_LayerData("0", 0),
-//                 DL_Attributes(
-//                     std::string(""),      // leave empty
-//                     DL_Codes::black,        // default color
-//                     100,                  // default width
-//                     "CONTINUOUS"));       // default line style
-
-//  this->dxf->writeLayer(*this->dw,
-//                 DL_LayerData("mainlayer", 0),
-//                 DL_Attributes(
-//                     std::string(""),
-//                     DL_Codes::red,
-//                     100,
-//                     "CONTINUOUS"));
-
-//  this->dxf->writeLayer(*this->dw,
-//                 DL_LayerData("anotherlayer", 0),
-//                 DL_Attributes(
-//                     std::string(""),
-//                     DL_Codes::black,
-//                     100,
-//                     "CONTINUOUS"));
-
-  sstDxf02FncLayCls *oLocSstFncLay = NULL;        /**< layer recmem object */
+  sstDxf02FncLayCls *oLocSstFncLay = NULL;            /**< layer sst table object */
   oLocSstFncLay = this->oDxfDb.getSstFncLay();
-  dREC04RECNUMTYP dNumLayers = oLocSstFncLay->count();
+  sstDxf02FncLTypeCls *oLocSstFncLType = NULL;        /**< ltype sst table object */
+  oLocSstFncLType = this->oDxfDb.getSstFncLType();
 
-  // int numberOfLayers = 3;
+  // set number of defined layers to dxflib
+  dREC04RECNUMTYP dNumLayers = oLocSstFncLay->count();
   this->dw->tableLayers((int) dNumLayers);
 
   sstDxf02TypLayCls oLayRec;
+  sstDxf02TypLTypeCls oLTypeRec;
 
   for (dREC04RECNUMTYP dd=1; dd <= dNumLayers; dd++)
   {
     iStat = oLocSstFncLay->Read(0,dd,&oLayRec);
+    iStat = oLocSstFncLType->Read(0,oLayRec.getLinetypeID(),&oLTypeRec);
 
     this->dxf->writeLayer(*this->dw,
-                   DL_LayerData(oLayRec.getName(), 0),
+                   DL_LayerData(oLayRec.getName(), 0), /** Layer flags. (1 = frozen, 2 = frozen by default, 4 = locked) */
                    DL_Attributes(
                        std::string(""),
-                       DL_Codes::black,
-                       100,
-                       "CONTINUOUS"));
+                       oLayRec.getColor(),
+                       oLayRec.getWidth(),
+                       oLTypeRec.getName()));
   }
 
   this->dw->tableEnd();
-
 
   // Fatal Errors goes to an assert
   if (iRet < 0)
@@ -291,33 +269,33 @@ int sstDxf02WriteCls::WrtSecBlocks (int         iKey)
 
   // Write one Symobl definition ================================================
 
-  dxf->writeBlock(*dw,
-                 DL_BlockData("myblock1", 0, 0.0, 0.0, 0.0));
-  // ...
-  // write block entities e.g. with dxf->writeLine(), ..
+//  dxf->writeBlock(*dw,
+//                 DL_BlockData("myblock1", 0, 0.0, 0.0, 0.0));
+//  // ...
+//  // write block entities e.g. with dxf->writeLine(), ..
 
-  dxf->writeLine(
-      *dw,
-      DL_LineData(0.0,   // start point
-                  0.0,
-                  0.0,
-                  1.0,   // end point
-                  1.0,
-                  0.0),
-      DL_Attributes("myblock1", 256, -1, "BYBLOCK"));
+//  dxf->writeLine(
+//      *dw,
+//      DL_LineData(0.0,   // start point
+//                  0.0,
+//                  0.0,
+//                  1.0,   // end point
+//                  1.0,
+//                  0.0),
+//      DL_Attributes("myblock1", 256, -1, "BYBLOCK"));
 
-  dxf->writeLine(
-      *dw,
-      DL_LineData(0.0,   // start point
-                  1.0,
-                  0.0,
-                  1.0,   // end point
-                  0.0,
-                  0.0),
-      DL_Attributes("myblock1", 256, -1, "BYBLOCK"));
+//  dxf->writeLine(
+//      *dw,
+//      DL_LineData(0.0,   // start point
+//                  1.0,
+//                  0.0,
+//                  1.0,   // end point
+//                  0.0,
+//                  0.0),
+//      DL_Attributes("myblock1", 256, -1, "BYBLOCK"));
 
-  // ...
-  dxf->writeEndBlock(*dw, "myblock1");
+//  // ...
+//  dxf->writeEndBlock(*dw, "myblock1");
   // End Symobl definition ================================================
 
   dREC04RECNUMTYP dActBlockID = 0;
@@ -365,6 +343,69 @@ int sstDxf02WriteCls::WrtSecBlocks (int         iKey)
 
         // write next insert into dxf file
         this->dxf->writeArc(  *this->dw, oDL_Arc, oAttributes);
+
+      }
+      break;
+      case RS2::EntityCircle:
+      {
+      sstDxf02FncCircleCls *oLocSstFncCircle = NULL;              /**< Arc recmem object */
+      sstDxf02TypCircleCls oCircleRec;
+      oLocSstFncCircle = this->oDxfDb.getSstFncCircle();
+
+      iStat = oLocSstFncCircle->Read(0,oMainRec.getTypeID(),&oCircleRec);
+      DL_CircleData oDL_Circle(0.0,0.0,0.0,0.0);
+        // Write arc parameter to dxflib arc
+        oCircleRec.WritToDL(&oDL_Circle);
+
+        DL_Attributes oAttributes;  // Dxflib Attributes
+        oCircleRec.BaseWritToDL(&oAttributes);
+        oAttributes.setLayer(oBlkRec.getName());
+        oAttributes.setLineType("BYBLOCK");
+
+        // write next insert into dxf file
+        this->dxf->writeCircle( *this->dw, oDL_Circle, oAttributes);
+
+      }
+      break;
+      case RS2::EntityMText:
+      {
+      sstDxf02FncMTextCls *oLocSstFncMText = NULL;              /**< Arc recmem object */
+      sstDxf02TypMTextCls oMTextRec;
+      oLocSstFncMText = this->oDxfDb.getSstFncMText();
+
+      iStat = oLocSstFncMText->Read(0,oMainRec.getTypeID(),&oMTextRec);
+      DL_MTextData oDL_MText(0,0,0,0,0,0,0,0,0,0,0,0,"","",0);
+        // Write arc parameter to dxflib arc
+        oMTextRec.WritToDL(&oDL_MText);
+
+        DL_Attributes oAttributes;  // Dxflib Attributes
+        oMTextRec.BaseWritToDL(&oAttributes);
+        oAttributes.setLayer(oBlkRec.getName());
+        oAttributes.setLineType("BYBLOCK");
+
+        // write next insert into dxf file
+        this->dxf->writeMText(  *this->dw, oDL_MText, oAttributes);
+
+      }
+      break;
+      case RS2::EntityText:
+      {
+      sstDxf02FncTextCls *oLocSstFncText = NULL;              /**< Arc recmem object */
+      sstDxf02TypTextCls oTextRec;
+      oLocSstFncText = this->oDxfDb.getSstFncText();
+
+      iStat = oLocSstFncText->Read(0,oMainRec.getTypeID(),&oTextRec);
+      DL_TextData oDL_Text(0,0,0,0,0,0,0,0,0,0,0,"","",0);
+        // Write arc parameter to dxflib arc
+        oTextRec.WritToDL(&oDL_Text);
+
+        DL_Attributes oAttributes;  // Dxflib Attributes
+        oTextRec.BaseWritToDL(&oAttributes);
+        oAttributes.setLayer(oBlkRec.getName());
+        oAttributes.setLineType("BYBLOCK");
+
+        // write next insert into dxf file
+        this->dxf->writeText(  *this->dw, oDL_Text, oAttributes);
 
       }
       break;
@@ -695,37 +736,124 @@ int sstDxf02WriteCls::WrtSecEntities (int          iKey)
 
     switch (oMainRec.getEntityType())
     {
-      case RS2::EntityArc:
-      {
+    case RS2::EntityArc:
+    {
 
-        sstDxf02FncArcCls *oLocSstFncArc = NULL;              /**< Arc recmem object */
-        sstDxf02TypArcCls oArcRec;
-        oLocSstFncArc = this->oDxfDb.getSstFncArc();
+      sstDxf02FncArcCls *oLocSstFncArc = NULL;              /**< Arc recmem object */
+      sstDxf02TypArcCls oArcRec;
+      oLocSstFncArc = this->oDxfDb.getSstFncArc();
 
-        // if new entity-type, then write open polyline or hatch and close
-        iStat = this->WriteOpenEntities(0);
+      // if new entity-type, then write open polyline or hatch and close
+      iStat = this->WriteOpenEntities(0);
 
-        iStat = oLocSstFncArc->Read(0,oMainRec.getTypeID(),&oArcRec);
-        DL_ArcData oDL_Arc( 0.0,0.0,0.0,
-                            1.0,        // Radius
-                            0.0,0.0);   // Angle1, angle2
-        oArcRec.WritToDL(&oDL_Arc);
+      iStat = oLocSstFncArc->Read(0,oMainRec.getTypeID(),&oArcRec);
+      DL_ArcData oDL_Arc( 0.0,0.0,0.0,
+                          1.0,        // Radius
+                          0.0,0.0);   // Angle1, angle2
+      oArcRec.WritToDL(&oDL_Arc);
 
-        DL_Attributes oAttributes;  // Dxflib Attributes
-        oArcRec.BaseWritToDL(&oAttributes);
-        oAttributes.setLayer(oLayRec.getName());
-        oAttributes.setLineType("BYBLOCK");
-        // set Blockname
-        // oDL_Insert.name = "myblock1";
+      DL_Attributes oAttributes;  // Dxflib Attributes
+      oArcRec.BaseWritToDL(&oAttributes);
+      oAttributes.setLayer(oLayRec.getName());
+      oAttributes.setLineType("BYBLOCK");
+      // set Blockname
+      // oDL_Insert.name = "myblock1";
 
-        // write next insert into dxf file
-        this->dxf->writeArc(  *this->dw, oDL_Arc, oAttributes);
+      // write next insert into dxf file
+      this->dxf->writeArc(  *this->dw, oDL_Arc, oAttributes);
 
-        this->oDxfDb.setActEntType(oMainRec.getEntityType());
-        this->oDxfDb.setActRecNo(oMainRec.getTypeID());
+      this->oDxfDb.setActEntType(oMainRec.getEntityType());
+      this->oDxfDb.setActRecNo(oMainRec.getTypeID());
 
-        break;
-      }
+      break;
+    }
+    case RS2::EntityCircle:
+    {
+
+      sstDxf02FncCircleCls *oLocSstFncCircle = NULL;              /**< Arc recmem object */
+      sstDxf02TypCircleCls oCircleRec;
+      oLocSstFncCircle = this->oDxfDb.getSstFncCircle();
+
+      // if new entity-type, then write open polyline or hatch and close
+      iStat = this->WriteOpenEntities(0);
+
+      iStat = oLocSstFncCircle->Read(0,oMainRec.getTypeID(),&oCircleRec);
+      DL_CircleData oDL_Circle(0.0,0.0,0.0,0.0);
+      oCircleRec.WritToDL(&oDL_Circle);
+
+      DL_Attributes oAttributes;  // Dxflib Attributes
+      oCircleRec.BaseWritToDL(&oAttributes);
+      oAttributes.setLayer(oLayRec.getName());
+      oAttributes.setLineType("BYBLOCK");
+      // set Blockname
+      // oDL_Insert.name = "myblock1";
+
+      // write next insert into dxf file
+      this->dxf->writeCircle(  *this->dw, oDL_Circle, oAttributes);
+
+      this->oDxfDb.setActEntType(oMainRec.getEntityType());
+      this->oDxfDb.setActRecNo(oMainRec.getTypeID());
+
+      break;
+    }
+    case RS2::EntityMText:
+    {
+
+      sstDxf02FncMTextCls *oLocSstFncMText = NULL;              /**< Arc recmem object */
+      sstDxf02TypMTextCls oMTextRec;
+      oLocSstFncMText = this->oDxfDb.getSstFncMText();
+
+      // if new entity-type, then write open polyline or hatch and close
+      iStat = this->WriteOpenEntities(0);
+
+      iStat = oLocSstFncMText->Read(0,oMainRec.getTypeID(),&oMTextRec);
+      DL_MTextData oDL_MText(0,0,0,0,0,0,0,0,0,0,0,0,"","",0);
+      oMTextRec.WritToDL(&oDL_MText);
+
+      DL_Attributes oAttributes;  // Dxflib Attributes
+      oMTextRec.BaseWritToDL(&oAttributes);
+      oAttributes.setLayer(oLayRec.getName());
+      oAttributes.setLineType("BYBLOCK");
+      // set Blockname
+      // oDL_Insert.name = "myblock1";
+
+      // write next insert into dxf file
+      this->dxf->writeMText(  *this->dw, oDL_MText, oAttributes);
+
+      this->oDxfDb.setActEntType(oMainRec.getEntityType());
+      this->oDxfDb.setActRecNo(oMainRec.getTypeID());
+
+      break;
+    }
+    case RS2::EntityText:
+    {
+
+      sstDxf02FncTextCls *oLocSstFncText = NULL;              /**< Arc recmem object */
+      sstDxf02TypTextCls oTextRec;
+      oLocSstFncText = this->oDxfDb.getSstFncText();
+
+      // if new entity-type, then write open polyline or hatch and close
+      iStat = this->WriteOpenEntities(0);
+
+      iStat = oLocSstFncText->Read(0,oMainRec.getTypeID(),&oTextRec);
+      DL_TextData oDL_Text(0,0,0,0,0,0,0,0,0,0,0,"","",0);
+      oTextRec.WritToDL(&oDL_Text);
+
+      DL_Attributes oAttributes;  // Dxflib Attributes
+      oTextRec.BaseWritToDL(&oAttributes);
+      oAttributes.setLayer(oLayRec.getName());
+      oAttributes.setLineType("BYBLOCK");
+      // set Blockname
+      // oDL_Insert.name = "myblock1";
+
+      // write next insert into dxf file
+      this->dxf->writeText(  *this->dw, oDL_Text, oAttributes);
+
+      this->oDxfDb.setActEntType(oMainRec.getEntityType());
+      this->oDxfDb.setActRecNo(oMainRec.getTypeID());
+
+      break;
+    }
     case RS2::EntityInsert:
     {
       sstDxf02FncInsertCls *oLocSstFncInsert = NULL;        /**< insert recmem object */

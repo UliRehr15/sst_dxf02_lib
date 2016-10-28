@@ -162,6 +162,7 @@ sstDxf02FncBaseCls::sstDxf02FncBaseCls(dREC04RECSIZTYP iSize):sstRec04Cls(iSize)
   this->oCsvRow.SetBracket(0,(char*)"\x22");  // quotation marks
   // Set Bool type 0 / 1
   this->oCsvRow.SetBoolTyp( 0, 0);
+  this->oCsvRow.setUiDec(4);  // Set double/float csv writing to 4 decimal places
 }
 //=============================================================================
 // Csv Read Function

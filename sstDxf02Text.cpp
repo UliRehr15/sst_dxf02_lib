@@ -86,7 +86,7 @@ void sstDxf02TypTextCls::WritToDL(DL_TextData *poDLText)
   poDLText->vJustification = this->vJustification;  // ->;II;6;0
   poDLText->text = this->text;  //  ->;CC;100;0
   // poDLText->style = this->style_ID;  // ->;UL;10;0
-  poDLText->style = "style";  // ->;UL;10;0
+  poDLText->style = "standard";  // ->;UL;10;0
   poDLText->angle = this->angle;  //  ->;DD;12;4
 }
 //=============================================================================
@@ -250,6 +250,12 @@ int sstDxf02FncTextCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ss
 //-----------------------------------------------------------------------------
   if ( iKey != 0) return -1;
  
+  oCsvRow.SetReadPositon(0,0);
+
+  // read base dxf attributes from csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseRead1(0, sErrTxt, ssstDxf02_Str, osstDxf02TypText);
+
   if (iStat >= 0)
   {
     // iStat = oCsvRow.CsvString2_Dbl( 0, ssstDxf02_Str, &osstDxf02TypText->ipx);
@@ -338,6 +344,9 @@ int sstDxf02FncTextCls::Csv_Read(int iKey, std::string *sErrTxt, std::string *ss
     osstDxf02TypText->setAngle(dVal);
   }
 
+  // read base dxf attributes from csv string
+  if (iStat >= 0)
+    iStat = this->Csv_BaseRead2(0, sErrTxt, ssstDxf02_Str, osstDxf02TypText);
  
   *sErrTxt = oCsvRow.GetErrorString();
  

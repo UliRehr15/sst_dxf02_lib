@@ -1,9 +1,16 @@
 # sst_dxf02_lib
+
+sst_dxf02_lib stores dxf data in sst tables (sst_rec04_lib).
+for every dxf entity type like ARC, MTEXT and so on there is a table.
+this sst dxf tables could by stored in csv, so editing with spreedsheets
+like excel is possible.
+
+
 fork from sst_dxf01_lib: change license
 
 change license to GNU General Public License version 2 because of use of LibreCAD.
 
-Based on dxflib, extended dxflib
+Based on dxflib, extends dxflib
 Uses functions from LibreCAD2
 
 Compile with QT 5.5 and QTCreator 3.5
@@ -31,5 +38,8 @@ Structure of coding projects should be:
 29.06.16: Version 1.9: Support for POLYLINE/HATCH in Block data.  <BR>
 05.07.16: Version 1.10: Problems with color and width fixed.  <BR>
 13.07.16: Version 1.11: new testframe for general testing.  <BR>
-27.09.16: Version 1.12: Preparing works for entities circle, mtext, test. <BR>
-21.10.16: Version 1.13: App Dxf2Csv: Full Support for circle, mtext, test. <BR>
+27.09.16: Version 1.12: Preparing works for entities circle, mtext, text. <BR>
+21.10.16: Version 1.13: App Dxf2Csv: Full Support for circle, mtext, text. <BR>
+28.10.16: Version 1.14: App Csv2Dxf: Full Support for circle, mtext, text. <BR>
+                        Rise precision of decimal places to 4 for writing double values to csv <BR>
+                        Caused by problems drawing filled circles in librecad. <BR>
